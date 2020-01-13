@@ -1,4 +1,4 @@
-package uk.co.jakelee.pixelbookshop.ui.home
+package uk.co.jakelee.pixelbookshop.ui.stock
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import uk.co.jakelee.pixelbookshop.R
 
-class HomeFragment : Fragment() {
+class StockFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var stockViewModel: StockViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-            ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(this, Observer {
+        stockViewModel =
+            ViewModelProviders.of(this).get(StockViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_stock, container, false)
+        val textView: TextView = root.findViewById(R.id.text_stock)
+        stockViewModel.text.observe(this, Observer {
             textView.text = it
         })
         return root

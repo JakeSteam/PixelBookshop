@@ -1,4 +1,4 @@
-package uk.co.jakelee.pixelbookshop.ui.notifications
+package uk.co.jakelee.pixelbookshop.ui.shop
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import uk.co.jakelee.pixelbookshop.R
 
-class NotificationsFragment : Fragment() {
+class ShopFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: NotificationsViewModel
+    private lateinit var shopViewModel: ShopViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        notificationsViewModel =
-            ViewModelProviders.of(this).get(NotificationsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_notifications, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
-        notificationsViewModel.text.observe(this, Observer {
+        shopViewModel =
+            ViewModelProviders.of(this).get(ShopViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_shop, container, false)
+        val textView: TextView = root.findViewById(R.id.text_shop)
+        shopViewModel.text.observe(this, Observer {
             textView.text = it
         })
         return root
