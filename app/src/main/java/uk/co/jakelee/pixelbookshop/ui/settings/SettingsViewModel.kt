@@ -1,4 +1,4 @@
-package uk.co.jakelee.pixelbookshop.ui.customise
+package uk.co.jakelee.pixelbookshop.ui.settings
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

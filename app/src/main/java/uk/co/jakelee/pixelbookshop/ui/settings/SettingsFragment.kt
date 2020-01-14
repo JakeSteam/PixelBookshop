@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import uk.co.jakelee.pixelbookshop.R
-import uk.co.jakelee.pixelbookshop.ui.customise.SettingsViewModel
 
 class SettingsFragment : Fragment() {
 
