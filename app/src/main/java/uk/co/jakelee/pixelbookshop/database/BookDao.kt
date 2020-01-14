@@ -1,17 +1,20 @@
 package uk.co.jakelee.pixelbookshop.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import uk.co.jakelee.pixelbookshop.database.entity.Book
 
 @Dao
 interface BookDao {
     @Query("SELECT * FROM book")
-    fun getAll(): List<Book>
+    fun getAll(): LiveData<List<Book>>
 
-    @Query("SELECT * FROM book WHERE id = :bookId LIMIT 1")
-    fun getOne(bookId: Int): Book
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(book: Book)
 
-    @Query("UPDATE book SET owned = (owned + 1) WHERE id = :bookId")
-    fun addOne(bookId: Int): Book
+    @Query("DELETE FROM book")
+    suspend fun deleteAll()
 }
