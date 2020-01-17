@@ -8,21 +8,30 @@ import kotlinx.coroutines.launch
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.Book
 import uk.co.jakelee.pixelbookshop.repository.BookRepository
+import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
 
 class StatusViewModel(application: Application) : AndroidViewModel(application) {
 
-    // The ViewModel maintains a reference to the repository to get data.
-    private val repository: BookRepository
+    private val bookRepo: BookRepository
+    private val playerRepo: PlayerRepository
 
-    // LiveData gives us updated words when they change.
-    val allBooks: LiveData<List<Book>>
+    val bookCount: LiveData<Long>
+    val name: LiveData<String>
+    val xp: LiveData<Long>
+    val coins: LiveData<Long>
+    val timeStarted: LiveData<Long>
 
     init {
-        // Gets reference to BookDao from AppDatabase to construct
-        // the correct BookRepository.
-        val wordsDao = AppDatabase.getDatabase(application, viewModelScope).bookDao()
-        repository = BookRepository(wordsDao)
-        allBooks = repository.allBooks
+        val bookDao = AppDatabase.getDatabase(application, viewModelScope).bookDao()
+        bookRepo = BookRepository(bookDao)
+        bookCount = bookRepo.bookCount
+
+        val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
+        playerRepo = PlayerRepository(playerDao)
+        name = playerRepo.name
+        xp = playerRepo.xp
+        coins = playerRepo.coins
+        timeStarted = playerRepo.timeStarted
     }
 
     /**
@@ -33,6 +42,6 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
      * viewModelScope which we can use here.
      */
     fun insert(book: Book) = viewModelScope.launch {
-        repository.insert(book)
+        bookRepo.insert(book)
     }
 }

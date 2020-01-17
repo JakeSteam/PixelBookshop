@@ -9,10 +9,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import uk.co.jakelee.pixelbookshop.database.entity.Book
+import uk.co.jakelee.pixelbookshop.database.entity.Player
 
-@Database(entities = [Book::class], version = 1)
+@Database(entities = [Book::class, Player::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
+    abstract fun playerDao(): PlayerDao
 
     companion object {
         @Volatile
@@ -22,8 +24,6 @@ abstract class AppDatabase : RoomDatabase() {
             context: Context,
             scope: CoroutineScope
         ): AppDatabase {
-            // if the INSTANCE is not null, then return it,
-            // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
@@ -40,35 +40,28 @@ abstract class AppDatabase : RoomDatabase() {
         private class AppDatabaseCallback(
             private val scope: CoroutineScope
         ) : RoomDatabase.Callback() {
-            /**
-             * Override the onOpen method to populate the database.
-             * For this sample, we clear the database every time it is created or opened.
-             */
-            override fun onOpen(db: SupportSQLiteDatabase) {
-                super.onOpen(db)
-                // If you want to keep the data through app restarts,
-                // comment out the following line.
+
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
                 INSTANCE?.let { database ->
                     scope.launch(Dispatchers.IO) {
-                        populateDatabase(database.bookDao())
+                        initialiseDatabase(database)
                     }
                 }
             }
         }
 
-        /**
-         * Populate the database in a new coroutine.
-         * If you want to start with more words, just add them.
-         */
-        suspend fun populateDatabase(bookDao: BookDao) {
-            // Start the app with a clean database every time.
-            // Not needed if you only populate on creation.
-            bookDao.deleteAll()
+        suspend fun initialiseDatabase(database: AppDatabase) {
+            database.playerDao().insert(
+                Player("", 100, 50, System.currentTimeMillis())
+            )
 
-            var book = Book(0, "Title", "Author", 0)
-            bookDao.insert(book)
-            book = Book(1, "Tiiiitle", "Auuuuthor", 10)
-            bookDao.insert(book)
+            database.bookDao().insert(
+                Book(1, "Foundation", "Isaac Asimov", 1),
+                Book(2, "Animal Farm", "George Orwell", 7),
+                Book(3, "Thud!", "Terry Pratchett", 9),
+                Book(4, "Misery", "Stephen King", 2)
+            )
         }
     }
 }

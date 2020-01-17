@@ -3,53 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/text_level"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="8dp"
+        android:textSize="48sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="16"/>
 
     <TextView
         android:id="@+id/text_xp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_level" />
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@id/text_level"
+        app:layout_constraintTop_toTopOf="@id/text_level"
+        tools:text="13457xp"/>
 
     <TextView
         android:id="@+id/text_stock"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_xp" />
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@id/text_level"
+        app:layout_constraintTop_toBottomOf="@id/text_xp"
+        app:layout_constraintBottom_toBottomOf="@id/text_level"
+        tools:text="100 books"/>
 
     <TextView
         android:id="@+id/text_coins"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
+        android:padding="8dp"
+        android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_stock" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="130"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

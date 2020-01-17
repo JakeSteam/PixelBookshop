@@ -6,6 +6,8 @@ import uk.co.jakelee.pixelbookshop.database.entity.Book
 
 class BookRepository(private val bookDao: BookDao) {
 
+    val bookCount: LiveData<Long> = bookDao.getBookCount()
+
     val allBooks: LiveData<List<Book>> = bookDao.getAll()
 
     suspend fun insert(book: Book) {
