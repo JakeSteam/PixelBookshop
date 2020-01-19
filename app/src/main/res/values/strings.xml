@@ -82,4 +82,30 @@
     <string name="url_orwell1984">https://www.goodreads.com/book/show/40961427-1984</string>
     <string name="url_moorevendetta">https://www.goodreads.com/book/show/5805.V_for_Vendetta</string>
     <string name="url_martingameofthrones">https://www.goodreads.com/book/show/13496.A_Game_of_Thrones</string>
+
+    <string name="furniture_decoration">Decoration</string>
+    <string name="furniture_display">Display</string>
+    <string name="furniture_seating">Seating</string>
+    <string name="furniture_storage">Storage</string>
+
+    <string name="decoration_singlecandle">Single Candle</string>
+    <string name="decoration_triplecandle">Triple Candle</string>
+
+    <string name="display_lectern">Lectern</string>
+    <string name="display_shelf">Shelf</string>
+    <string name="display_bookcase">Bookcase</string>
+
+    <string name="seating_chair">Chair</string>
+    <string name="seating_roundtable">Round Table</string>
+
+    <string name="storage_smallcrate">Small Crate</string>
+    <string name="storage_bigcrate">Big Crate</string>
+
+    <string name="floor_dirt">Dirt</string>
+    <string name="floor_wood">Wood</string>
+    <string name="floor_marble">Marble</string>
+
+    <string name="wall_fence">Fence</string>
+    <string name="wall_brick">Brick</string>
+    <string name="wall_marble">Marble</string>
 </resources>
