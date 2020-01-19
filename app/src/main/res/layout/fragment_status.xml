@@ -2,48 +2,77 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorPrimary">
+    android:padding="8dp"
+    android:background="@drawable/ui_background">
 
     <TextView
         android:id="@+id/text_level"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:textSize="48sp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:layout_margin="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/text_xp"
+        android:background="@drawable/ui_element"
         tools:text="16"/>
 
     <TextView
         android:id="@+id/text_xp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="24sp"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:layout_margin="2dp"
         app:layout_constraintStart_toEndOf="@id/text_level"
-        app:layout_constraintTop_toTopOf="@id/text_level"
+        app:layout_constraintEnd_toStartOf="@id/text_coins"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text_stock"
+        android:background="@drawable/ui_element"
         tools:text="13457xp"/>
 
     <TextView
         android:id="@+id/text_stock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@id/text_level"
+        android:gravity="center"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@id/text_xp"
         app:layout_constraintTop_toBottomOf="@id/text_xp"
-        app:layout_constraintBottom_toBottomOf="@id/text_level"
+        app:layout_constraintEnd_toEndOf="@id/text_xp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/ui_element"
         tools:text="100 books"/>
 
     <TextView
         android:id="@+id/text_coins"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:textSize="48sp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:layout_margin="2dp"
+        app:layout_constraintStart_toEndOf="@id/text_xp"
+        app:layout_constraintEnd_toStartOf="@id/text_notifications"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/ui_element"
+        tools:text="130"/>
+
+    <TextView
+        android:id="@+id/text_notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:layout_margin="2dp"
+        app:layout_constraintStart_toEndOf="@id/text_coins"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="130"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/ui_element"
+        android:text="!"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
