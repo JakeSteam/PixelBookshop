@@ -3,7 +3,7 @@ package uk.co.jakelee.pixelbookshop.data
 import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
 
-enum class OwnedBookQuality(id: Int, @StringRes name: Int, canHaveDefects: Boolean, frequency: Double, modifier: Double) {
+enum class OwnedBookQuality(val id: Int, @StringRes name: Int, canHaveDefects: Boolean, frequency: Double, modifier: Double) {
     New(1, R.string.quality_new, false, 0.1, 1.0),
     Fine(2, R.string.quality_fine, false, 0.2, 0.95),
     VeryGood(3, R.string.quality_verygood, false, 0.4,0.9),

@@ -5,9 +5,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Book(
+data class Shop(
     @PrimaryKey val id: Int,
-    @ColumnInfo val title: String,
-    @ColumnInfo val author: String,
-    @ColumnInfo val owned: Int
+    @ColumnInfo val name: String,
+    @ColumnInfo val floorId: Int,
+    @ColumnInfo val wallId: Int,
+    @ColumnInfo val timeStarted: Long
 )

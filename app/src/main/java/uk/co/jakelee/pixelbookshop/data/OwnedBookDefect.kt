@@ -3,7 +3,7 @@ package uk.co.jakelee.pixelbookshop.data
 import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
 
-enum class OwnedBookDefect(id: Int, @StringRes name: Int, frequency: Double, modifier: Double) {
+enum class OwnedBookDefect(val id: Int, @StringRes name: Int, frequency: Double, modifier: Double) {
     None(1, R.string.defect_none, 1.0, 1.0),
     FoldedPages(2, R.string.defect_foldedpages, 0.05, 0.9),
     StainedPages(3, R.string.defect_stainedpages, 0.05, 0.8),

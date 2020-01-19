@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
 
 enum class Book(
-    id: Int, genre: BookGenre, rarity: BookRarity, @StringRes title: Int, @StringRes author: Int, published: Int, @StringRes url: Int
+    val id: Int, genre: BookGenre, rarity: BookRarity, @StringRes title: Int, @StringRes author: Int, published: Int, @StringRes url: Int
 ) {
     TolkienHobbit(1, BookGenre.ActionAdventure, BookRarity.Common,
         R.string.title_hobbit, R.string.author_tolkien, 1937, R.string.url_tolkienhobbit),

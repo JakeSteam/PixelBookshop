@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
 
 enum class Furniture(
-    type: FurnitureType, id: Int, tier: Int, @StringRes name: Int, cost: Int,
+    type: FurnitureType, val id: Int, tier: Int, @StringRes name: Int, cost: Int,
     capacity: Int, // Decoration: Range. Display: Books shown. Seating: Seats. Storage: Books stored.
     level: Int, // Level required to purchase
     rarity: BookRarity // Decoration: N/A. Display: Max rarity shown. Seating: Max rarity read there. Storage: Books extra capacity applies too.
