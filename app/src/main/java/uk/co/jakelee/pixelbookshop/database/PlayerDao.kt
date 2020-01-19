@@ -24,5 +24,7 @@ interface PlayerDao {
     @Query("SELECT started FROM player")
     fun getTimeStarted(): LiveData<Long>
 
+    @Query("UPDATE player SET xp = (xp + :xp)")
+    fun addXp(xp: Int)
 
 }

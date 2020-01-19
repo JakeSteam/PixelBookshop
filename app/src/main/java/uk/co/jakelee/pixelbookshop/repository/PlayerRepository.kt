@@ -9,4 +9,8 @@ class PlayerRepository(private val playerDao: PlayerDao) {
     val xp = playerDao.getXp()
     val coins = playerDao.getCoins()
     val timeStarted: LiveData<Long> = playerDao.getTimeStarted()
+
+    suspend fun addXp(newXp: Int) {
+        playerDao.addXp(newXp)
+    }
 }

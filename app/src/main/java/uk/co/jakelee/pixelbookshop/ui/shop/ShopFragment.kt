@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import uk.co.jakelee.pixelbookshop.R
 
 class ShopFragment : Fragment() {
@@ -19,13 +19,19 @@ class ShopFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        shopViewModel =
-            ViewModelProviders.of(this).get(ShopViewModel::class.java)
+        shopViewModel = ViewModelProvider(this).get(ShopViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_shop, container, false)
-        val textView: TextView = root.findViewById(R.id.text_shop)
-        shopViewModel.text.observe(this, Observer {
-            textView.text = it
+
+        shopViewModel.text.observe(this.activity!!, Observer {
+            root.findViewById<TextView>(R.id.text_shop).text = it
         })
+        root.findViewById<TextView>(R.id.text_xp).setOnClickListener {
+            shopViewModel.addXp(10)
+        }
         return root
+    }
+
+    fun add10Xp() {
+        shopViewModel.addXp(10)
     }
 }
