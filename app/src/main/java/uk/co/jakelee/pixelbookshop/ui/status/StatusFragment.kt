@@ -20,10 +20,11 @@ class StatusFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         statusViewModel = ViewModelProvider(this).get(StatusViewModel::class.java)
-        statusViewModel.bookCount.observe(this.activity!!, Observer { text_stock.text = "$it books" })
+        statusViewModel.ownedBookCount.observe(this.activity!!, Observer { text_stock.text = "$it books" })
         statusViewModel.xp.observe(this.activity!!, Observer {
-            text_xp.text = "$it XP"
-            text_level.text = "L${it.div(10)}"
+            val value = it ?: 0
+            text_xp.text = "$value XP"
+            text_level.text = value.div(10).toString()
         })
         statusViewModel.coins.observe(this.activity!!, Observer { text_coins.text = "${it}c" })
         return inflater.inflate(R.layout.fragment_status, container, false)

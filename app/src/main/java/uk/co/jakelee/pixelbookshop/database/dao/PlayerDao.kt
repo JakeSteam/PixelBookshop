@@ -1,4 +1,4 @@
-package uk.co.jakelee.pixelbookshop.database
+package uk.co.jakelee.pixelbookshop.database.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

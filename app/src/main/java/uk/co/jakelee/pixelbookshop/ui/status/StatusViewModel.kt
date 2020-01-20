@@ -6,25 +6,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
-import uk.co.jakelee.pixelbookshop.database.entity.Book
-import uk.co.jakelee.pixelbookshop.repository.BookRepository
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedBook
+import uk.co.jakelee.pixelbookshop.repository.OwnedBookRepository
 import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
 
 class StatusViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val bookRepo: BookRepository
+    private val ownedBookRepo: OwnedBookRepository
     private val playerRepo: PlayerRepository
 
-    val bookCount: LiveData<Long>
+    val ownedBookCount: LiveData<Long>
     val name: LiveData<String>
     val xp: LiveData<Long>
     val coins: LiveData<Long>
     val timeStarted: LiveData<Long>
 
     init {
-        val bookDao = AppDatabase.getDatabase(application, viewModelScope).bookDao()
-        bookRepo = BookRepository(bookDao)
-        bookCount = bookRepo.bookCount
+        val ownedBookDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()
+        ownedBookRepo = OwnedBookRepository(ownedBookDao)
+        ownedBookCount = ownedBookRepo.bookCount
 
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)
@@ -41,7 +41,7 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
      * ViewModels have a coroutine scope based on their lifecycle called
      * viewModelScope which we can use here.
      */
-    fun insert(book: Book) = viewModelScope.launch {
-        bookRepo.insert(book)
+    fun insert(ownedBook: OwnedBook) = viewModelScope.launch {
+       ownedBookRepo.insert(ownedBook)
     }
 }

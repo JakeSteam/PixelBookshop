@@ -8,12 +8,16 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uk.co.jakelee.pixelbookshop.database.entity.Book
+import uk.co.jakelee.pixelbookshop.data.*
+import uk.co.jakelee.pixelbookshop.database.dao.OwnedBookDao
+import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedBook
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.Player
 
-@Database(entities = [Book::class, Player::class], version = 1)
+@Database(entities = [OwnedBook::class, Player::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun bookDao(): BookDao
+    abstract fun ownedBookDao(): OwnedBookDao
     abstract fun playerDao(): PlayerDao
 
     companion object {
@@ -53,15 +57,19 @@ abstract class AppDatabase : RoomDatabase() {
 
         suspend fun initialiseDatabase(database: AppDatabase) {
             database.playerDao().insert(
-                Player("", 100, 50, System.currentTimeMillis())
+                Player("Jake", 100, 50, System.currentTimeMillis())
             )
 
-            database.bookDao().insert(
-                Book(1, "Foundation", "Isaac Asimov", 1),
-                Book(2, "Animal Farm", "George Orwell", 7),
-                Book(3, "Thud!", "Terry Pratchett", 9),
-                Book(4, "Misery", "Stephen King", 2)
-            )
+            val ownedFurniture = OwnedFurniture(1, 0, 0, true, Furniture.Lectern.id)
+            database.ownedBookDao().insert(OwnedBook(
+                1,
+                Book.Orwell1984.id,
+                ownedFurniture.id,
+                OwnedBookDefect.FoldedPages.id,
+                OwnedBookQuality.Poor.id,
+                OwnedBookSource.Gift.id,
+                OwnedBookType.Paperback.id
+            ))
         }
     }
 }
