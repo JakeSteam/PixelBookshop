@@ -10,14 +10,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import uk.co.jakelee.pixelbookshop.data.*
 import uk.co.jakelee.pixelbookshop.database.dao.OwnedBookDao
+import uk.co.jakelee.pixelbookshop.database.dao.OwnedFurnitureDao
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedBook
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.Player
 
-@Database(entities = [OwnedBook::class, Player::class], version = 1)
+@Database(entities = [OwnedBook::class, OwnedFurniture::class, Player::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
+
     abstract fun ownedBookDao(): OwnedBookDao
+    abstract fun ownedFurnitureDao(): OwnedFurnitureDao
     abstract fun playerDao(): PlayerDao
 
     companion object {
@@ -59,17 +62,20 @@ abstract class AppDatabase : RoomDatabase() {
             database.playerDao().insert(
                 Player("Jake", 100, 50, System.currentTimeMillis())
             )
-
-            val ownedFurniture = OwnedFurniture(1, 0, 0, true, Furniture.Lectern.id)
-            database.ownedBookDao().insert(OwnedBook(
-                1,
-                Book.Orwell1984.id,
-                ownedFurniture.id,
-                OwnedBookDefect.FoldedPages.id,
-                OwnedBookQuality.Poor.id,
-                OwnedBookSource.Gift.id,
-                OwnedBookType.Paperback.id
-            ))
+            database.ownedFurnitureDao().insert(
+                OwnedFurniture(1, 0, 0, true, Furniture.Lectern.id)
+            )
+            database.ownedBookDao().insert(
+                OwnedBook(
+                    1,
+                    Book.Orwell1984.id,
+                    ownedFurniture.id,
+                    OwnedBookDefect.FoldedPages.id,
+                    OwnedBookQuality.Poor.id,
+                    OwnedBookSource.Gift.id,
+                    OwnedBookType.Paperback.id
+                )
+            )
         }
     }
 }
