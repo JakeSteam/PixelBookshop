@@ -13,10 +13,11 @@ import uk.co.jakelee.pixelbookshop.database.dao.OwnedBookDao
 import uk.co.jakelee.pixelbookshop.database.dao.OwnedFurnitureDao
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedBook
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.Player
 
-@Database(entities = [OwnedBook::class, OwnedFurniture::class, Player::class], version = 1)
+@Database(entities = [OwnedBook::class, OwnedFloor::class, OwnedFurniture::class, Player::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun ownedBookDao(): OwnedBookDao

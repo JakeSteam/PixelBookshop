@@ -4,9 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
@@ -26,11 +23,5 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)
-    }
-
-    fun addXp(xp: Int) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            playerRepo.addXp(xp)
-        }
     }
 }

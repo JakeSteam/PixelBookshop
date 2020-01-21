@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -30,6 +31,10 @@ class StatusFragment : Fragment() {
         statusViewModel.coins.observe(this.activity!!, Observer { it?.let {
             text_coins.text = "$it"
         }})
-        return inflater.inflate(R.layout.fragment_status, container, false)
+        val root = inflater.inflate(R.layout.fragment_status, container, false)
+        root.findViewById<TextView>(R.id.text_xp).setOnClickListener {
+            statusViewModel.addXp(10)
+        }
+        return root
     }
 }
