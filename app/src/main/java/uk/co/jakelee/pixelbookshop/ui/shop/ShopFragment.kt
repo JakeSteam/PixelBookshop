@@ -11,11 +11,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import uk.co.jakelee.pixelbookshop.R
+import uk.co.jakelee.pixelbookshop.data.Furniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
+import uk.co.jakelee.pixelbookshop.interfaces.Tile
 
 
 class ShopFragment : Fragment() {
@@ -35,42 +39,57 @@ class ShopFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        floor_layer.removeAllViews()
 
         // Y = left to top
         // X = left to bottom
 
-        val floors = getFloor()
-        val xTiles = floors.first().size
+        val floors = getFloor() // Sorted ascending y, then descending x,
+        val maxX = floors.first().first().x
+        floor_layer.removeAllViews()
+        floors.forEach { floor ->
+            floor.forEach {
+                val resource = if (it.exists) R.drawable.floor_planks else android.R.color.transparent
+                val callback = { tile: Tile -> Toast.makeText(activity, "Clicked tile (${tile.x},${tile.y})!", Toast.LENGTH_SHORT).show() }
+                floor_layer.addView(
+                    createTile(it, resource, callback),
+                    getTileParams(it.x, it.y, maxX)
+                )
+            }
+        }
 
-        for (floor in floors) {
-            for (tile in floor) {
-                floor_layer.addView(createTile(tile), getTileParams(tile.x, tile.y, xTiles))
+        val furnitures = getFurniture()
+        furniture_layer.removeAllViews()
+        furnitures.forEach { row ->
+            row.forEach {
+                val resource = if (it.furnitureId == Furniture.SmallCrate.id) R.drawable.furniture_crate else android.R.color.transparent
+                val callback = { tile: Tile -> Toast.makeText(activity, "Clicked furniture (${tile.x},${tile.y})!", Toast.LENGTH_SHORT).show() }
+                floor_layer.addView(
+                    createTile(it, resource, callback),
+                    getTileParams(it.x, it.y, maxX)
+                )
             }
         }
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun createTile(tile: OwnedFloor): ImageView {
-        val image = ImageView(activity!!)
-        if (tile.exists) image.setImageResource(R.drawable.floor_planks)
-
-        image.isDrawingCacheEnabled = true
-        image.setOnTouchListener(View.OnTouchListener { v, event ->
-            val bmp = Bitmap.createBitmap(v.drawingCache)
-            if (event.x.toInt() > bmp.width || event.y.toInt() > bmp.height) return@OnTouchListener true
-            val color = bmp.getPixel(event.x.toInt(), event.y.toInt())
-            if (color == Color.TRANSPARENT) {
-                return@OnTouchListener false
-            } else {
-                if (event.action == MotionEvent.ACTION_UP) {
-                    Toast.makeText(activity, "Clicked tile (${tile.x},${tile.y})!", Toast.LENGTH_SHORT).show()
+    private fun createTile(tile: Tile, @DrawableRes resource: Int, callback: (Tile) -> (Unit)) =
+        ImageView(activity!!).apply {
+            isDrawingCacheEnabled = true
+            setImageResource(resource)
+            setOnTouchListener(View.OnTouchListener { v, event ->
+                val bmp = Bitmap.createBitmap(v.drawingCache)
+                if (event.x.toInt() > bmp.width || event.y.toInt() > bmp.height) return@OnTouchListener true
+                val color = bmp.getPixel(event.x.toInt(), event.y.toInt())
+                if (color == Color.TRANSPARENT) {
+                    return@OnTouchListener false
+                } else {
+                    if (event.action == MotionEvent.ACTION_UP) {
+                        callback.invoke(tile)
+                    }
+                    return@OnTouchListener true
                 }
-                return@OnTouchListener true
-            }
-        })
-        return image
-    }
+            })
+        }
 
     private fun getTileParams(x: Int, y: Int, xTiles: Int): RelativeLayout.LayoutParams {
         val tileWidth = 64
@@ -80,6 +99,21 @@ class ShopFragment : Fragment() {
         val topPadding = (xTiles + (y - x)) * (tileHeight / 8)
         layoutParams.setMargins(leftPadding, topPadding, 0, 0)
         return layoutParams
+    }
+
+    private fun getFurniture(): List<List<OwnedFurniture>> {
+        return listOf(
+            listOf(
+                OwnedFurniture(3, 0, true, Furniture.SmallCrate.id),
+                OwnedFurniture(2, 0, true, Furniture.SmallCrate.id),
+                OwnedFurniture(1, 0, true, Furniture.SmallCrate.id),
+                OwnedFurniture(0, 0, true, Furniture.SmallCrate.id)
+            ),
+            listOf(
+                OwnedFurniture(3, 5, false, Furniture.SmallCrate.id),
+                OwnedFurniture(3, 6, false, Furniture.BigCrate.id)
+            )
+        )
     }
 
     // List[Y][X]

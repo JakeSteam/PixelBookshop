@@ -6,7 +6,6 @@ import uk.co.jakelee.pixelbookshop.database.entity.Player
 import uk.co.jakelee.pixelbookshop.database.entity.Shop
 
 val ownedFurniture = OwnedFurniture(
-    1,
     0,
     0,
     true,
@@ -16,7 +15,7 @@ val ownedFurniture = OwnedFurniture(
 val ownedBook = OwnedBook(
     1,
     Book.Orwell1984.id,
-    ownedFurniture.id,
+    0,
     OwnedBookDefect.FoldedPages.id,
     OwnedBookQuality.Poor.id,
     OwnedBookSource.Gift.id,

@@ -64,13 +64,13 @@ abstract class AppDatabase : RoomDatabase() {
                 Player("Jake", 100, 50, System.currentTimeMillis())
             )
             database.ownedFurnitureDao().insert(
-                OwnedFurniture(1, 0, 0, true, Furniture.Lectern.id)
+                OwnedFurniture(0, 0, true, Furniture.Lectern.id)
             )
             database.ownedBookDao().insert(
                 OwnedBook(
                     1,
                     Book.Orwell1984.id,
-                    ownedFurniture.id,
+                    0,
                     OwnedBookDefect.FoldedPages.id,
                     OwnedBookQuality.Poor.id,
                     OwnedBookSource.Gift.id,

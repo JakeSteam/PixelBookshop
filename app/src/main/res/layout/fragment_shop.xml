@@ -40,12 +40,12 @@
                 android:layout_height="wrap_content" />
 
             <RelativeLayout
-                android:id="@+id/walls"
+                android:id="@+id/wall_layer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <RelativeLayout
-                android:id="@+id/furniture"
+                android:id="@+id/furniture_layer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

@@ -29,7 +29,5 @@ enum class Furniture(
     SmallCrate(FurnitureType.Storage, 4001, 1, R.string.storage_smallcrate,
         100, 10, 1, BookRarity.Common),
     BigCrate(FurnitureType.Storage, 4002, 2, R.string.storage_bigcrate,
-        500, 30, 1, BookRarity.Uncommon),
-
-
+        500, 30, 1, BookRarity.Uncommon)
 }
