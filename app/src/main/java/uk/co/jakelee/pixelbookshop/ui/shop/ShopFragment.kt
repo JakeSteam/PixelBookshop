@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import uk.co.jakelee.pixelbookshop.R
-import uk.co.jakelee.pixelbookshop.data.Furniture
+import uk.co.jakelee.pixelbookshop.model.Furniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.interfaces.Tile

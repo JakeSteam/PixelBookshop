@@ -1,4 +1,4 @@
-package uk.co.jakelee.pixelbookshop.data
+package uk.co.jakelee.pixelbookshop.model
 
 import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R

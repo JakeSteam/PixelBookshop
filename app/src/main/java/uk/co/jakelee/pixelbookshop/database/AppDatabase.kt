@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uk.co.jakelee.pixelbookshop.data.*
+import uk.co.jakelee.pixelbookshop.model.*
 import uk.co.jakelee.pixelbookshop.database.dao.OwnedBookDao
 import uk.co.jakelee.pixelbookshop.database.dao.OwnedFurnitureDao
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao

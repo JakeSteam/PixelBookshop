@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 data class Shop(
     @PrimaryKey val id: Int,
     @ColumnInfo val name: String,
-    @ColumnInfo val floorId: Int,
     @ColumnInfo val wallId: Int,
     @ColumnInfo val timeStarted: Long
 )
