@@ -3,14 +3,15 @@ package uk.co.jakelee.pixelbookshop.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import uk.co.jakelee.pixelbookshop.model.*
 
 @Entity
 data class OwnedBook(
-    @PrimaryKey val id: Int,
-    @ColumnInfo val bookId: Int,
-    @ColumnInfo val furnitureId: Int,
-    @ColumnInfo val bookDefectId: Int,
-    @ColumnInfo val bookQualityId: Int,
-    @ColumnInfo val bookSourceId: Int,
-    @ColumnInfo val bookTypeId: Int
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    @ColumnInfo val book: Book,
+    @ColumnInfo val ownedFurnitureId: Int,
+    @ColumnInfo val bookDefect: OwnedBookDefect,
+    @ColumnInfo val bookQuality: OwnedBookQuality,
+    @ColumnInfo val bookSource: OwnedBookSource,
+    @ColumnInfo val bookType: OwnedBookType
 )

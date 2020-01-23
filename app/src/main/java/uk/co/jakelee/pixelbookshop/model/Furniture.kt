@@ -2,13 +2,14 @@ package uk.co.jakelee.pixelbookshop.model
 
 import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
+import uk.co.jakelee.pixelbookshop.interfaces.Model
 
 enum class Furniture(
-    type: FurnitureType, val id: Int, tier: Int, @StringRes name: Int, cost: Int,
+    type: FurnitureType, override val id: Int, tier: Int, @StringRes name: Int, cost: Int,
     capacity: Int, // Decoration: Range. Display: Books shown. Seating: Seats. Storage: Books stored.
     level: Int, // Level required to purchase
     rarity: BookRarity // Decoration: N/A. Display: Max rarity shown. Seating: Max rarity read there. Storage: Books extra capacity applies too.
-) {
+): Model {
     SingleCandle(FurnitureType.Decoration, 1001, 1, R.string.decoration_singlecandle,
         100, 1, 1, BookRarity.Common),
     TripleCandle(FurnitureType.Decoration, 1002, 2, R.string.decoration_triplecandle,

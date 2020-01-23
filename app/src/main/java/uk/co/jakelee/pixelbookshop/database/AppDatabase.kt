@@ -4,20 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uk.co.jakelee.pixelbookshop.model.*
 import uk.co.jakelee.pixelbookshop.database.dao.OwnedBookDao
 import uk.co.jakelee.pixelbookshop.database.dao.OwnedFurnitureDao
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedBook
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
-import uk.co.jakelee.pixelbookshop.database.entity.Player
+import uk.co.jakelee.pixelbookshop.database.entity.*
+import uk.co.jakelee.pixelbookshop.model.*
 
-@Database(entities = [OwnedBook::class, OwnedFloor::class, OwnedFurniture::class, Player::class], version = 1)
+@Database(entities = [OwnedBook::class, OwnedFloor::class, OwnedFurniture::class, Player::class, Shop::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun ownedBookDao(): OwnedBookDao
@@ -64,17 +63,17 @@ abstract class AppDatabase : RoomDatabase() {
                 Player("Jake", 100, 50, System.currentTimeMillis())
             )
             database.ownedFurnitureDao().insert(
-                OwnedFurniture(0, 0, true, Furniture.Lectern.id)
+                OwnedFurniture(1, 0, 0, true, Furniture.Lectern)
             )
             database.ownedBookDao().insert(
                 OwnedBook(
                     1,
-                    Book.Orwell1984.id,
-                    0,
-                    OwnedBookDefect.FoldedPages.id,
-                    OwnedBookQuality.Poor.id,
-                    OwnedBookSource.Gift.id,
-                    OwnedBookType.Paperback.id
+                    Book.Orwell1984,
+                    1,
+                    OwnedBookDefect.FoldedPages,
+                    OwnedBookQuality.Poor,
+                    OwnedBookSource.Gift,
+                    OwnedBookType.Paperback
                 )
             )
         }

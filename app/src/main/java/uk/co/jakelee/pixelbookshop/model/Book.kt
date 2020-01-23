@@ -2,10 +2,11 @@ package uk.co.jakelee.pixelbookshop.model
 
 import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
+import uk.co.jakelee.pixelbookshop.interfaces.Model
 
 enum class Book(
-    val id: Int, genre: BookGenre, rarity: BookRarity, @StringRes title: Int, @StringRes author: Int, published: Int, @StringRes url: Int
-) {
+    override val id: Int, genre: BookGenre, rarity: BookRarity, @StringRes title: Int, @StringRes author: Int, published: Int, @StringRes url: Int
+): Model {
     TolkienHobbit(1, BookGenre.ActionAdventure, BookRarity.Common,
         R.string.title_hobbit, R.string.author_tolkien, 1937, R.string.url_tolkienhobbit),
     Orwell1984(2, BookGenre.ScienceFiction, BookRarity.Uncommon,

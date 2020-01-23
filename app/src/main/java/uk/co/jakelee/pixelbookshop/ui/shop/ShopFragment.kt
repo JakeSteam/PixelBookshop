@@ -16,10 +16,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import uk.co.jakelee.pixelbookshop.R
-import uk.co.jakelee.pixelbookshop.model.Furniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
+import uk.co.jakelee.pixelbookshop.model.Furniture
 
 
 class ShopFragment : Fragment() {
@@ -61,7 +61,7 @@ class ShopFragment : Fragment() {
         furniture_layer.removeAllViews()
         furnitures.forEach { row ->
             row.forEach {
-                val resource = if (it.furnitureId == Furniture.SmallCrate.id) R.drawable.furniture_crate else android.R.color.transparent
+                val resource = if (it.furniture == Furniture.SmallCrate) R.drawable.furniture_crate else android.R.color.transparent
                 val callback = { tile: Tile -> Toast.makeText(activity, "Clicked furniture (${tile.x},${tile.y})!", Toast.LENGTH_SHORT).show() }
                 floor_layer.addView(
                     createTile(it, resource, callback),
@@ -104,14 +104,14 @@ class ShopFragment : Fragment() {
     private fun getFurniture(): List<List<OwnedFurniture>> {
         return listOf(
             listOf(
-                OwnedFurniture(3, 0, true, Furniture.SmallCrate.id),
-                OwnedFurniture(2, 0, true, Furniture.SmallCrate.id),
-                OwnedFurniture(1, 0, true, Furniture.SmallCrate.id),
-                OwnedFurniture(0, 0, true, Furniture.SmallCrate.id)
+                OwnedFurniture(1, 3, 0, true, Furniture.SmallCrate),
+                OwnedFurniture(2, 2, 0, true, Furniture.SmallCrate),
+                OwnedFurniture(3, 1, 0, true, Furniture.SmallCrate),
+                OwnedFurniture(4, 0, 0, true, Furniture.SmallCrate)
             ),
             listOf(
-                OwnedFurniture(3, 5, false, Furniture.SmallCrate.id),
-                OwnedFurniture(3, 6, false, Furniture.BigCrate.id)
+                OwnedFurniture(5, 3, 5, false, Furniture.SmallCrate),
+                OwnedFurniture(6, 3, 6, false, Furniture.BigCrate)
             )
         )
     }
