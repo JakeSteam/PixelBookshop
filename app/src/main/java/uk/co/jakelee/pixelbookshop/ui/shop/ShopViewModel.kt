@@ -4,9 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
+import uk.co.jakelee.pixelbookshop.model.Floor
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
 import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
@@ -31,5 +33,17 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)
+    }
+
+    fun invertFloor(ownedFloor: OwnedFloor) = viewModelScope.launch {
+        ownedFloor.apply {
+            floor = when(floor) {
+                null -> Floor.Dirt
+                Floor.Dirt -> Floor.Wood
+                Floor.Wood -> Floor.Marble
+                Floor.Marble -> null
+            }
+        }
+        ownedFloorRepo.insert(ownedFloor)
     }
 }

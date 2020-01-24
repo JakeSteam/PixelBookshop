@@ -17,8 +17,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import uk.co.jakelee.pixelbookshop.R
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
-import uk.co.jakelee.pixelbookshop.model.Furniture
 
 
 class ShopFragment : Fragment() {
@@ -43,41 +43,42 @@ class ShopFragment : Fragment() {
         // X = left to bottom
 
         shopViewModel.ownedFloor.observe(viewLifecycleOwner, Observer { floors ->
-            val maxX = floors.last().x
-            floor_layer.removeAllViews()
-            floors.forEach {
-                val resource =
-                    if (it.exists) R.drawable.floor_planks else android.R.color.transparent
-                val callback = { tile: Tile ->
-                    Toast.makeText(
-                        activity,
-                        "Clicked tile (${tile.x},${tile.y})!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            if (floors.isNotEmpty()) {
+                val maxX = floors.last().x
+                floor_layer.removeAllViews()
+                floors.forEach {
+                    val resource =
+                        if (it.floor?.image != null) it.floor!!.image else android.R.color.transparent
+                    val callback = { tile: Tile ->
+                        if (tile is OwnedFloor) {
+                            shopViewModel.invertFloor(tile)
+                        }
+                    }
+                    floor_layer.addView(
+                        createTile(it, resource, callback),
+                        getTileParams(it.x, it.y, maxX)
+                    )
                 }
-                floor_layer.addView(
-                    createTile(it, resource, callback),
-                    getTileParams(it.x, it.y, maxX)
-                )
             }
         })
 
         shopViewModel.ownedFurniture.observe(viewLifecycleOwner, Observer { furnitures ->
-            furniture_layer.removeAllViews()
-            furnitures.forEach {
-                val resource =
-                    if (it.furniture == Furniture.SmallCrate) R.drawable.furniture_crate else android.R.color.transparent
-                val callback = { tile: Tile ->
-                    Toast.makeText(
-                        activity,
-                        "Clicked furniture (${tile.x},${tile.y})!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            if (furnitures.isNotEmpty()) {
+                furniture_layer.removeAllViews()
+                furnitures.forEach {
+                    val resource = it.furniture.image
+                    val callback = { tile: Tile ->
+                        Toast.makeText(
+                            activity,
+                            "Clicked furniture (${tile.x},${tile.y})!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    furniture_layer.addView(
+                        createTile(it, resource, callback),
+                        getTileParams(it.x, it.y, 3)
+                    )
                 }
-                furniture_layer.addView(
-                    createTile(it, resource, callback),
-                    getTileParams(it.x, it.y, 3)
-                )
             }
         })
     }

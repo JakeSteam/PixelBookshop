@@ -12,8 +12,8 @@ class Converters {
     @TypeConverter fun bookRarityToInt(value: BookRarity) = value.id
     @TypeConverter fun intToBookRarity(id: Int) = BookRarity.values().first { it.id == id }
 
-    @TypeConverter fun floorToInt(value: Floor) = value.id
-    @TypeConverter fun intToFloor(id: Int) = Floor.values().first { it.id == id }
+    @TypeConverter fun floorToInt(value: Floor?) = value?.id ?: 0
+    @TypeConverter fun intToFloor(id: Int) = if (id == 0) null else Floor.values().first { it.id == id }
 
     @TypeConverter fun furnitureToInt(value: Furniture) = value.id
     @TypeConverter fun intToFurniture(id: Int) = Furniture.values().first { it.id == id }
