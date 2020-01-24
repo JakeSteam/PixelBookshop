@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import uk.co.jakelee.pixelbookshop.database.dao.OwnedBookDao
+import uk.co.jakelee.pixelbookshop.database.dao.OwnedFloorDao
 import uk.co.jakelee.pixelbookshop.database.dao.OwnedFurnitureDao
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
 import uk.co.jakelee.pixelbookshop.database.entity.*
@@ -20,6 +21,7 @@ import uk.co.jakelee.pixelbookshop.model.*
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun ownedBookDao(): OwnedBookDao
+    abstract fun ownedFloorDao(): OwnedFloorDao
     abstract fun ownedFurnitureDao(): OwnedFurnitureDao
     abstract fun playerDao(): PlayerDao
 
@@ -62,8 +64,49 @@ abstract class AppDatabase : RoomDatabase() {
             database.playerDao().insert(
                 Player("Jake", 100, 50, System.currentTimeMillis())
             )
+            database.ownedFloorDao().insert(
+                OwnedFloor(3, 0, true),
+                OwnedFloor(2, 0, true),
+                OwnedFloor(1, 0, true),
+                OwnedFloor(0, 0, true),
+
+                OwnedFloor(3, 1, true),
+                OwnedFloor(2, 1, false),
+                OwnedFloor(1, 1, true),
+                OwnedFloor(0, 1, false),
+
+                OwnedFloor(3, 2, false),
+                OwnedFloor(2, 2, false),
+                OwnedFloor(1, 2, true),
+                OwnedFloor(0, 2, false),
+
+                OwnedFloor(3, 3, true),
+                OwnedFloor(2, 3, false),
+                OwnedFloor(1, 3, true),
+                OwnedFloor(0, 3, true),
+
+                OwnedFloor(3, 4, true),
+                OwnedFloor(2, 4, true),
+                OwnedFloor(1, 4, true),
+                OwnedFloor(0, 4, true),
+
+                OwnedFloor(3, 5, true),
+                OwnedFloor(2, 5, true),
+                OwnedFloor(1, 5, true),
+                OwnedFloor(0, 5, true),
+
+                OwnedFloor(3, 6, true),
+                OwnedFloor(2, 6, true),
+                OwnedFloor(1, 6, true),
+                OwnedFloor(0, 6, true)
+            )
             database.ownedFurnitureDao().insert(
-                OwnedFurniture(1, 0, 0, true, Furniture.Lectern)
+                OwnedFurniture(1, 3, 0, true, Furniture.SmallCrate),
+                OwnedFurniture(2, 2, 0, true, Furniture.SmallCrate),
+                OwnedFurniture(3, 1, 0, true, Furniture.SmallCrate),
+                OwnedFurniture(4, 0, 0, true, Furniture.SmallCrate),
+                OwnedFurniture(5, 3, 5, false, Furniture.SmallCrate),
+                OwnedFurniture(6, 3, 6, false, Furniture.BigCrate)
             )
             database.ownedBookDao().insert(
                 OwnedBook(

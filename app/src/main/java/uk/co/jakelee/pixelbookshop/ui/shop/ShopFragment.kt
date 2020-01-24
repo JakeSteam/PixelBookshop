@@ -13,11 +13,10 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import uk.co.jakelee.pixelbookshop.R
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
 import uk.co.jakelee.pixelbookshop.model.Furniture
 
@@ -32,7 +31,7 @@ class ShopFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root =
-            inflater.inflate(uk.co.jakelee.pixelbookshop.R.layout.fragment_shop, container, false)
+            inflater.inflate(R.layout.fragment_shop, container, false)
         shopViewModel = ViewModelProvider(this).get(ShopViewModel::class.java)
         return root
     }
@@ -43,32 +42,44 @@ class ShopFragment : Fragment() {
         // Y = left to top
         // X = left to bottom
 
-        val floors = getFloor() // Sorted ascending y, then descending x,
-        val maxX = floors.first().first().x
-        floor_layer.removeAllViews()
-        floors.forEach { floor ->
-            floor.forEach {
-                val resource = if (it.exists) R.drawable.floor_planks else android.R.color.transparent
-                val callback = { tile: Tile -> Toast.makeText(activity, "Clicked tile (${tile.x},${tile.y})!", Toast.LENGTH_SHORT).show() }
+        shopViewModel.ownedFloor.observe(viewLifecycleOwner, Observer { floors ->
+            val maxX = floors.last().x
+            floor_layer.removeAllViews()
+            floors.forEach {
+                val resource =
+                    if (it.exists) R.drawable.floor_planks else android.R.color.transparent
+                val callback = { tile: Tile ->
+                    Toast.makeText(
+                        activity,
+                        "Clicked tile (${tile.x},${tile.y})!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
                 floor_layer.addView(
                     createTile(it, resource, callback),
                     getTileParams(it.x, it.y, maxX)
                 )
             }
-        }
+        })
 
-        val furnitures = getFurniture()
-        furniture_layer.removeAllViews()
-        furnitures.forEach { row ->
-            row.forEach {
-                val resource = if (it.furniture == Furniture.SmallCrate) R.drawable.furniture_crate else android.R.color.transparent
-                val callback = { tile: Tile -> Toast.makeText(activity, "Clicked furniture (${tile.x},${tile.y})!", Toast.LENGTH_SHORT).show() }
-                floor_layer.addView(
+        shopViewModel.ownedFurniture.observe(viewLifecycleOwner, Observer { furnitures ->
+            furniture_layer.removeAllViews()
+            furnitures.forEach {
+                val resource =
+                    if (it.furniture == Furniture.SmallCrate) R.drawable.furniture_crate else android.R.color.transparent
+                val callback = { tile: Tile ->
+                    Toast.makeText(
+                        activity,
+                        "Clicked furniture (${tile.x},${tile.y})!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                furniture_layer.addView(
                     createTile(it, resource, callback),
-                    getTileParams(it.x, it.y, maxX)
+                    getTileParams(it.x, it.y, 3)
                 )
             }
-        }
+        })
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -96,66 +107,9 @@ class ShopFragment : Fragment() {
         val tileHeight = 128
         val layoutParams = RelativeLayout.LayoutParams(tileWidth, tileHeight)
         val leftPadding = (x + y) * (tileWidth / 2)
-        val topPadding = (xTiles + (y - x)) * (tileHeight / 8)
+        val topPadding = (xTiles + (x - y)) * (tileHeight / 8)
         layoutParams.setMargins(leftPadding, topPadding, 0, 0)
         return layoutParams
-    }
-
-    private fun getFurniture(): List<List<OwnedFurniture>> {
-        return listOf(
-            listOf(
-                OwnedFurniture(1, 3, 0, true, Furniture.SmallCrate),
-                OwnedFurniture(2, 2, 0, true, Furniture.SmallCrate),
-                OwnedFurniture(3, 1, 0, true, Furniture.SmallCrate),
-                OwnedFurniture(4, 0, 0, true, Furniture.SmallCrate)
-            ),
-            listOf(
-                OwnedFurniture(5, 3, 5, false, Furniture.SmallCrate),
-                OwnedFurniture(6, 3, 6, false, Furniture.BigCrate)
-            )
-        )
-    }
-
-    // List[Y][X]
-    private fun getFloor(): List<List<OwnedFloor>> {
-        return listOf(
-            listOf(
-                OwnedFloor(3, 0, true),
-                OwnedFloor(2, 0, true),
-                OwnedFloor(1, 0, true),
-                OwnedFloor(0, 0, true)
-            ), listOf(
-                OwnedFloor(3, 1, true),
-                OwnedFloor(2, 1, false),
-                OwnedFloor(1, 1, true),
-                OwnedFloor(0, 1, false)
-            ), listOf(
-                OwnedFloor(3, 2, false),
-                OwnedFloor(2, 2, false),
-                OwnedFloor(1, 2, true),
-                OwnedFloor(0, 2, false)
-            ), listOf(
-                OwnedFloor(3, 3, true),
-                OwnedFloor(2, 3, false),
-                OwnedFloor(1, 3, true),
-                OwnedFloor(0, 3, true)
-            ), listOf(
-                OwnedFloor(3, 4, true),
-                OwnedFloor(2, 4, true),
-                OwnedFloor(1, 4, true),
-                OwnedFloor(0, 4, true)
-            ), listOf(
-                OwnedFloor(3, 5, true),
-                OwnedFloor(2, 5, true),
-                OwnedFloor(1, 5, true),
-                OwnedFloor(0, 5, true)
-            ), listOf(
-                OwnedFloor(3, 6, true),
-                OwnedFloor(2, 6, true),
-                OwnedFloor(1, 6, true),
-                OwnedFloor(0, 6, true)
-            )
-        )
     }
 
 }
