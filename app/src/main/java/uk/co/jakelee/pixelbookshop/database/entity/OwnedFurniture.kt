@@ -3,7 +3,7 @@ package uk.co.jakelee.pixelbookshop.database.entity
 import androidx.room.*
 import uk.co.jakelee.pixelbookshop.interfaces.Model
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
-import uk.co.jakelee.pixelbookshop.model.Furniture
+import uk.co.jakelee.pixelbookshop.lookups.Furniture
 
 @Entity(indices = [Index("x", "y")])
 data class OwnedFurniture(

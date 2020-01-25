@@ -1,6 +1,7 @@
-package uk.co.jakelee.pixelbookshop.model
+package uk.co.jakelee.pixelbookshop.database
 
 import androidx.room.TypeConverter
+import uk.co.jakelee.pixelbookshop.lookups.*
 
 class Converters {
     @TypeConverter fun bookToInt(value: Book) = value.id

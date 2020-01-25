@@ -13,6 +13,6 @@ interface OwnedFloorDao {
     @Query("SELECT * FROM OwnedFloor ORDER BY x ASC, y DESC")
     fun getAll(): LiveData<List<OwnedFloor>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg ownedFloor: OwnedFloor)
 }

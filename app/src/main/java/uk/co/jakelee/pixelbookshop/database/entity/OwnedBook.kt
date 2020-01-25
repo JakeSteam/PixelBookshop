@@ -3,7 +3,7 @@ package uk.co.jakelee.pixelbookshop.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import uk.co.jakelee.pixelbookshop.model.*
+import uk.co.jakelee.pixelbookshop.lookups.*
 
 @Entity
 data class OwnedBook(

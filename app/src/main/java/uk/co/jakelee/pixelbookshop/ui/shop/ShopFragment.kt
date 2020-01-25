@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -39,9 +38,6 @@ class ShopFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        // Y = left to top
-        // X = left to bottom
-
         shopViewModel.ownedFloor.observe(viewLifecycleOwner, Observer { floors ->
             if (floors.isNotEmpty()) {
                 val maxX = floors.last().x
@@ -50,9 +46,8 @@ class ShopFragment : Fragment() {
                     val resource =
                         if (it.floor?.image != null) it.floor!!.image else android.R.color.transparent
                     val callback = { tile: Tile ->
-                        if (tile is OwnedFloor) {
-                            shopViewModel.invertFloor(tile)
-                        }
+                        shopViewModel.invertFloor(tile as OwnedFloor)
+                        Unit
                     }
                     floor_layer.addView(
                         createTile(it, resource, callback),
@@ -67,13 +62,7 @@ class ShopFragment : Fragment() {
                 furniture_layer.removeAllViews()
                 furnitures.forEach {
                     val resource = it.furniture.image
-                    val callback = { tile: Tile ->
-                        Toast.makeText(
-                            activity,
-                            "Clicked furniture (${tile.x},${tile.y})!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    val callback = { tile: Tile -> }
                     furniture_layer.addView(
                         createTile(it, resource, callback),
                         getTileParams(it.x, it.y, 3)

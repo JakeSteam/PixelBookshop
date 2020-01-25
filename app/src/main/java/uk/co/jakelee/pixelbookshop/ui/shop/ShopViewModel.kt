@@ -4,20 +4,20 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
-import uk.co.jakelee.pixelbookshop.model.Floor
+import uk.co.jakelee.pixelbookshop.lookups.Floor
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
-import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     private val ownedFloorRepo: OwnedFloorRepository
     private val ownedFurnitureRepo: OwnedFurnitureRepository
-    private val playerRepo: PlayerRepository
 
     val ownedFloor: LiveData<List<OwnedFloor>>
     val ownedFurniture: LiveData<List<OwnedFurniture>>
@@ -30,20 +30,19 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         val ownedFurnitureDao = AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
         ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
         ownedFurniture = ownedFurnitureRepo.allFurniture
-
-        val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
-        playerRepo = PlayerRepository(playerDao)
     }
 
     fun invertFloor(ownedFloor: OwnedFloor) = viewModelScope.launch {
-        ownedFloor.apply {
-            floor = when(floor) {
-                null -> Floor.Dirt
-                Floor.Dirt -> Floor.Wood
-                Floor.Wood -> Floor.Marble
-                Floor.Marble -> null
+        withContext(Dispatchers.IO) {
+            ownedFloor.apply {
+                floor = when(floor) {
+                    Floor.Dirt -> Floor.Wood
+                    Floor.Wood -> Floor.Marble
+                    Floor.Marble -> Floor.Dirt
+                    else -> null
+                }
             }
+            ownedFloorRepo.insert(ownedFloor)
         }
-        ownedFloorRepo.insert(ownedFloor)
     }
 }

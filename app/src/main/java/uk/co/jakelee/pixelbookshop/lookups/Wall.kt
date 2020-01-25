@@ -1,4 +1,4 @@
-package uk.co.jakelee.pixelbookshop.model
+package uk.co.jakelee.pixelbookshop.lookups
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
