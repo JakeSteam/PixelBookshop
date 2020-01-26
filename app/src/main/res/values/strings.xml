@@ -122,6 +122,13 @@
     <string name="floor_stone">Stone</string>
 
     <string name="wall_fence">Fence</string>
+    <string name="wall_brickframe">Brick (Frame)</string>
+    <string name="wall_brickpartial">Brick (Partial)</string>
     <string name="wall_brick">Brick</string>
-    <string name="wall_marble">Marble</string>
+    <string name="wall_bricknosupport">Brick (Supportless)</string>
+    <string name="wall_brickwindow">Brick (Window)</string>
+    <string name="wall_stonesmall">Stone (Partial)</string>
+    <string name="wall_stone">Stone</string>
+    <string name="wall_stoneholes">Stone (Holes)</string>
+    <string name="wall_stonewindow">Stone (Window)</string>
 </resources>

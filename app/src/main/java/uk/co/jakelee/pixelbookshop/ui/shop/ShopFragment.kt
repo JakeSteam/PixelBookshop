@@ -55,6 +55,7 @@ class ShopFragment : Fragment() {
                         getTileParams(it.x, it.y, maxX)
                     )
                 }
+
             }
         })
 

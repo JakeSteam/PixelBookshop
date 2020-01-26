@@ -8,11 +8,11 @@ import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 @Dao
 interface OwnedFurnitureDao {
 
-    @Query("SELECT * FROM OwnedFurniture ORDER BY y, x")
+    @Query("SELECT * FROM OwnedFurniture ORDER BY x ASC, y DESC")
     fun getAll(): LiveData<List<OwnedFurniture>>
 
     @Transaction
-    @Query("SELECT * FROM OwnedFurniture ORDER BY y, x")
+    @Query("SELECT * FROM OwnedFurniture ORDER BY x ASC, y DESC")
     fun getAllWithBooks(): LiveData<List<OwnedFurnitureWithOwnedBooks>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

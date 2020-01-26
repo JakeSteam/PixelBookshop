@@ -62,7 +62,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         suspend fun initialiseDatabase(database: AppDatabase) {
             database.playerDao().insert(
-                Player("Jake", 100, 50, System.currentTimeMillis())
+                Player("Jake", 100, 50, Wall.Brick, System.currentTimeMillis())
             )
             database.ownedFloorDao().insert(
                 OwnedFloor(0, 0, true, Floor.Stone),
@@ -134,7 +134,7 @@ abstract class AppDatabase : RoomDatabase() {
                 OwnedFurniture(14, 3, 1, true, Furniture.PlainTable),
                 OwnedFurniture(15, 4, 1, true, Furniture.Lectern),
                 OwnedFurniture(16, 6, 1, true, Furniture.Crate),
-                OwnedFurniture(17, 7, 1, true, Furniture.QuintupleBarrel),
+                OwnedFurniture(17, 7, 1, false, Furniture.QuintupleBarrel),
 
                 OwnedFurniture(21, 0, 2, true, Furniture.WideBookcase),
                 OwnedFurniture(22, 1, 2, true, Furniture.WideShelf),
@@ -149,8 +149,9 @@ abstract class AppDatabase : RoomDatabase() {
                 OwnedFurniture(33, 2, 3, true, Furniture.Rug),
                 OwnedFurniture(34, 3, 3, true, Furniture.Rug),
                 OwnedFurniture(35, 4, 3, true, Furniture.Rug),
-                OwnedFurniture(36, 6, 3, true, Furniture.Rug),
-                OwnedFurniture(37, 7, 3, true, Furniture.Rug),
+                OwnedFurniture(36, 5, 3, true, Furniture.Rug),
+                OwnedFurniture(37, 6, 3, true, Furniture.Rug),
+                OwnedFurniture(38, 7, 3, true, Furniture.Rug),
 
                 OwnedFurniture(41, 1, 4, false, Furniture.Shelf),
                 OwnedFurniture(42, 2, 4, false, Furniture.DisplayShelf),
@@ -159,7 +160,7 @@ abstract class AppDatabase : RoomDatabase() {
                 OwnedFurniture(52, 1, 5, false, Furniture.WideBookcase),
                 OwnedFurniture(53, 2, 5, false, Furniture.WideBookcase),
                 OwnedFurniture(54, 3, 5, false, Furniture.WideBookcase),
-                OwnedFurniture(55, 4, 5, false, Furniture.TripleCandle),
+                OwnedFurniture(55, 4, 5, true, Furniture.TripleCandle),
                 OwnedFurniture(56, 5, 5, false, Furniture.WideShelf),
                 OwnedFurniture(57, 6, 5, false, Furniture.WideBookcase),
                 OwnedFurniture(58, 7, 5, false, Furniture.WideBookcase)

@@ -125,11 +125,11 @@ enum class Furniture(
         100, 10, 1, BookRarity.Common, R.drawable.furniture_barrel_n, R.drawable.furniture_barrel_e
     ),
     TripleBarrel(
-        FurnitureType.Storage, 4004, 4, R.string.storage_triplebarrel,
+        FurnitureType.Storage, 4005, 4, R.string.storage_triplebarrel,
         100, 10, 1, BookRarity.Common, R.drawable.furniture_triple_barrel_n, R.drawable.furniture_triple_barrel_e
     ),
     QuintupleBarrel(
-        FurnitureType.Storage, 4005, 5, R.string.storage_quintuplebarrel,
+        FurnitureType.Storage, 4006, 5, R.string.storage_quintuplebarrel,
         100, 10, 1, BookRarity.Common, R.drawable.furniture_quintuple_barrel_n, R.drawable.furniture_quintuple_barrel_e
     )
 }
