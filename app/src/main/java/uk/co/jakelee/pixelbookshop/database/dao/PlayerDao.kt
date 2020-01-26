@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import uk.co.jakelee.pixelbookshop.database.entity.Player
+import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
 import uk.co.jakelee.pixelbookshop.lookups.Wall
 
 @Dao
@@ -22,8 +23,8 @@ interface PlayerDao {
     @Query("SELECT coins FROM player")
     fun getCoins(): LiveData<Long>
 
-    @Query("SELECT wall FROM player")
-    fun getWall(): LiveData<Wall>
+    @Query("SELECT wall, isX, position FROM player")
+    fun getWall(): LiveData<WallInfo>
 
     @Query("SELECT started FROM player")
     fun getTimeStarted(): LiveData<Long>

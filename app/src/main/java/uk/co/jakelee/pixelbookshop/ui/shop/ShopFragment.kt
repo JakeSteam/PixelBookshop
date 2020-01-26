@@ -17,8 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
+import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
-import uk.co.jakelee.pixelbookshop.lookups.Wall
 
 
 class ShopFragment : Fragment() {
@@ -56,25 +56,30 @@ class ShopFragment : Fragment() {
                     val params = getTileParams(it.x, it.y, maxX)
                     floor_layer.addView(createTile(it, floorResource, floorCallback), params)
 
-                    if (it.x == 0 || it.y == 5) {
-                        val wall = shopViewModel.wall.value ?: Wall.BrickFrame
-                        val wallCallback = { clickedWall: Wall ->
-                            shopViewModel.upgradeWall(clickedWall)
+                    if ((it.x == 0 || it.y == 5) && shopViewModel.wall.value != null) {
+                        val wall = shopViewModel.wall.value!!
+                        val wallCallback = { fullWall: WallInfo ->
+                            shopViewModel.upgradeWall(fullWall.wall)
                             Unit
                         }
-                        if (it.x == 0 && it.y == 5) {
+                        if (wall.isX && wall.position == it.x || !wall.isX && wall.position == it.y) {
                             wall_layer.addView(
-                                createTile(wall, wall.imageCorner, wallCallback),
+                                createTile(wall, wall.wall.imageDoor, wallCallback),
+                                params
+                            )
+                        } else if (it.x == 0 && it.y == 5) {
+                            wall_layer.addView(
+                                createTile(wall, wall.wall.imageCorner, wallCallback),
                                 params
                             )
                         } else if (it.x == 0) {
                             wall_layer.addView(
-                                createTile(wall, wall.imageEast, wallCallback),
+                                createTile(wall, wall.wall.imageEast, wallCallback),
                                 params
                             )
                         } else if (it.y == 5) {
                             wall_layer.addView(
-                                createTile(wall, wall.imageNorth, wallCallback),
+                                createTile(wall, wall.wall.imageNorth, wallCallback),
                                 params
                             )
                         }

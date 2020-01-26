@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
+import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
 import uk.co.jakelee.pixelbookshop.lookups.Floor
 import uk.co.jakelee.pixelbookshop.lookups.Wall
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
@@ -24,7 +25,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     val ownedFloor: LiveData<List<OwnedFloor>>
     val ownedFurniture: LiveData<List<OwnedFurniture>>
-    val wall: LiveData<Wall>
+    val wall: LiveData<WallInfo>
 
     init {
         val ownedFloorDao = AppDatabase.getDatabase(application, viewModelScope).ownedFloorDao()
@@ -65,20 +66,18 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     fun upgradeWall(wall: Wall) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            playerRepo.changeWall(
-                when (wall) {
-                    Wall.StoneWindow -> Wall.Fence
-                    Wall.Fence -> Wall.BrickFrame
-                    Wall.BrickFrame -> Wall.BrickPartial
-                    Wall.BrickPartial -> Wall.Brick
-                    Wall.Brick -> Wall.BrickNoSupport
-                    Wall.BrickNoSupport -> Wall.BrickWindow
-                    Wall.BrickWindow -> Wall.StoneSmall
-                    Wall.StoneSmall -> Wall.Stone
-                    Wall.Stone -> Wall.StoneHoles
-                    Wall.StoneHoles -> Wall.StoneWindow
-                }
-            )
+            playerRepo.changeWall(when (wall) {
+                Wall.StoneWindow -> Wall.Fence
+                Wall.Fence -> Wall.BrickFrame
+                Wall.BrickFrame -> Wall.BrickPartial
+                Wall.BrickPartial -> Wall.Brick
+                Wall.Brick -> Wall.BrickNoSupport
+                Wall.BrickNoSupport -> Wall.BrickWindow
+                Wall.BrickWindow -> Wall.StoneSmall
+                Wall.StoneSmall -> Wall.Stone
+                Wall.Stone -> Wall.StoneHoles
+                Wall.StoneHoles -> Wall.StoneWindow
+            })
         }
     }
 }

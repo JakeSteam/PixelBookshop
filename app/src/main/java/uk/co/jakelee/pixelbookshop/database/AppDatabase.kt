@@ -61,8 +61,9 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         suspend fun initialiseDatabase(database: AppDatabase) {
+            val wallInfo = WallInfo(Wall.StoneWindow, false, 3)
             database.playerDao().insert(
-                Player("Jake", 100, 50, Wall.Brick, System.currentTimeMillis())
+                Player("Jake", 100, 50, wallInfo, System.currentTimeMillis())
             )
             database.ownedFloorDao().insert(
                 OwnedFloor(0, 0, true, Floor.Stone),
