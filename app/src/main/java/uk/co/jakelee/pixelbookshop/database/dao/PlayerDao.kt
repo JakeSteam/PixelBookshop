@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import uk.co.jakelee.pixelbookshop.database.entity.Player
+import uk.co.jakelee.pixelbookshop.lookups.Wall
 
 @Dao
 interface PlayerDao {
@@ -21,10 +22,16 @@ interface PlayerDao {
     @Query("SELECT coins FROM player")
     fun getCoins(): LiveData<Long>
 
+    @Query("SELECT wall FROM player")
+    fun getWall(): LiveData<Wall>
+
     @Query("SELECT started FROM player")
     fun getTimeStarted(): LiveData<Long>
 
     @Query("UPDATE player SET xp = (xp + :xp)")
     fun addXp(xp: Int)
+
+    @Query("UPDATE player SET wall = :wall")
+    fun setWall(wall: Wall)
 
 }

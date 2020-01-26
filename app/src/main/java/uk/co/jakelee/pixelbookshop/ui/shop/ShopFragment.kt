@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_shop.*
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
+import uk.co.jakelee.pixelbookshop.lookups.Wall
 
 
 class ShopFragment : Fragment() {
@@ -38,24 +39,47 @@ class ShopFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        shopViewModel.wall.observe(viewLifecycleOwner, Observer { _ -> })
         shopViewModel.ownedFloor.observe(viewLifecycleOwner, Observer { floors ->
             if (floors.isNotEmpty()) {
                 val maxX = floors.last().x
                 floor_layer.removeAllViews()
+                wall_layer.removeAllViews()
                 floors.forEach {
-                    val resource = it.floor?.let { floor ->
+                    val floorResource = it.floor?.let { floor ->
                         if (it.isFacingEast) floor.imageEast else floor.imageNorth
                     } ?: android.R.color.transparent
-                    val callback = { tile: Tile ->
-                        shopViewModel.invertFloor(tile as OwnedFloor)
+                    val floorCallback = { tile: Tile ->
+                        shopViewModel.upgradeFloor(tile as OwnedFloor)
                         Unit
                     }
-                    floor_layer.addView(
-                        createTile(it, resource, callback),
-                        getTileParams(it.x, it.y, maxX)
-                    )
-                }
+                    val params = getTileParams(it.x, it.y, maxX)
+                    floor_layer.addView(createTile(it, floorResource, floorCallback), params)
 
+                    if (it.x == 0 || it.y == 5) {
+                        val wall = shopViewModel.wall.value ?: Wall.BrickFrame
+                        val wallCallback = { clickedWall: Wall ->
+                            shopViewModel.upgradeWall(clickedWall)
+                            Unit
+                        }
+                        if (it.x == 0 && it.y == 5) {
+                            wall_layer.addView(
+                                createTile(wall, wall.imageCorner, wallCallback),
+                                params
+                            )
+                        } else if (it.x == 0) {
+                            wall_layer.addView(
+                                createTile(wall, wall.imageEast, wallCallback),
+                                params
+                            )
+                        } else if (it.y == 5) {
+                            wall_layer.addView(
+                                createTile(wall, wall.imageNorth, wallCallback),
+                                params
+                            )
+                        }
+                    }
+                }
             }
         })
 
@@ -63,7 +87,8 @@ class ShopFragment : Fragment() {
             if (furnitures.isNotEmpty()) {
                 furniture_layer.removeAllViews()
                 furnitures.forEach {
-                    val resource = if (it.isFacingEast) it.furniture.imageEast else it.furniture.imageNorth
+                    val resource =
+                        if (it.isFacingEast) it.furniture.imageEast else it.furniture.imageNorth
                     val callback = { tile: Tile -> }
                     furniture_layer.addView(
                         createTile(it, resource, callback),
@@ -75,7 +100,7 @@ class ShopFragment : Fragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun createTile(tile: Tile, @DrawableRes resource: Int, callback: (Tile) -> (Unit)) =
+    private fun <T : Any> createTile(tile: T, @DrawableRes resource: Int, callback: (T) -> (Unit)) =
         ImageView(activity!!).apply {
             isDrawingCacheEnabled = true
             setImageResource(resource)
