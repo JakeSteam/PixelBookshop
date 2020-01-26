@@ -35,11 +35,19 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     fun invertFloor(ownedFloor: OwnedFloor) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             ownedFloor.apply {
-                floor = when(floor) {
-                    Floor.Dirt -> Floor.Wood
-                    Floor.Wood -> Floor.Marble
-                    Floor.Marble -> Floor.Dirt
-                    else -> null
+                if (!isFacingEast) {
+                    isFacingEast = true
+                } else {
+                    isFacingEast = false
+                    floor = when (floor) {
+                        Floor.Stone -> Floor.Dirt
+                        Floor.Dirt -> Floor.WoodOld
+                        Floor.WoodOld -> Floor.Wood
+                        Floor.Wood-> Floor.StoneUneven
+                        Floor.StoneUneven-> Floor.StoneMissing
+                        Floor.StoneMissing-> Floor.Stone
+                        else -> null
+                    }
                 }
             }
             ownedFloorRepo.insert(ownedFloor)

@@ -9,5 +9,6 @@ import uk.co.jakelee.pixelbookshop.lookups.Floor
 data class OwnedFloor(
     @ColumnInfo override val x: Int,
     @ColumnInfo override val y: Int,
+    @ColumnInfo override var isFacingEast: Boolean,
     @ColumnInfo var floor: Floor?
 ) : Tile

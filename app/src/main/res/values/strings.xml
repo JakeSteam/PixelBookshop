@@ -88,22 +88,38 @@
     <string name="furniture_seating">Seating</string>
     <string name="furniture_storage">Storage</string>
 
-    <string name="decoration_singlecandle">Single Candle</string>
-    <string name="decoration_triplecandle">Triple Candle</string>
+    <string name="decoration_rug">Rug</string>
+    <string name="decoration_singlecandle">Candle</string>
+    <string name="decoration_triplecandle">Candle (3)</string>
 
     <string name="display_lectern">Lectern</string>
     <string name="display_shelf">Shelf</string>
+    <string name="display_wideshelf">Shelf (Wide)</string>
+    <string name="display_displayshelf">Shelf (Display)</string>
     <string name="display_bookcase">Bookcase</string>
+    <string name="display_widebookcase">Bookcase (Wide)</string>
+    <string name="display_widebookcaseladder">Bookcase (Ladder)</string>
 
     <string name="seating_chair">Chair</string>
-    <string name="seating_roundtable">Round Table</string>
+    <string name="seating_smalltable">Table (Small)</string>
+    <string name="seating_roundtable">Table (Round)</string>
+    <string name="seating_plaintable">Table</string>
+    <string name="seating_decoratedtable">Table (Decorated)</string>
+    <string name="seating_fancytable">Table (Fancy)</string>
 
-    <string name="storage_smallcrate">Small Crate</string>
-    <string name="storage_bigcrate">Big Crate</string>
+    <string name="storage_chest">Chest</string>
+    <string name="storage_crate">Crate</string>
+    <string name="storage_triplecrate">Crate (3)</string>
+    <string name="storage_barrel">Barrel</string>
+    <string name="storage_triplebarrel">Barrel (3)</string>
+    <string name="storage_quintuplebarrel">Barrel (5)</string>
 
     <string name="floor_dirt">Dirt</string>
+    <string name="floor_wood_old">Wood (Old)</string>
     <string name="floor_wood">Wood</string>
-    <string name="floor_marble">Marble</string>
+    <string name="floor_stone_uneven">Stone (Uneven)</string>
+    <string name="floor_stone_missing">Stone (Missing)</string>
+    <string name="floor_stone">Stone</string>
 
     <string name="wall_fence">Fence</string>
     <string name="wall_brick">Brick</string>

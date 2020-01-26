@@ -43,8 +43,9 @@ class ShopFragment : Fragment() {
                 val maxX = floors.last().x
                 floor_layer.removeAllViews()
                 floors.forEach {
-                    val resource =
-                        if (it.floor?.image != null) it.floor!!.image else android.R.color.transparent
+                    val resource = it.floor?.let { floor ->
+                        if (it.isFacingEast) floor.imageEast else floor.imageNorth
+                    } ?: android.R.color.transparent
                     val callback = { tile: Tile ->
                         shopViewModel.invertFloor(tile as OwnedFloor)
                         Unit
@@ -61,11 +62,11 @@ class ShopFragment : Fragment() {
             if (furnitures.isNotEmpty()) {
                 furniture_layer.removeAllViews()
                 furnitures.forEach {
-                    val resource = it.furniture.image
+                    val resource = if (it.isFacingEast) it.furniture.imageEast else it.furniture.imageNorth
                     val callback = { tile: Tile -> }
                     furniture_layer.addView(
                         createTile(it, resource, callback),
-                        getTileParams(it.x, it.y, 3)
+                        getTileParams(it.x, it.y, 7)
                     )
                 }
             }

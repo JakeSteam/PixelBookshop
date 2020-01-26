@@ -10,7 +10,7 @@ data class OwnedFurniture(
     @PrimaryKey(autoGenerate = true) override val id: Int,
     @ColumnInfo override val x: Int,
     @ColumnInfo override val y: Int,
-    @ColumnInfo val facingEast: Boolean,
+    @ColumnInfo override val isFacingEast: Boolean,
     @ColumnInfo val furniture: Furniture
 ) : Tile, Model
 
