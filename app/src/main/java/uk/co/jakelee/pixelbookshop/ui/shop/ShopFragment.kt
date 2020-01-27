@@ -62,7 +62,8 @@ class ShopFragment : Fragment() {
                             shopViewModel.upgradeWall(fullWall.wall, 1)
                             Unit
                         }
-                        if (wall.isX && wall.position == it.x || !wall.isX && wall.position == it.y) {
+                        if (wall.isDoorOnX && wall.doorPosition == it.x
+                            || !wall.isDoorOnX && wall.doorPosition == it.y) {
                             wall_layer.addView(
                                 createTile(wall, wall.wall.imageDoor, wallCallback),
                                 params

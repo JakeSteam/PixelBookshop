@@ -15,7 +15,7 @@ interface ShopDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(shop: Shop)
 
-    @Query("SELECT wall, isX, position FROM shop WHERE id = :shopId")
+    @Query("SELECT wall, isDoorOnX, doorPosition FROM shop WHERE id = :shopId")
     fun getWall(shopId: Int): LiveData<WallInfo>
 
     @Query("UPDATE shop SET wall = :wall WHERE id = :shopId")

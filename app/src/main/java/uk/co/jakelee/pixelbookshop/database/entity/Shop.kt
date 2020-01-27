@@ -16,6 +16,6 @@ data class Shop(
 
 data class WallInfo(
     var wall: Wall,
-    val isX: Boolean,
-    val position: Int
+    val isDoorOnX: Boolean,
+    val doorPosition: Int
 )
