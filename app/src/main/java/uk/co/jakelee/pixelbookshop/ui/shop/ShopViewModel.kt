@@ -15,13 +15,13 @@ import uk.co.jakelee.pixelbookshop.lookups.Floor
 import uk.co.jakelee.pixelbookshop.lookups.Wall
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
-import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
+import uk.co.jakelee.pixelbookshop.repository.ShopRepository
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     private val ownedFloorRepo: OwnedFloorRepository
     private val ownedFurnitureRepo: OwnedFurnitureRepository
-    private val playerRepo: PlayerRepository
+    private val shopRepo: ShopRepository
 
     val ownedFloor: LiveData<List<OwnedFloor>>
     val ownedFurniture: LiveData<List<OwnedFurniture>>
@@ -37,9 +37,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
         ownedFurniture = ownedFurnitureRepo.allFurniture
 
-        val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
-        playerRepo = PlayerRepository(playerDao)
-        wall = playerRepo.wall
+        val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
+        shopRepo = ShopRepository(shopDao, 1)
+        wall = shopRepo.wall
     }
 
     fun upgradeFloor(ownedFloor: OwnedFloor) = viewModelScope.launch {
@@ -64,9 +64,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun upgradeWall(wall: Wall) = viewModelScope.launch {
+    fun upgradeWall(wall: Wall, id: Int) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            playerRepo.changeWall(when (wall) {
+            shopRepo.changeWall(when (wall) {
                 Wall.StoneWindow -> Wall.Fence
                 Wall.Fence -> Wall.BrickFrame
                 Wall.BrickFrame -> Wall.BrickPartial
@@ -77,7 +77,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 Wall.StoneSmall -> Wall.Stone
                 Wall.Stone -> Wall.StoneHoles
                 Wall.StoneHoles -> Wall.StoneWindow
-            })
+            }, id)
         }
     }
 }

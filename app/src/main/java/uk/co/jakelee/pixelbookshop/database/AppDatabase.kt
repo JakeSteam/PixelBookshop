@@ -9,10 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uk.co.jakelee.pixelbookshop.database.dao.OwnedBookDao
-import uk.co.jakelee.pixelbookshop.database.dao.OwnedFloorDao
-import uk.co.jakelee.pixelbookshop.database.dao.OwnedFurnitureDao
-import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
+import uk.co.jakelee.pixelbookshop.database.dao.*
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.lookups.*
 
@@ -24,6 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun ownedFloorDao(): OwnedFloorDao
     abstract fun ownedFurnitureDao(): OwnedFurnitureDao
     abstract fun playerDao(): PlayerDao
+    abstract fun shopDao(): ShopDao
 
     companion object {
         @Volatile
@@ -61,110 +59,112 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         suspend fun initialiseDatabase(database: AppDatabase) {
+            database.playerDao().insert(Player("Jake", 100, 50))
+
             val wallInfo = WallInfo(Wall.StoneWindow, false, 3)
-            database.playerDao().insert(
-                Player("Jake", 100, 50, wallInfo, System.currentTimeMillis())
-            )
+            database.shopDao().insert(
+                Shop(1, "Jake's Shop", wallInfo, System.currentTimeMillis()))
+
             database.ownedFloorDao().insert(
-                OwnedFloor(0, 0, true, Floor.Stone),
-                OwnedFloor(1, 0, true, Floor.Stone),
-                OwnedFloor(2, 0, true, Floor.Stone),
-                OwnedFloor(3, 0, true, Floor.Stone),
-                OwnedFloor(4, 0, true, Floor.Stone),
-                OwnedFloor(5, 0, true, Floor.Stone),
-                OwnedFloor(6, 0, true, Floor.Stone),
-                OwnedFloor(7, 0, true, Floor.Stone),
+                OwnedFloor(1, 0, 0, true, Floor.Stone),
+                OwnedFloor(1, 1, 0, true, Floor.Stone),
+                OwnedFloor(1, 2, 0, true, Floor.Stone),
+                OwnedFloor(1, 3, 0, true, Floor.Stone),
+                OwnedFloor(1, 4, 0, true, Floor.Stone),
+                OwnedFloor(1, 5, 0, true, Floor.Stone),
+                OwnedFloor(1, 6, 0, true, Floor.Stone),
+                OwnedFloor(1, 7, 0, true, Floor.Stone),
 
-                OwnedFloor(0, 1, true, Floor.Stone),
-                OwnedFloor(1, 1, true, Floor.Stone),
-                OwnedFloor(2, 1, true, Floor.Stone),
-                OwnedFloor(3, 1, true, Floor.Stone),
-                OwnedFloor(4, 1, true, Floor.Stone),
-                OwnedFloor(5, 1, true, Floor.Stone),
-                OwnedFloor(6, 1, true, Floor.Stone),
-                OwnedFloor(7, 1, true, Floor.Stone),
+                OwnedFloor(1, 0, 1, true, Floor.Stone),
+                OwnedFloor(1, 1, 1, true, Floor.Stone),
+                OwnedFloor(1, 2, 1, true, Floor.Stone),
+                OwnedFloor(1, 3, 1, true, Floor.Stone),
+                OwnedFloor(1, 4, 1, true, Floor.Stone),
+                OwnedFloor(1, 5, 1, true, Floor.Stone),
+                OwnedFloor(1, 6, 1, true, Floor.Stone),
+                OwnedFloor(1, 7, 1, true, Floor.Stone),
 
-                OwnedFloor(0, 2, true, Floor.Stone),
-                OwnedFloor(1, 2, true, Floor.Stone),
-                OwnedFloor(2, 2, true, Floor.Stone),
-                OwnedFloor(3, 2, true, Floor.Stone),
-                OwnedFloor(4, 2, true, Floor.Stone),
-                OwnedFloor(5, 2, true, Floor.Stone),
-                OwnedFloor(6, 2, true, Floor.Stone),
-                OwnedFloor(7, 2, true, Floor.Stone),
+                OwnedFloor(1, 0, 2, true, Floor.Stone),
+                OwnedFloor(1, 1, 2, true, Floor.Stone),
+                OwnedFloor(1, 2, 2, true, Floor.Stone),
+                OwnedFloor(1, 3, 2, true, Floor.Stone),
+                OwnedFloor(1, 4, 2, true, Floor.Stone),
+                OwnedFloor(1, 5, 2, true, Floor.Stone),
+                OwnedFloor(1, 6, 2, true, Floor.Stone),
+                OwnedFloor(1, 7, 2, true, Floor.Stone),
 
-                OwnedFloor(0, 3, true, Floor.Stone),
-                OwnedFloor(1, 3, true, Floor.Stone),
-                OwnedFloor(2, 3, true, Floor.Stone),
-                OwnedFloor(3, 3, true, Floor.Stone),
-                OwnedFloor(4, 3, true, Floor.Stone),
-                OwnedFloor(5, 3, true, Floor.Stone),
-                OwnedFloor(6, 3, true, Floor.Stone),
-                OwnedFloor(7, 3, true, Floor.Stone),
+                OwnedFloor(1, 0, 3, true, Floor.Stone),
+                OwnedFloor(1, 1, 3, true, Floor.Stone),
+                OwnedFloor(1, 2, 3, true, Floor.Stone),
+                OwnedFloor(1, 3, 3, true, Floor.Stone),
+                OwnedFloor(1, 4, 3, true, Floor.Stone),
+                OwnedFloor(1, 5, 3, true, Floor.Stone),
+                OwnedFloor(1, 6, 3, true, Floor.Stone),
+                OwnedFloor(1, 7, 3, true, Floor.Stone),
 
-                OwnedFloor(0, 4, true, Floor.Stone),
-                OwnedFloor(1, 4, true, Floor.Stone),
-                OwnedFloor(2, 4, true, Floor.Stone),
-                OwnedFloor(3, 4, true, Floor.Stone),
-                OwnedFloor(4, 4, true, Floor.Stone),
-                OwnedFloor(5, 4, true, Floor.Stone),
-                OwnedFloor(6, 4, true, Floor.Stone),
-                OwnedFloor(7, 4, true, Floor.Stone),
+                OwnedFloor(1, 0, 4, true, Floor.Stone),
+                OwnedFloor(1, 1, 4, true, Floor.Stone),
+                OwnedFloor(1, 2, 4, true, Floor.Stone),
+                OwnedFloor(1, 3, 4, true, Floor.Stone),
+                OwnedFloor(1, 4, 4, true, Floor.Stone),
+                OwnedFloor(1, 5, 4, true, Floor.Stone),
+                OwnedFloor(1, 6, 4, true, Floor.Stone),
+                OwnedFloor(1, 7, 4, true, Floor.Stone),
 
-                OwnedFloor(0, 5, true, Floor.Stone),
-                OwnedFloor(1, 5, true, Floor.Stone),
-                OwnedFloor(2, 5, true, Floor.Stone),
-                OwnedFloor(3, 5, true, Floor.Stone),
-                OwnedFloor(4, 5, true, Floor.Stone),
-                OwnedFloor(5, 5, true, Floor.Stone),
-                OwnedFloor(6, 5, true, Floor.Stone),
-                OwnedFloor(7, 5, true, Floor.Stone)
+                OwnedFloor(1, 0, 5, true, Floor.Stone),
+                OwnedFloor(1, 1, 5, true, Floor.Stone),
+                OwnedFloor(1, 2, 5, true, Floor.Stone),
+                OwnedFloor(1, 3, 5, true, Floor.Stone),
+                OwnedFloor(1, 4, 5, true, Floor.Stone),
+                OwnedFloor(1, 5, 5, true, Floor.Stone),
+                OwnedFloor(1, 6, 5, true, Floor.Stone),
+                OwnedFloor(1, 7, 5, true, Floor.Stone)
             )
             database.ownedFurnitureDao().insert(
-                OwnedFurniture(1, 0, 0, true, Furniture.WideBookcase),
-                OwnedFurniture(2, 1, 0, true, Furniture.WideShelf),
-                OwnedFurniture(3, 2, 0, true, Furniture.DisplayShelf),
-                OwnedFurniture(4, 3, 0, true, Furniture.PlainTable),
-                OwnedFurniture(5, 4, 0, true, Furniture.SingleCandle),
-                OwnedFurniture(6, 6, 0, true, Furniture.TripleCrate),
-                OwnedFurniture(7, 7, 0, true, Furniture.TripleBarrel),
+                OwnedFurniture(1, 1, 0, 0, true, Furniture.WideBookcase),
+                OwnedFurniture(2, 1, 1, 0, true, Furniture.WideShelf),
+                OwnedFurniture(3, 1, 2, 0, true, Furniture.DisplayShelf),
+                OwnedFurniture(4, 1, 3, 0, true, Furniture.PlainTable),
+                OwnedFurniture(5, 1, 4, 0, true, Furniture.SingleCandle),
+                OwnedFurniture(6, 1, 6, 0, true, Furniture.TripleCrate),
+                OwnedFurniture(7, 1, 7, 0, true, Furniture.TripleBarrel),
 
-                OwnedFurniture(11, 0, 1, true, Furniture.WideBookcase),
-                OwnedFurniture(12, 1, 1, true, Furniture.WideShelf),
-                OwnedFurniture(13, 2, 1, true, Furniture.DisplayShelf),
-                OwnedFurniture(14, 3, 1, true, Furniture.PlainTable),
-                OwnedFurniture(15, 4, 1, true, Furniture.Lectern),
-                OwnedFurniture(16, 6, 1, true, Furniture.Crate),
-                OwnedFurniture(17, 7, 1, false, Furniture.QuintupleBarrel),
+                OwnedFurniture(11, 1, 0, 1, true, Furniture.WideBookcase),
+                OwnedFurniture(12, 1, 1, 1, true, Furniture.WideShelf),
+                OwnedFurniture(13, 1, 2, 1, true, Furniture.DisplayShelf),
+                OwnedFurniture(14, 1, 3, 1, true, Furniture.PlainTable),
+                OwnedFurniture(15, 1, 4, 1, true, Furniture.Lectern),
+                OwnedFurniture(16, 1, 6, 1, true, Furniture.Crate),
+                OwnedFurniture(17, 1, 7, 1, false, Furniture.QuintupleBarrel),
 
-                OwnedFurniture(21, 0, 2, true, Furniture.WideBookcase),
-                OwnedFurniture(22, 1, 2, true, Furniture.WideShelf),
-                OwnedFurniture(23, 2, 2, true, Furniture.DisplayShelf),
-                OwnedFurniture(24, 3, 2, true, Furniture.PlainTable),
-                OwnedFurniture(25, 4, 2, true, Furniture.SingleCandle),
-                OwnedFurniture(26, 6, 2, true, Furniture.TripleCrate),
-                OwnedFurniture(27, 7, 2, true, Furniture.Barrel),
+                OwnedFurniture(21, 1, 0, 2, true, Furniture.WideBookcase),
+                OwnedFurniture(22, 1, 1, 2, true, Furniture.WideShelf),
+                OwnedFurniture(23, 1, 2, 2, true, Furniture.DisplayShelf),
+                OwnedFurniture(24, 1, 3, 2, true, Furniture.PlainTable),
+                OwnedFurniture(25, 1, 4, 2, true, Furniture.SingleCandle),
+                OwnedFurniture(26, 1, 6, 2, true, Furniture.TripleCrate),
+                OwnedFurniture(27, 1, 7, 2, true, Furniture.Barrel),
 
-                OwnedFurniture(31, 0, 3, true, Furniture.Rug),
-                OwnedFurniture(32, 1, 3, true, Furniture.Rug),
-                OwnedFurniture(33, 2, 3, true, Furniture.Rug),
-                OwnedFurniture(34, 3, 3, true, Furniture.Rug),
-                OwnedFurniture(35, 4, 3, true, Furniture.Rug),
-                OwnedFurniture(36, 5, 3, true, Furniture.Rug),
-                OwnedFurniture(37, 6, 3, true, Furniture.Rug),
-                OwnedFurniture(38, 7, 3, true, Furniture.Rug),
+                OwnedFurniture(31, 1, 0, 3, true, Furniture.Rug),
+                OwnedFurniture(32, 1, 1, 3, true, Furniture.Rug),
+                OwnedFurniture(33, 1, 2, 3, true, Furniture.Rug),
+                OwnedFurniture(34, 1, 3, 3, true, Furniture.Rug),
+                OwnedFurniture(35, 1, 4, 3, true, Furniture.Rug),
+                OwnedFurniture(36, 1, 5, 3, true, Furniture.Rug),
+                OwnedFurniture(37, 1, 6, 3, true, Furniture.Rug),
+                OwnedFurniture(38, 1, 7, 3, true, Furniture.Rug),
 
-                OwnedFurniture(41, 1, 4, false, Furniture.Shelf),
-                OwnedFurniture(42, 2, 4, false, Furniture.DisplayShelf),
+                OwnedFurniture(41, 1, 1, 4, false, Furniture.Shelf),
+                OwnedFurniture(42, 1, 2, 4, false, Furniture.DisplayShelf),
 
-                OwnedFurniture(51, 0, 5, true, Furniture.Bookcase),
-                OwnedFurniture(52, 1, 5, false, Furniture.WideBookcase),
-                OwnedFurniture(53, 2, 5, false, Furniture.WideBookcase),
-                OwnedFurniture(54, 3, 5, false, Furniture.WideBookcase),
-                OwnedFurniture(55, 4, 5, true, Furniture.TripleCandle),
-                OwnedFurniture(56, 5, 5, false, Furniture.WideShelf),
-                OwnedFurniture(57, 6, 5, false, Furniture.WideBookcase),
-                OwnedFurniture(58, 7, 5, false, Furniture.WideBookcase)
+                OwnedFurniture(51, 1, 0, 5, true, Furniture.Bookcase),
+                OwnedFurniture(52, 1, 1, 5, false, Furniture.WideBookcase),
+                OwnedFurniture(53, 1, 2, 5, false, Furniture.WideBookcase),
+                OwnedFurniture(54, 1, 3, 5, false, Furniture.WideBookcase),
+                OwnedFurniture(55, 1, 4, 5, true, Furniture.TripleCandle),
+                OwnedFurniture(56, 1, 5, 5, false, Furniture.WideShelf),
+                OwnedFurniture(57, 1, 6, 5, false, Furniture.WideBookcase),
+                OwnedFurniture(58, 1, 7, 5, false, Furniture.WideBookcase)
             )
             database.ownedBookDao().insert(
                 OwnedBook(

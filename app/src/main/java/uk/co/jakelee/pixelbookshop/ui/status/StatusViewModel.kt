@@ -21,7 +21,6 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     val name: LiveData<String>
     val xp: LiveData<Long>
     val coins: LiveData<Long>
-    val timeStarted: LiveData<Long>
 
     init {
         val ownedBookDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()
@@ -33,7 +32,6 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
         name = playerRepo.name
         xp = playerRepo.xp
         coins = playerRepo.coins
-        timeStarted = playerRepo.timeStarted
     }
 
     fun insert(ownedBook: OwnedBook) = viewModelScope.launch {

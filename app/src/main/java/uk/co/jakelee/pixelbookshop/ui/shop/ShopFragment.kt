@@ -59,7 +59,7 @@ class ShopFragment : Fragment() {
                     if ((it.x == 0 || it.y == 5) && shopViewModel.wall.value != null) {
                         val wall = shopViewModel.wall.value!!
                         val wallCallback = { fullWall: WallInfo ->
-                            shopViewModel.upgradeWall(fullWall.wall)
+                            shopViewModel.upgradeWall(fullWall.wall, 1)
                             Unit
                         }
                         if (wall.isX && wall.position == it.x || !wall.isX && wall.position == it.y) {
@@ -94,7 +94,7 @@ class ShopFragment : Fragment() {
                 furnitures.forEach {
                     val resource =
                         if (it.isFacingEast) it.furniture.imageEast else it.furniture.imageNorth
-                    val callback = { tile: Tile -> }
+                    val callback = { _: Tile -> }
                     furniture_layer.addView(
                         createTile(it, resource, callback),
                         getTileParams(it.x, it.y, 7)
