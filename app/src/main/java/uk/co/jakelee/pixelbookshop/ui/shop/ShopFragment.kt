@@ -19,6 +19,7 @@ import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
+import uk.co.jakelee.pixelbookshop.lookups.Furniture
 
 
 class ShopFragment : Fragment() {
@@ -93,16 +94,29 @@ class ShopFragment : Fragment() {
             if (furnitures.isNotEmpty()) {
                 furniture_layer.removeAllViews()
                 furnitures.forEach {
-                    val resource =
-                        if (it.isFacingEast) it.furniture.imageEast else it.furniture.imageNorth
+                    val books = it.ownedBooks
+                    val furniture = it.ownedFurniture
+                    val resource = getResource(furniture.furniture, furniture.isFacingEast, books.isNotEmpty())
                     val callback = { _: Tile -> }
                     furniture_layer.addView(
-                        createTile(it, resource, callback),
-                        getTileParams(it.x, it.y, 7)
+                        createTile(furniture, resource, callback),
+                        getTileParams(it.ownedFurniture.x, it.ownedFurniture.y, 7)
                     )
                 }
             }
         })
+    }
+
+    private fun getResource(furniture: Furniture, isFacingEast: Boolean, hasBooks: Boolean): Int {
+        return if (hasBooks && isFacingEast) {
+            furniture.imageEastFilled ?: furniture.imageEast
+        } else if (hasBooks && !isFacingEast) {
+            furniture.imageNorthFilled ?: furniture.imageNorth
+        } else if (!hasBooks && isFacingEast) {
+            furniture.imageEast
+        } else {
+            furniture.imageNorth
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

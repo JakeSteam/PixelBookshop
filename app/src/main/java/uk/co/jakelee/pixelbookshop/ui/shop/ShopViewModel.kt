@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
 import uk.co.jakelee.pixelbookshop.lookups.Floor
 import uk.co.jakelee.pixelbookshop.lookups.Wall
@@ -24,7 +24,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val shopRepo: ShopRepository
 
     val ownedFloor: LiveData<List<OwnedFloor>>
-    val ownedFurniture: LiveData<List<OwnedFurniture>>
+    val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     val wall: LiveData<WallInfo>
 
     init {
@@ -35,7 +35,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         val ownedFurnitureDao =
             AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
         ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
-        ownedFurniture = ownedFurnitureRepo.allFurniture
+        ownedFurniture = ownedFurnitureRepo.allFurnitureWithBooks
 
         val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
         shopRepo = ShopRepository(shopDao, 1)
