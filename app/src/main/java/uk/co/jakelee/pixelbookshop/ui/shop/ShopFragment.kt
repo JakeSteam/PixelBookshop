@@ -64,7 +64,8 @@ class ShopFragment : Fragment() {
                             Unit
                         }
                         if (wall.isDoorOnX && wall.doorPosition == it.x
-                            || !wall.isDoorOnX && wall.doorPosition == it.y) {
+                            || !wall.isDoorOnX && wall.doorPosition == it.y
+                        ) {
                             wall_layer.addView(
                                 createTile(wall, wall.wall.imageDoor, wallCallback),
                                 params
@@ -96,7 +97,8 @@ class ShopFragment : Fragment() {
                 furnitures.forEach {
                     val books = it.ownedBooks
                     val furniture = it.ownedFurniture
-                    val resource = getResource(furniture.furniture, furniture.isFacingEast, books.isNotEmpty())
+                    val resource =
+                        getResource(furniture.furniture, furniture.isFacingEast, books.isNotEmpty())
                     val callback = { _: Tile -> }
                     furniture_layer.addView(
                         createTile(furniture, resource, callback),
@@ -107,16 +109,11 @@ class ShopFragment : Fragment() {
         })
     }
 
-    private fun getResource(furniture: Furniture, isFacingEast: Boolean, hasBooks: Boolean): Int {
-        return if (hasBooks && isFacingEast) {
-            furniture.imageEastFilled ?: furniture.imageEast
-        } else if (hasBooks && !isFacingEast) {
-            furniture.imageNorthFilled ?: furniture.imageNorth
-        } else if (!hasBooks && isFacingEast) {
-            furniture.imageEast
-        } else {
-            furniture.imageNorth
-        }
+    private fun getResource(furniture: Furniture, isFacingEast: Boolean, hasBooks: Boolean) = when {
+        hasBooks && isFacingEast -> furniture.imageEastFilled ?: furniture.imageEast
+        hasBooks && !isFacingEast -> furniture.imageNorthFilled ?: furniture.imageNorth
+        !hasBooks && isFacingEast -> furniture.imageEast
+        else -> furniture.imageNorth
     }
 
     @SuppressLint("ClickableViewAccessibility")
