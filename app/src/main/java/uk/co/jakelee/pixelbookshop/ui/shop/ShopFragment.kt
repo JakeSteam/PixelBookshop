@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
@@ -62,7 +63,10 @@ class ShopFragment : Fragment() {
             val furniture = it.ownedFurniture
             val resource =
                 getResource(furniture.furniture, furniture.isFacingEast, books.isNotEmpty())
-            val callback = { _: Tile -> }
+            val callback = { tile: OwnedFurniture ->
+                shopViewModel.upgradeFurni(tile)
+                Unit
+            }
             furniture_layer.addView(
                 createTile(furniture, resource, callback),
                 getTileParams(it.ownedFurniture.x, it.ownedFurniture.y, maxX)

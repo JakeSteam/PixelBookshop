@@ -15,6 +15,6 @@ interface OwnedFurnitureDao {
     @Query("SELECT * FROM OwnedFurniture ORDER BY x ASC, y DESC")
     fun getAllWithBooks(): LiveData<List<OwnedFurnitureWithOwnedBooks>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg ownedFurniture: OwnedFurniture)
 }

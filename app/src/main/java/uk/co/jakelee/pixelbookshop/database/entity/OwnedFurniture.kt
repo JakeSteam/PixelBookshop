@@ -17,7 +17,7 @@ data class OwnedFurniture(
     @ColumnInfo override val x: Int,
     @ColumnInfo override val y: Int,
     @ColumnInfo override val isFacingEast: Boolean,
-    @ColumnInfo val furniture: Furniture
+    @ColumnInfo var furniture: Furniture
 ) : Tile, Model
 
 data class OwnedFurnitureWithOwnedBooks(

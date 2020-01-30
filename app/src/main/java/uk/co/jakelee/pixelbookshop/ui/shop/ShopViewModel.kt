@@ -10,14 +10,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
 import uk.co.jakelee.pixelbookshop.lookups.Floor
+import uk.co.jakelee.pixelbookshop.lookups.Furniture
 import uk.co.jakelee.pixelbookshop.lookups.Wall
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
 import uk.co.jakelee.pixelbookshop.repository.ShopRepository
+import java.util.*
 
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
@@ -91,6 +94,15 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             ownedFloorRepo.insert(ownedFloor)
+        }
+    }
+
+    fun upgradeFurni(furniture: OwnedFurniture) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            furniture.apply {
+                this.furniture = Furniture.values()[Random().nextInt(Furniture.values().size)]
+            }
+            ownedFurnitureRepo.insert(furniture)
         }
     }
 
