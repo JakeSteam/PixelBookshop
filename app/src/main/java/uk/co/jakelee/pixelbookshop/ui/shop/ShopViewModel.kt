@@ -32,20 +32,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     private val wall: LiveData<WallInfo>
 
-
-    inner class MyResult {
-        var wall: WallInfo? = null
-        var floors: List<OwnedFloor>? = null
-        var furnitures: List<OwnedFurnitureWithOwnedBooks>? = null
-
-        val isComplete = wall != null
-                && floors?.size ?: 0 > 0
-                && furnitures?.size ?: 0 > 0
-    }
-
-    fun usersBooksLiveDataMerger(): MediatorLiveData<MyResult> {
-        val mediatorLiveData = MediatorLiveData<MyResult>()
-        val current = MyResult()
+    fun getShopData(): MediatorLiveData<ShopData> {
+        val mediatorLiveData = MediatorLiveData<ShopData>()
+        val current = ShopData()
         mediatorLiveData.addSource(wall) { list ->
             current.wall = list
             mediatorLiveData.setValue(current)
