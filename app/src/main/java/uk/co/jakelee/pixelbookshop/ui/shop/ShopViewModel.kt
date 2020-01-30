@@ -13,7 +13,6 @@ import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
-import uk.co.jakelee.pixelbookshop.interfaces.Tile
 import uk.co.jakelee.pixelbookshop.lookups.Floor
 import uk.co.jakelee.pixelbookshop.lookups.Furniture
 import uk.co.jakelee.pixelbookshop.lookups.Wall
@@ -38,6 +37,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         var wall: WallInfo? = null
         var floors: List<OwnedFloor>? = null
         var furnitures: List<OwnedFurnitureWithOwnedBooks>? = null
+
+        val isComplete = wall != null
+                && floors?.size ?: 0 > 0
+                && furnitures?.size ?: 0 > 0
     }
 
     fun usersBooksLiveDataMerger(): MediatorLiveData<MyResult> {
@@ -71,8 +74,6 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
         shopRepo = ShopRepository(shopDao, 1)
         wall = shopRepo.wall
-
-        val merger = MediatorLiveData<List<Tile>>()
     }
 
     fun upgradeFloor(ownedFloor: OwnedFloor) = viewModelScope.launch {

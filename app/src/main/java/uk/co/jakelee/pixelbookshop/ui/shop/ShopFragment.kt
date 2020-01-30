@@ -46,12 +46,11 @@ class ShopFragment : Fragment() {
         super.onResume()
 
         shopViewModel.usersBooksLiveDataMerger().observe(viewLifecycleOwner, Observer<MyResult> { result ->
-            if (result?.floors == null || result.furnitures == null || result.wall == null) {
-                return@Observer
-            }
+            if (result.isComplete) return@Observer
             val maxX = result.floors!!.last().x
             val maxY = result.floors!!.first().y
-            drawFloorsWalls(result.floors!!, result.wall!!, maxX, maxY)
+            drawFloors(result.floors!!, maxX)
+            drawWalls(result.floors!!, result.wall!!, maxX, maxY)
             drawFurni(result.furnitures!!, maxX)
         })
     }
@@ -74,9 +73,8 @@ class ShopFragment : Fragment() {
         }
     }
 
-    private fun drawFloorsWalls(floors: List<OwnedFloor>, wall: WallInfo, maxX: Int, maxY: Int) {
+    private fun drawFloors(floors: List<OwnedFloor>, maxX: Int) {
         floor_layer.removeAllViews()
-        wall_layer.removeAllViews()
         floors.forEach {
             val floorResource = it.floor?.let { floor ->
                 if (it.isFacingEast) floor.imageEast else floor.imageNorth
@@ -87,36 +85,44 @@ class ShopFragment : Fragment() {
             }
             val params = getTileParams(it.x, it.y, maxX)
             floor_layer.addView(createTile(it, floorResource, floorCallback), params)
+        }
+    }
 
+    private fun drawWalls(floors: List<OwnedFloor>, wall: WallInfo, maxX: Int, maxY: Int) {
+        wall_layer.removeAllViews()
+        val wallCallback = { fullWall: WallInfo ->
+            shopViewModel.upgradeWall(fullWall.wall, 1)
+            Unit
+        }
+        floors.forEach {
+            val params = getTileParams(it.x, it.y, maxX)
             if (it.x == 0 || it.y == maxY) {
-                val wallCallback = { fullWall: WallInfo ->
-                    shopViewModel.upgradeWall(fullWall.wall, 1)
-                    Unit
-                }
-                if (wall.isDoorOnX && wall.doorPosition == it.x || !wall.isDoorOnX && wall.doorPosition == it.y) {
+                getWallAsset(it.x, it.y, wall, maxY)?.let { image ->
                     wall_layer.addView(
-                        createTile(wall, wall.wall.imageDoor, wallCallback),
-                        params
-                    )
-                } else if (it.x == 0 && it.y == 5) {
-                    wall_layer.addView(
-                        createTile(wall, wall.wall.imageCorner, wallCallback),
-                        params
-                    )
-                } else if (it.x == 0) {
-                    wall_layer.addView(
-                        createTile(wall, wall.wall.imageEast, wallCallback),
-                        params
-                    )
-                } else if (it.y == 5) {
-                    wall_layer.addView(
-                        createTile(wall, wall.wall.imageNorth, wallCallback),
+                        createTile(wall, image, wallCallback),
                         params
                     )
                 }
             }
         }
     }
+
+    private fun getWallAsset(x: Int, y: Int, wall: WallInfo, maxY: Int): Int? {
+        return if (isDoor(wall, x, y)) {
+            wall.wall.imageDoor
+        } else if (x == 0 && y == maxY) {
+            wall.wall.imageCorner
+        } else if (x == 0) {
+            wall.wall.imageEast
+        } else if (y == maxY) {
+            wall.wall.imageNorth
+        } else {
+            null
+        }
+    }
+
+    private fun isDoor(wall: WallInfo, x: Int, y: Int) =
+        wall.isDoorOnX && wall.doorPosition == x || !wall.isDoorOnX && wall.doorPosition == y
 
     private fun getResource(furniture: Furniture, isFacingEast: Boolean, hasBooks: Boolean) = when {
         hasBooks && isFacingEast -> furniture.imageEastFilled ?: furniture.imageEast
