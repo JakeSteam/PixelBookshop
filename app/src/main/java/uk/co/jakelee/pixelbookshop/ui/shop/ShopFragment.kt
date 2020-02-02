@@ -15,19 +15,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
+import kotlinx.android.synthetic.main.fragment_shop.view.*
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
-import uk.co.jakelee.pixelbookshop.interfaces.Tile
 import uk.co.jakelee.pixelbookshop.lookups.Furniture
-
-
-
 
 class ShopFragment : Fragment() {
 
     private lateinit var shopViewModel: ShopViewModel
+
+    enum class SelectedTab { NONE, ROTATE, MOVE, UPGRADE }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,12 +36,11 @@ class ShopFragment : Fragment() {
         val root =
             inflater.inflate(uk.co.jakelee.pixelbookshop.R.layout.fragment_shop, container, false)
         shopViewModel = ViewModelProvider(this).get(ShopViewModel::class.java)
-        return root
-    }
-
-    override fun onResume() {
-        super.onResume()
-
+        root.button_show.setOnClickListener { showControls() }
+        root.button_hide.setOnClickListener { hideControls() }
+        root.button_rotate.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.ROTATE) }
+        root.button_upgrade.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.UPGRADE) }
+        root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
         shopViewModel.getShopData().observe(viewLifecycleOwner, Observer<ShopData> { result ->
             if (result.wall == null || result.floors?.size ?: 0 == 0 || result.furnitures?.size ?: 0 == 0) return@Observer
 
@@ -52,6 +50,31 @@ class ShopFragment : Fragment() {
             drawWalls(result.floors!!, result.wall!!, maxX, maxY)
             drawFurniture(result.furnitures!!, maxX)
         })
+        shopViewModel.currentTab.observe(viewLifecycleOwner, Observer<SelectedTab> {
+            when (it) {
+                SelectedTab.ROTATE -> { setSelectedLayers(true, false, true) }
+                SelectedTab.MOVE-> { setSelectedLayers(false, false, true) }
+                SelectedTab.UPGRADE -> { setSelectedLayers(true, true, true) }
+                else -> { setSelectedLayers(true, true, true) }
+            }
+        })
+        return root
+    }
+
+    private fun setSelectedLayers(floor: Boolean, wall: Boolean, furniture: Boolean) {
+        floor_layer.alpha = if (floor) 1.0f else 0.5f
+        wall_layer.alpha = if (wall) 1.0f else 0.5f
+        furniture_layer.alpha = if (furniture) 1.0f else 0.5f
+    }
+
+    private fun showControls() {
+        controls.visibility = View.VISIBLE
+        button_show.visibility = View.GONE
+    }
+
+    private fun hideControls() {
+        controls.visibility = View.GONE
+        button_show.visibility = View.VISIBLE
     }
 
     private fun drawFloors(floors: List<OwnedFloor>, maxX: Int) {
@@ -60,26 +83,20 @@ class ShopFragment : Fragment() {
             val floorResource = it.floor?.let { floor ->
                 if (it.isFacingEast) floor.imageEast else floor.imageNorth
             } ?: android.R.color.transparent
-            val floorCallback = { tile: Tile ->
-                shopViewModel.upgradeFloor(tile as OwnedFloor)
-                Unit
-            }
+            val floorCallback = { floor: OwnedFloor -> shopViewModel.floorClick(floor) }
             val params = getTileParams(it.x, it.y, maxX, false)
             floor_layer.addView(createTile(it, floorResource, floorCallback), params)
         }
     }
 
-    private fun drawWalls(floors: List<OwnedFloor>, wall: WallInfo, maxX: Int, maxY: Int) {
+    private fun drawWalls(floors: List<OwnedFloor>, wallInfo: WallInfo, maxX: Int, maxY: Int) {
         wall_layer.removeAllViews()
-        val wallCallback = { fullWall: WallInfo ->
-            shopViewModel.upgradeWall(fullWall.wall, 1)
-            Unit
-        }
+        val wallCallback = { wall: WallInfo -> shopViewModel.wallClick(wall, 1) }
         floors.forEach {
             if (it.x == 0 || it.y == maxY) {
-                getWallAsset(it.x, it.y, wall, maxY)?.let { image ->
+                getWallAsset(it.x, it.y, wallInfo, maxY)?.let { image ->
                     wall_layer.addView(
-                        createTile(wall, image, wallCallback),
+                        createTile(wallInfo, image, wallCallback),
                         getTileParams(it.x, it.y, maxX, true)
                     )
                 }
@@ -92,12 +109,8 @@ class ShopFragment : Fragment() {
         furnitures.forEach {
             val books = it.ownedBooks
             val furniture = it.ownedFurniture
-            val resource =
-                getResource(furniture.furniture, furniture.isFacingEast, books.isNotEmpty())
-            val callback = { tile: OwnedFurniture ->
-                shopViewModel.upgradeFurni(tile)
-                Unit
-            }
+            val resource = getResource(furniture.furniture, furniture.isFacingEast, books.isNotEmpty())
+            val callback = { tile: OwnedFurniture -> shopViewModel.furniClick(tile) }
             furniture_layer.addView(
                 createTile(furniture, resource, callback),
                 getTileParams(it.ownedFurniture.x, it.ownedFurniture.y, maxX, true)
@@ -130,7 +143,7 @@ class ShopFragment : Fragment() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun <T : Any> createTile(tile: T, @DrawableRes resource: Int, callback: (T) -> (Unit)) =
+    private fun <T : Any> createTile(tile: T, @DrawableRes resource: Int, callback: (T) -> (Any)) =
         ImageView(activity!!).apply {
             isDrawingCacheEnabled = true
             setImageResource(resource)

@@ -16,7 +16,7 @@ data class OwnedFurniture(
     @ColumnInfo override val shopId: Int,
     @ColumnInfo override val x: Int,
     @ColumnInfo override val y: Int,
-    @ColumnInfo override val isFacingEast: Boolean,
+    @ColumnInfo override var isFacingEast: Boolean,
     @ColumnInfo var furniture: Furniture
 ) : Tile, Model
 

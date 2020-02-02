@@ -1,10 +1,7 @@
 package uk.co.jakelee.pixelbookshop.ui.shop
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,6 +28,16 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFloor: LiveData<List<OwnedFloor>>
     private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     private val wall: LiveData<WallInfo>
+
+    var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
+
+    fun setOrResetMode(selectedTab: ShopFragment.SelectedTab) {
+        if (currentTab.value == selectedTab) {
+            currentTab.value = ShopFragment.SelectedTab.NONE
+        } else {
+            currentTab.value = selectedTab
+        }
+    }
 
     fun getShopData(): MediatorLiveData<ShopData> {
         val mediatorLiveData = MediatorLiveData<ShopData>()
@@ -65,51 +72,83 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         wall = shopRepo.wall
     }
 
-    fun upgradeFloor(ownedFloor: OwnedFloor) = viewModelScope.launch {
+    // WALL
+    fun wallClick(wall: WallInfo, shopId: Int) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            ownedFloor.apply {
-                if (!isFacingEast) {
-                    isFacingEast = true
-                } else {
-                    isFacingEast = false
-                    floor = when (floor) {
-                        Floor.Stone -> Floor.Dirt
-                        Floor.Dirt -> Floor.WoodOld
-                        Floor.WoodOld -> Floor.Wood
-                        Floor.Wood -> Floor.StoneUneven
-                        Floor.StoneUneven -> Floor.StoneMissing
-                        Floor.StoneMissing -> Floor.Stone
-                        else -> null
-                    }
-                }
+            when (currentTab.value) {
+                ShopFragment.SelectedTab.UPGRADE -> upgradeWall(wall.wall, shopId)
+                else -> null
             }
-            ownedFloorRepo.insert(ownedFloor)
         }
     }
 
-    fun upgradeFurni(furniture: OwnedFurniture) = viewModelScope.launch {
+    suspend fun upgradeWall(wall: Wall, id: Int) = shopRepo.changeWall(
+        when (wall) {
+            Wall.StoneWindow -> Wall.Fence
+            Wall.Fence -> Wall.BrickFrame
+            Wall.BrickFrame -> Wall.BrickPartial
+            Wall.BrickPartial -> Wall.Brick
+            Wall.Brick -> Wall.BrickNoSupport
+            Wall.BrickNoSupport -> Wall.BrickWindow
+            Wall.BrickWindow -> Wall.StoneSmall
+            Wall.StoneSmall -> Wall.Stone
+            Wall.Stone -> Wall.StoneHoles
+            Wall.StoneHoles -> Wall.StoneWindow
+        }, id
+    )
+
+    // FLOOR
+    fun floorClick(floor: OwnedFloor) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            furniture.apply {
-                this.furniture = Furniture.values()[Random().nextInt(Furniture.values().size)]
+            when (currentTab.value) {
+                ShopFragment.SelectedTab.UPGRADE -> upgradeFloor(floor)
+                ShopFragment.SelectedTab.ROTATE -> rotateFloor(floor)
+                else -> null
             }
-            ownedFurnitureRepo.insert(furniture)
         }
     }
 
-    fun upgradeWall(wall: Wall, id: Int) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            shopRepo.changeWall(when (wall) {
-                Wall.StoneWindow -> Wall.Fence
-                Wall.Fence -> Wall.BrickFrame
-                Wall.BrickFrame -> Wall.BrickPartial
-                Wall.BrickPartial -> Wall.Brick
-                Wall.Brick -> Wall.BrickNoSupport
-                Wall.BrickNoSupport -> Wall.BrickWindow
-                Wall.BrickWindow -> Wall.StoneSmall
-                Wall.StoneSmall -> Wall.Stone
-                Wall.Stone -> Wall.StoneHoles
-                Wall.StoneHoles -> Wall.StoneWindow
-            }, id)
+    suspend fun upgradeFloor(ownedFloor: OwnedFloor) {
+        ownedFloor.apply {
+            floor = when (floor) {
+                Floor.Stone -> Floor.Dirt
+                Floor.Dirt -> Floor.WoodOld
+                Floor.WoodOld -> Floor.Wood
+                Floor.Wood -> Floor.StoneUneven
+                Floor.StoneUneven -> Floor.StoneMissing
+                Floor.StoneMissing -> Floor.Stone
+                else -> null
+            }
         }
+        ownedFloorRepo.insert(ownedFloor)
+    }
+
+    suspend fun rotateFloor(ownedFloor: OwnedFloor) {
+        ownedFloor.apply { isFacingEast = !isFacingEast }
+        ownedFloorRepo.insert(ownedFloor)
+    }
+
+    // FURNITURE
+    fun furniClick(furni: OwnedFurniture) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            when (currentTab.value) {
+                ShopFragment.SelectedTab.UPGRADE -> upgradeFurni(furni)
+                ShopFragment.SelectedTab.ROTATE -> rotateFurni(furni)
+                ShopFragment.SelectedTab.MOVE -> {}
+                else -> null
+            }
+        }
+    }
+
+    suspend fun upgradeFurni(furniture: OwnedFurniture) {
+        furniture.apply {
+            this.furniture = Furniture.values()[Random().nextInt(Furniture.values().size)]
+        }
+        ownedFurnitureRepo.insert(furniture)
+    }
+
+    suspend fun rotateFurni(ownedFurniture: OwnedFurniture) {
+        ownedFurniture.apply { isFacingEast = !isFacingEast }
+        ownedFurnitureRepo.insert(ownedFurniture)
     }
 }
