@@ -6,7 +6,7 @@ import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.interfaces.Model
 
 enum class Furniture(
-    type: FurnitureType, override val id: Int, tier: Int, @StringRes name: Int, cost: Int,
+    val type: FurnitureType, override val id: Int, val tier: Int, @StringRes name: Int, cost: Int,
     capacity: Int, // Decoration: Range. Display: Books shown. Seating: Seats. Storage: Books stored.
     level: Int, // Level required to purchase
     rarity: BookRarity, // Decoration: N/A. Display: Max rarity shown. Seating: Max rarity read there. Storage: Books extra capacity applies too.

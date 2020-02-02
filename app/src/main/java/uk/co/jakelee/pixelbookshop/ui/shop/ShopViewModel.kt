@@ -16,7 +16,6 @@ import uk.co.jakelee.pixelbookshop.lookups.Wall
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
 import uk.co.jakelee.pixelbookshop.repository.ShopRepository
-import java.util.*
 
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
@@ -131,6 +130,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     // FURNITURE
     var selectedFurni: OwnedFurniture? = null
+
     fun furniClick(furni: OwnedFurniture) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
@@ -143,9 +143,13 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private suspend fun upgradeFurni(furniture: OwnedFurniture) {
-        furniture.apply {
-            this.furniture = Furniture.values()[Random().nextInt(Furniture.values().size)]
-        }
+        val allUpgrades = Furniture.values()
+            .filter { it.type == furniture.furniture.type }
+            .sortedBy { it.tier }
+        val validUpgrades = allUpgrades
+            .filter { it.tier > furniture.furniture.tier }
+
+        furniture.furniture = validUpgrades.firstOrNull() ?: allUpgrades.first()
         ownedFurnitureRepo.insert(furniture)
     }
 
