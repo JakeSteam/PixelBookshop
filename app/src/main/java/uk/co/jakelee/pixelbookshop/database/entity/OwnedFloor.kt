@@ -3,6 +3,7 @@ package uk.co.jakelee.pixelbookshop.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
 import uk.co.jakelee.pixelbookshop.lookups.Floor
 
@@ -11,7 +12,8 @@ import uk.co.jakelee.pixelbookshop.lookups.Floor
         entity = Shop::class,
         parentColumns = ["id"],
         childColumns = ["shopId"],
-        onDelete = ForeignKey.CASCADE)])
+        onDelete = ForeignKey.CASCADE)],
+    indices = [Index("shopId")])
 data class OwnedFloor(
     @ColumnInfo override val shopId: Int,
     @ColumnInfo override val x: Int,

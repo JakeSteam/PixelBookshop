@@ -14,7 +14,6 @@ import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
 import uk.co.jakelee.pixelbookshop.repository.ShopRepository
 
-
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     private val ownedFloorRepo: OwnedFloorRepository
@@ -28,6 +27,21 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private var selectedFurni: OwnedFurniture? = null
 
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
+
+    init {
+        val ownedFloorDao = AppDatabase.getDatabase(application, viewModelScope).ownedFloorDao()
+        ownedFloorRepo = OwnedFloorRepository(ownedFloorDao)
+        ownedFloor = ownedFloorRepo.allFloor
+
+        val ownedFurnitureDao =
+            AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
+        ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
+        ownedFurniture = ownedFurnitureRepo.allFurnitureWithBooks
+
+        val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
+        shopRepo = ShopRepository(shopDao, 1)
+        wall = shopRepo.wall
+    }
 
     fun setOrResetMode(selectedTab: ShopFragment.SelectedTab) {
         if (currentTab.value == selectedTab) {
@@ -53,21 +67,6 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             mediatorLiveData.setValue(current)
         }
         return mediatorLiveData
-    }
-
-    init {
-        val ownedFloorDao = AppDatabase.getDatabase(application, viewModelScope).ownedFloorDao()
-        ownedFloorRepo = OwnedFloorRepository(ownedFloorDao)
-        ownedFloor = ownedFloorRepo.allFloor
-
-        val ownedFurnitureDao =
-            AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
-        ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
-        ownedFurniture = ownedFurnitureRepo.allFurnitureWithBooks
-
-        val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
-        shopRepo = ShopRepository(shopDao, 1)
-        wall = shopRepo.wall
     }
 
 

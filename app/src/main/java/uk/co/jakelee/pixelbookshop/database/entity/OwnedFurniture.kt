@@ -5,7 +5,7 @@ import uk.co.jakelee.pixelbookshop.interfaces.Model
 import uk.co.jakelee.pixelbookshop.interfaces.Tile
 import uk.co.jakelee.pixelbookshop.lookups.Furniture
 
-@Entity(indices = [Index("x", "y")],
+@Entity(indices = [Index("x", "y"), Index("shopId")],
     foreignKeys = [ForeignKey(
         entity = Shop::class,
         parentColumns = ["id"],
