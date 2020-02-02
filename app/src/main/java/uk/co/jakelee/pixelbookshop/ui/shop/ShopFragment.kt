@@ -43,7 +43,6 @@ class ShopFragment : Fragment() {
         root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
         shopViewModel.getShopData().observe(viewLifecycleOwner, Observer<ShopData> { result ->
             if (result.wall == null || result.floors?.size ?: 0 == 0 || result.furnitures?.size ?: 0 == 0) return@Observer
-
             val maxX = result.floors!!.last().x
             val maxY = result.floors!!.first().y
             drawFloors(result.floors!!, maxX)
@@ -51,6 +50,7 @@ class ShopFragment : Fragment() {
             drawFurniture(result.furnitures!!, maxX)
         })
         shopViewModel.currentTab.observe(viewLifecycleOwner, Observer<SelectedTab> {
+            updateCurrentTabButtons()
             when (it) {
                 SelectedTab.ROTATE -> { setSelectedLayers(true, false, true) }
                 SelectedTab.MOVE-> { setSelectedLayers(false, false, true) }
@@ -59,6 +59,15 @@ class ShopFragment : Fragment() {
             }
         })
         return root
+    }
+
+    private fun updateCurrentTabButtons() {
+        shopViewModel.currentTab.value?.let {
+            val default = it == SelectedTab.NONE
+            button_rotate.alpha = if (default || it == SelectedTab.ROTATE) 1.0f else 0.5f
+            button_upgrade.alpha = if (default || it == SelectedTab.UPGRADE) 1.0f else 0.5f
+            button_move.alpha = if (default || it == SelectedTab.MOVE) 1.0f else 0.5f
+        }
     }
 
     private fun setSelectedLayers(floor: Boolean, wall: Boolean, furniture: Boolean) {
@@ -75,6 +84,7 @@ class ShopFragment : Fragment() {
     private fun hideControls() {
         controls.visibility = View.GONE
         button_show.visibility = View.VISIBLE
+        shopViewModel.setOrResetMode(SelectedTab.NONE)
     }
 
     private fun drawFloors(floors: List<OwnedFloor>, maxX: Int) {
