@@ -14,8 +14,8 @@ import uk.co.jakelee.pixelbookshop.lookups.Furniture
 data class OwnedFurniture(
     @PrimaryKey(autoGenerate = true) override val id: Int,
     @ColumnInfo override val shopId: Int,
-    @ColumnInfo override val x: Int,
-    @ColumnInfo override val y: Int,
+    @ColumnInfo override var x: Int,
+    @ColumnInfo override var y: Int,
     @ColumnInfo override var isFacingEast: Boolean,
     @ColumnInfo var furniture: Furniture
 ) : Tile, Model

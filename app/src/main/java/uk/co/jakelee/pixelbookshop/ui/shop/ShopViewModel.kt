@@ -82,7 +82,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    suspend fun upgradeWall(wall: Wall, id: Int) = shopRepo.changeWall(
+    private suspend fun upgradeWall(wall: Wall, id: Int) = shopRepo.changeWall(
         when (wall) {
             Wall.StoneWindow -> Wall.Fence
             Wall.Fence -> Wall.BrickFrame
@@ -103,12 +103,13 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             when (currentTab.value) {
                 ShopFragment.SelectedTab.UPGRADE -> upgradeFloor(floor)
                 ShopFragment.SelectedTab.ROTATE -> rotateFloor(floor)
+                ShopFragment.SelectedTab.MOVE -> moveFurni(floor)
                 else -> null
             }
         }
     }
 
-    suspend fun upgradeFloor(ownedFloor: OwnedFloor) {
+    private suspend fun upgradeFloor(ownedFloor: OwnedFloor) {
         ownedFloor.apply {
             floor = when (floor) {
                 Floor.Stone -> Floor.Dirt
@@ -123,32 +124,55 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         ownedFloorRepo.insert(ownedFloor)
     }
 
-    suspend fun rotateFloor(ownedFloor: OwnedFloor) {
+    private suspend fun rotateFloor(ownedFloor: OwnedFloor) {
         ownedFloor.apply { isFacingEast = !isFacingEast }
         ownedFloorRepo.insert(ownedFloor)
     }
 
     // FURNITURE
+    var selectedFurni: OwnedFurniture? = null
     fun furniClick(furni: OwnedFurniture) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
                 ShopFragment.SelectedTab.UPGRADE -> upgradeFurni(furni)
                 ShopFragment.SelectedTab.ROTATE -> rotateFurni(furni)
-                ShopFragment.SelectedTab.MOVE -> {}
+                ShopFragment.SelectedTab.MOVE -> moveFurni(furni)
                 else -> null
             }
         }
     }
 
-    suspend fun upgradeFurni(furniture: OwnedFurniture) {
+    private suspend fun upgradeFurni(furniture: OwnedFurniture) {
         furniture.apply {
             this.furniture = Furniture.values()[Random().nextInt(Furniture.values().size)]
         }
         ownedFurnitureRepo.insert(furniture)
     }
 
-    suspend fun rotateFurni(ownedFurniture: OwnedFurniture) {
-        ownedFurniture.apply { isFacingEast = !isFacingEast }
-        ownedFurnitureRepo.insert(ownedFurniture)
+    private suspend fun rotateFurni(furniture: OwnedFurniture) {
+        furniture.apply { isFacingEast = !isFacingEast }
+        ownedFurnitureRepo.insert(furniture)
+    }
+
+    private suspend fun moveFurni(furniture: OwnedFurniture) {
+        if (selectedFurni == null) {
+            selectedFurni = furniture
+        } else {
+            ownedFurnitureRepo.swap(selectedFurni!!, furniture)
+            selectedFurni = null
+        }
+    }
+
+    private suspend fun moveFurni(floor: OwnedFloor) {
+        val furniOnFloor = ownedFurnitureRepo.getByPosition(floor.x, floor.y)
+        ownedFurnitureRepo.allFurniture
+        if (furniOnFloor != null) { // Furniture on tapped tile
+            moveFurni(furniOnFloor)
+        } else if (selectedFurni != null) { // We have furniture to move
+            selectedFurni!!.x = floor.x
+            selectedFurni!!.y = floor.y
+            ownedFurnitureRepo.insert(selectedFurni!!)
+            selectedFurni = null
+        }
     }
 }
