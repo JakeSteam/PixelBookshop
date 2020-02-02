@@ -9,7 +9,19 @@ class ShopRepository(private val shopDao: ShopDao, id: Int) {
 
     val wall: LiveData<WallInfo> = shopDao.getWall(id)
 
-    suspend fun changeWall(wall: Wall, id: Int) {
-        shopDao.setWall(wall, id)
+    suspend fun upgradeWall(wall: Wall, id: Int) {
+        val newWall = when (wall) {
+            Wall.StoneWindow -> Wall.Fence
+            Wall.Fence -> Wall.BrickFrame
+            Wall.BrickFrame -> Wall.BrickPartial
+            Wall.BrickPartial -> Wall.Brick
+            Wall.Brick -> Wall.BrickNoSupport
+            Wall.BrickNoSupport -> Wall.BrickWindow
+            Wall.BrickWindow -> Wall.StoneSmall
+            Wall.StoneSmall -> Wall.Stone
+            Wall.Stone -> Wall.StoneHoles
+            Wall.StoneHoles -> Wall.StoneWindow
+        }
+        shopDao.setWall(newWall, id)
     }
 }

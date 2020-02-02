@@ -10,9 +10,6 @@ import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
-import uk.co.jakelee.pixelbookshop.lookups.Floor
-import uk.co.jakelee.pixelbookshop.lookups.Furniture
-import uk.co.jakelee.pixelbookshop.lookups.Wall
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
 import uk.co.jakelee.pixelbookshop.repository.ShopRepository
@@ -27,6 +24,8 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFloor: LiveData<List<OwnedFloor>>
     private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     private val wall: LiveData<WallInfo>
+
+    private var selectedFurni: OwnedFurniture? = null
 
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
 
@@ -71,112 +70,45 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         wall = shopRepo.wall
     }
 
-    // WALL
+
     fun wallClick(wall: WallInfo, shopId: Int) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
-                ShopFragment.SelectedTab.UPGRADE -> upgradeWall(wall.wall, shopId)
+                ShopFragment.SelectedTab.UPGRADE -> shopRepo.upgradeWall(wall.wall, shopId)
                 else -> null
             }
         }
     }
 
-    private suspend fun upgradeWall(wall: Wall, id: Int) = shopRepo.changeWall(
-        when (wall) {
-            Wall.StoneWindow -> Wall.Fence
-            Wall.Fence -> Wall.BrickFrame
-            Wall.BrickFrame -> Wall.BrickPartial
-            Wall.BrickPartial -> Wall.Brick
-            Wall.Brick -> Wall.BrickNoSupport
-            Wall.BrickNoSupport -> Wall.BrickWindow
-            Wall.BrickWindow -> Wall.StoneSmall
-            Wall.StoneSmall -> Wall.Stone
-            Wall.Stone -> Wall.StoneHoles
-            Wall.StoneHoles -> Wall.StoneWindow
-        }, id
-    )
-
-    // FLOOR
     fun floorClick(floor: OwnedFloor) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
-                ShopFragment.SelectedTab.UPGRADE -> upgradeFloor(floor)
-                ShopFragment.SelectedTab.ROTATE -> rotateFloor(floor)
-                ShopFragment.SelectedTab.MOVE -> moveFurni(floor)
+                ShopFragment.SelectedTab.UPGRADE -> ownedFloorRepo.upgradeFloor(floor)
+                ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
+                ShopFragment.SelectedTab.MOVE -> {
+                    ownedFurnitureRepo.moveFurni(floor, selectedFurni)
+                    selectedFurni = null
+                }
                 else -> null
             }
         }
     }
-
-    private suspend fun upgradeFloor(ownedFloor: OwnedFloor) {
-        ownedFloor.apply {
-            floor = when (floor) {
-                Floor.Stone -> Floor.Dirt
-                Floor.Dirt -> Floor.WoodOld
-                Floor.WoodOld -> Floor.Wood
-                Floor.Wood -> Floor.StoneUneven
-                Floor.StoneUneven -> Floor.StoneMissing
-                Floor.StoneMissing -> Floor.Stone
-                else -> null
-            }
-        }
-        ownedFloorRepo.insert(ownedFloor)
-    }
-
-    private suspend fun rotateFloor(ownedFloor: OwnedFloor) {
-        ownedFloor.apply { isFacingEast = !isFacingEast }
-        ownedFloorRepo.insert(ownedFloor)
-    }
-
-    // FURNITURE
-    var selectedFurni: OwnedFurniture? = null
 
     fun furniClick(furni: OwnedFurniture) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
-                ShopFragment.SelectedTab.UPGRADE -> upgradeFurni(furni)
-                ShopFragment.SelectedTab.ROTATE -> rotateFurni(furni)
-                ShopFragment.SelectedTab.MOVE -> moveFurni(furni)
+                ShopFragment.SelectedTab.UPGRADE -> ownedFurnitureRepo.upgradeFurni(furni)
+                ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)
+                ShopFragment.SelectedTab.MOVE -> {
+                    if (selectedFurni == null) {
+                        selectedFurni = furni
+                    } else {
+                        ownedFurnitureRepo.swap(furni, selectedFurni!!)
+                        selectedFurni = null
+                    }
+                }
                 else -> null
             }
-        }
-    }
-
-    private suspend fun upgradeFurni(furniture: OwnedFurniture) {
-        val allUpgrades = Furniture.values()
-            .filter { it.type == furniture.furniture.type }
-            .sortedBy { it.tier }
-        val validUpgrades = allUpgrades
-            .filter { it.tier > furniture.furniture.tier }
-
-        furniture.furniture = validUpgrades.firstOrNull() ?: allUpgrades.first()
-        ownedFurnitureRepo.insert(furniture)
-    }
-
-    private suspend fun rotateFurni(furniture: OwnedFurniture) {
-        furniture.apply { isFacingEast = !isFacingEast }
-        ownedFurnitureRepo.insert(furniture)
-    }
-
-    private suspend fun moveFurni(furniture: OwnedFurniture) {
-        if (selectedFurni == null) {
-            selectedFurni = furniture
-        } else {
-            ownedFurnitureRepo.swap(selectedFurni!!, furniture)
-            selectedFurni = null
-        }
-    }
-
-    private suspend fun moveFurni(floor: OwnedFloor) {
-        val furniOnFloor = ownedFurnitureRepo.getByPosition(floor.x, floor.y)
-        ownedFurnitureRepo.allFurniture
-        if (furniOnFloor != null) { // Furniture on tapped tile
-            moveFurni(furniOnFloor)
-        } else if (selectedFurni != null) { // We have furniture to move
-            selectedFurni!!.x = floor.x
-            selectedFurni!!.y = floor.y
-            ownedFurnitureRepo.insert(selectedFurni!!)
-            selectedFurni = null
         }
     }
 }
