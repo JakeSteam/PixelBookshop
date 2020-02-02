@@ -145,7 +145,6 @@ abstract class AppDatabase : RoomDatabase() {
                 OwnedFurniture(26, 1, 6, 2, true, Furniture.TripleCrate),
                 OwnedFurniture(27, 1, 7, 2, true, Furniture.Barrel),
 
-                OwnedFurniture(31, 1, 0, 3, true, Furniture.Rug),
                 OwnedFurniture(32, 1, 1, 3, true, Furniture.Rug),
                 OwnedFurniture(33, 1, 2, 3, true, Furniture.Rug),
                 OwnedFurniture(34, 1, 3, 3, true, Furniture.Rug),

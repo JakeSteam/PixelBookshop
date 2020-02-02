@@ -177,7 +177,7 @@ class ShopFragment : Fragment() {
         val tileHeight = 128
         val layoutParams = RelativeLayout.LayoutParams(tileWidth, tileHeight)
         val leftPadding = (x + y) * (tileWidth / 2)
-        val topOffset = if (boostVertically) 6 else 0
+        val topOffset = if (boostVertically) 5 else 0
         val topPadding = (xTiles + (x - y)) * (tileHeight / 8) - topOffset
         layoutParams.setMargins(leftPadding, topPadding, 0, 0)
         return layoutParams
