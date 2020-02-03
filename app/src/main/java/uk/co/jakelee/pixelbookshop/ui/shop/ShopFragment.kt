@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import kotlinx.android.synthetic.main.fragment_shop.view.*
+import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
@@ -26,7 +27,15 @@ class ShopFragment : Fragment() {
 
     private lateinit var shopViewModel: ShopViewModel
 
-    enum class SelectedTab { NONE, ROTATE, MOVE, UPGRADE }
+    enum class SelectedTab(val wall: Boolean, val floor: Boolean, val furniture: Boolean) {
+        NONE(true, true, true),
+        ROTATE(true, false, true),
+        MOVE(false, false, true),
+        UPGRADE(true, true, true)
+    }
+
+    private val visibleAlpha = resources.getDimension(R.dimen.shop_layer_visible_alpha)
+    private val invisibleAlpha = resources.getDimension(R.dimen.shop_layer_invisible_alpha)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,39 +50,36 @@ class ShopFragment : Fragment() {
         root.button_rotate.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.ROTATE) }
         root.button_upgrade.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.UPGRADE) }
         root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
-        shopViewModel.getShopData().observe(viewLifecycleOwner, Observer<ShopData> { result ->
-            if (result.wall == null || result.floors?.size ?: 0 == 0 || result.furnitures?.size ?: 0 == 0) return@Observer
-            val maxX = result.floors!!.last().x
-            val maxY = result.floors!!.first().y
-            drawFloors(result.floors!!, maxX)
-            drawWalls(result.floors!!, result.wall!!, maxX, maxY)
-            drawFurniture(result.furnitures!!, maxX)
-        })
-        shopViewModel.currentTab.observe(viewLifecycleOwner, Observer<SelectedTab> {
-            updateCurrentTabButtons()
-            when (it) {
-                SelectedTab.ROTATE -> { setSelectedLayers(true, false, true) }
-                SelectedTab.MOVE-> { setSelectedLayers(false, false, true) }
-                SelectedTab.UPGRADE -> { setSelectedLayers(true, true, true) }
-                else -> { setSelectedLayers(true, true, true) }
-            }
-        })
+        shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
+        shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         return root
     }
 
-    private fun updateCurrentTabButtons() {
-        shopViewModel.currentTab.value?.let {
-            val default = it == SelectedTab.NONE
-            button_rotate.alpha = if (default || it == SelectedTab.ROTATE) 1.0f else 0.5f
-            button_upgrade.alpha = if (default || it == SelectedTab.UPGRADE) 1.0f else 0.5f
-            button_move.alpha = if (default || it == SelectedTab.MOVE) 1.0f else 0.5f
-        }
+    private val shopTabObserver = Observer<SelectedTab> {
+        setButtonVisibility(button_rotate, SelectedTab.ROTATE, it)
+        setButtonVisibility(button_upgrade, SelectedTab.UPGRADE, it)
+        setButtonVisibility(button_move, SelectedTab.MOVE, it)
+        setSelectedLayers(it)
     }
 
-    private fun setSelectedLayers(floor: Boolean, wall: Boolean, furniture: Boolean) {
-        floor_layer.alpha = if (floor) 1.0f else 0.5f
-        wall_layer.alpha = if (wall) 1.0f else 0.5f
-        furniture_layer.alpha = if (furniture) 1.0f else 0.5f
+    private fun setButtonVisibility(button: View, targetTab: SelectedTab, actualTab: SelectedTab) {
+        val isVisible = actualTab == SelectedTab.NONE || actualTab == targetTab
+        button.alpha = if (isVisible) visibleAlpha else invisibleAlpha
+    }
+
+    private val shopDataObserver = Observer<ShopData> { result ->
+        if (result.wall == null || result.floors?.size ?: 0 == 0 || result.furnitures?.size ?: 0 == 0) return@Observer
+        val maxX = result.floors!!.last().x
+        val maxY = result.floors!!.first().y
+        drawFloors(result.floors!!, maxX)
+        drawWalls(result.floors!!, result.wall!!, maxX, maxY)
+        drawFurniture(result.furnitures!!, maxX)
+    }
+
+    private fun setSelectedLayers(selectedTab: SelectedTab) {
+        floor_layer.alpha = if (selectedTab.floor) visibleAlpha else invisibleAlpha
+        wall_layer.alpha = if (selectedTab.wall) visibleAlpha else invisibleAlpha
+        furniture_layer.alpha = if (selectedTab.furniture) visibleAlpha else invisibleAlpha
     }
 
     private fun showControls() {
@@ -104,7 +110,7 @@ class ShopFragment : Fragment() {
         val wallCallback = { wall: WallInfo -> shopViewModel.wallClick(wall, 1) }
         floors.forEach {
             if (it.x == 0 || it.y == maxY) {
-                getWallAsset(it.x, it.y, wallInfo, maxY)?.let { image ->
+                wallInfo.getAsset(it.x, it.y, maxY)?.let { image ->
                     wall_layer.addView(
                         createTile(wallInfo, image, wallCallback),
                         getTileParams(it.x, it.y, maxX, true)
@@ -127,23 +133,6 @@ class ShopFragment : Fragment() {
             )
         }
     }
-
-    private fun getWallAsset(x: Int, y: Int, wall: WallInfo, maxY: Int): Int? {
-        return if (isDoor(wall, x, y)) {
-            wall.wall.imageDoor
-        } else if (x == 0 && y == maxY) {
-            wall.wall.imageCorner
-        } else if (x == 0) {
-            wall.wall.imageEast
-        } else if (y == maxY) {
-            wall.wall.imageNorth
-        } else {
-            null
-        }
-    }
-
-    private fun isDoor(wall: WallInfo, x: Int, y: Int) =
-        wall.isDoorOnX && wall.doorPosition == x || !wall.isDoorOnX && wall.doorPosition == y
 
     private fun getResource(furniture: Furniture, isFacingEast: Boolean, hasBooks: Boolean) = when {
         hasBooks && isFacingEast -> furniture.imageEastFilled ?: furniture.imageEast

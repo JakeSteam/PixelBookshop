@@ -2,4 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <item name="shop_layer_visible_alpha" format="float" type="dimen">1.0f</item>
+    <item name="shop_layer_invisible_alpha" format="float" type="dimen">0.5f</item>
 </resources>

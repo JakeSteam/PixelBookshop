@@ -15,38 +15,13 @@ enum class Furniture(
 ) : Model {
     // Decorations
     Rug(
-        FurnitureType.Decoration,
-        1001,
-        1,
-        R.string.decoration_rug,
-        100,
-        0,
-        1,
-        BookRarity.Common,
-        R.drawable.furniture_rug_n, R.drawable.furniture_rug_e
-    ),
+        FurnitureType.Decoration, 1001, 1, R.string.decoration_rug, 100, 0, 1, BookRarity.Common,
+        R.drawable.furniture_rug_n, R.drawable.furniture_rug_e),
     SingleCandle(
-        FurnitureType.Decoration,
-        1002,
-        2,
-        R.string.decoration_singlecandle,
-        100,
-        1,
-        1,
-        BookRarity.Common,
-        R.drawable.furniture_single_candle_n, R.drawable.furniture_single_candle_e
-    ),
-    TripleCandle(
-        FurnitureType.Decoration,
-        1003,
-        3,
-        R.string.decoration_triplecandle,
-        200,
-        2,
-        10,
-        BookRarity.Common,
-        R.drawable.furniture_triple_candle_n, R.drawable.furniture_triple_candle_e
-    ),
+        FurnitureType.Decoration, 1002, 2, R.string.decoration_singlecandle, 100, 1, 1, BookRarity.Common,
+        R.drawable.furniture_single_candle_n, R.drawable.furniture_single_candle_e),
+    TripleCandle(FurnitureType.Decoration, 1003, 3, R.string.decoration_triplecandle, 200, 2, 10, BookRarity.Common,
+        R.drawable.furniture_triple_candle_n, R.drawable.furniture_triple_candle_e),
 
     // Displays
     Lectern(
