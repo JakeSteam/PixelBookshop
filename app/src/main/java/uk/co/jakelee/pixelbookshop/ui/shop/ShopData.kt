@@ -8,4 +8,8 @@ class ShopData {
     var wall: WallInfo? = null
     var floors: List<OwnedFloor>? = null
     var furnitures: List<OwnedFurnitureWithOwnedBooks>? = null
+
+    fun isValid() = wall != null
+            && floors?.size ?: 0 > 0
+            && furnitures?.size ?: 0 > 0
 }
