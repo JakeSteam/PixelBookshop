@@ -14,7 +14,6 @@
         android:layout_height="0dp"
         android:indeterminate="false"
         android:progressDrawable="@drawable/progressbar_vertical"
-        android:progress="75"
         android:layout_margin="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -36,42 +35,63 @@
         android:id="@+id/text_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:background="@drawable/ui_element"
         android:gravity="center"
         android:textSize="18sp"
-        android:layout_margin="2dp"
+        app:layout_constraintBottom_toTopOf="@id/text_stock_progress"
+        app:layout_constraintEnd_toStartOf="@id/text_coins_progress"
         app:layout_constraintStart_toEndOf="@id/text_level_progress"
-        app:layout_constraintEnd_toStartOf="@id/text_coins"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/text_stock"
-        android:background="@drawable/ui_element"
-        tools:text="13457xp"/>
+        tools:text="13457xp" />
 
+    <ProgressBar
+        android:id="@+id/text_stock_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_margin="2dp"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/progressbar_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/text_coins_progress"
+        app:layout_constraintStart_toStartOf="@id/text_time"
+        app:layout_constraintTop_toBottomOf="@id/text_time" />
     <TextView
         android:id="@+id/text_stock"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@id/text_time"
-        app:layout_constraintTop_toBottomOf="@id/text_time"
-        app:layout_constraintEnd_toEndOf="@id/text_time"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/ui_element"
+        app:layout_constraintStart_toStartOf="@id/text_stock_progress"
+        app:layout_constraintTop_toTopOf="@id/text_stock_progress"
+        app:layout_constraintEnd_toEndOf="@id/text_stock_progress"
+        app:layout_constraintBottom_toBottomOf="@id/text_stock_progress"
         tools:text="100 books"/>
 
-    <TextView
-        android:id="@+id/text_coins"
-        android:layout_width="wrap_content"
+    <ProgressBar
+        android:id="@+id/text_coins_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="50dp"
         android:layout_height="0dp"
-        android:gravity="center"
-        android:textSize="24sp"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/progressbar_vertical"
         android:layout_margin="2dp"
         app:layout_constraintStart_toEndOf="@id/text_time"
         app:layout_constraintEnd_toStartOf="@id/text_notifications"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/ui_element"
-        tools:text="130"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+        android:id="@+id/text_coins"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@id/text_coins_progress"
+        app:layout_constraintTop_toTopOf="@id/text_coins_progress"
+        app:layout_constraintBottom_toBottomOf="@id/text_coins_progress"
+        app:layout_constraintEnd_toEndOf="@id/text_coins_progress"
+        tools:text="16"/>
 
     <TextView
         android:id="@+id/text_notifications"

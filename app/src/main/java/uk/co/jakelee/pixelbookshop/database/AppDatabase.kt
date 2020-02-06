@@ -59,7 +59,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         suspend fun initialiseDatabase(database: AppDatabase) {
-            database.playerDao().insert(Player("Jake", 100, 50))
+            database.playerDao().insert(Player("Jake", 100, 5000))
 
             val wallInfo = WallInfo(Wall.StoneWindow, false, 3)
             database.shopDao().insert(
@@ -172,6 +172,15 @@ abstract class AppDatabase : RoomDatabase() {
                     1,
                     OwnedBookDefect.FoldedPages,
                     OwnedBookQuality.Poor,
+                    OwnedBookSource.Gift,
+                    OwnedBookType.Paperback
+                ),
+                OwnedBook(
+                    2,
+                    Book.MartinGameOfThrones,
+                    null,
+                    OwnedBookDefect.None,
+                    OwnedBookQuality.New,
                     OwnedBookSource.Gift,
                     OwnedBookType.Paperback
                 )

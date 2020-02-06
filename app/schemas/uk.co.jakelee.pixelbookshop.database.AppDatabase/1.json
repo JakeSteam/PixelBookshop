@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "75d6f42c594eefacc077e5bb403e9157",
+    "identityHash": "a9eb39283a6b14ff7ea2bddbffac4d63",
     "entities": [
       {
         "tableName": "OwnedBook",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `book` INTEGER NOT NULL, `ownedFurnitureId` INTEGER NOT NULL, `bookDefect` INTEGER NOT NULL, `bookQuality` INTEGER NOT NULL, `bookSource` INTEGER NOT NULL, `bookType` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `book` INTEGER NOT NULL, `ownedFurnitureId` INTEGER, `bookDefect` INTEGER NOT NULL, `bookQuality` INTEGER NOT NULL, `bookSource` INTEGER NOT NULL, `bookType` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -24,7 +24,7 @@
             "fieldPath": "ownedFurnitureId",
             "columnName": "ownedFurnitureId",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "bookDefect",
@@ -292,7 +292,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '75d6f42c594eefacc077e5bb403e9157')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a9eb39283a6b14ff7ea2bddbffac4d63')"
     ]
   }
 }
