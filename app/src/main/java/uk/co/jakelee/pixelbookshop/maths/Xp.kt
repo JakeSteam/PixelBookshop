@@ -1,4 +1,4 @@
-package uk.co.jakelee.pixelbookshop.converters
+package uk.co.jakelee.pixelbookshop.maths
 
 import kotlin.math.floor
 import kotlin.math.pow
