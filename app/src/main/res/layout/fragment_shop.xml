@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical|horizontal"
+        android:background="@color/black"
         app:alignment="center"
         app:animationDuration="280"
         app:flingEnabled="true"

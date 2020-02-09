@@ -67,7 +67,7 @@ class StatusFragment : Fragment() {
             val calendar = Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, it.hour)
             }
-            val formattedTime = SimpleDateFormat("ha", Locale.ROOT).format(calendar.time)
+            val formattedTime = SimpleDateFormat("ha", Locale.ROOT).format(calendar.time).toLowerCase()
             text_time.text = String.format(
                 Locale.UK,
                 getString(R.string.date_progression),

@@ -51,7 +51,7 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
         val mediatorLiveData = MediatorLiveData<BookData>()
         val current = BookData(null, null, null)
         mediatorLiveData.addSource(ownedBookRepo.allBooks) { books ->
-            // Gets all books not currently in furniture
+            // Gets all books not in / in furniture
             current.unassignedBooks = books.count { it.ownedFurnitureId == null }
             current.assignedBooks = books.size - current.unassignedBooks!!
             mediatorLiveData.setValue(current)

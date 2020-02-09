@@ -72,28 +72,28 @@ enum class Furniture(
         FurnitureType.Storage, 4001, 1, R.string.storage_chest, 100, 10, 1, BookRarity.Common,
         R.drawable.furniture_chest_n, R.drawable.furniture_chest_e),
     Crate(
-        FurnitureType.Storage, 4002, 2, R.string.storage_crate, 100, 10, 1, BookRarity.Common,
+        FurnitureType.Storage, 4002, 2, R.string.storage_crate, 100, 20, 1, BookRarity.Common,
         R.drawable.furniture_crate_n, R.drawable.furniture_crate_e),
     TripleCrate(
-        FurnitureType.Storage, 4003, 3, R.string.storage_triplecrate, 100, 10, 1, BookRarity.Common,
+        FurnitureType.Storage, 4003, 3, R.string.storage_triplecrate, 100, 50, 1, BookRarity.Common,
         R.drawable.furniture_triple_crate_n, R.drawable.furniture_triple_crate_e),
     Barrel(
-        FurnitureType.Storage, 4004, 4, R.string.storage_barrel, 100, 10, 1, BookRarity.Common,
+        FurnitureType.Storage, 4004, 4, R.string.storage_barrel, 100, 100, 1, BookRarity.Common,
         R.drawable.furniture_barrel_n, R.drawable.furniture_barrel_e),
     TripleBarrel(
-        FurnitureType.Storage, 4005, 4, R.string.storage_triplebarrel, 100, 10, 1, BookRarity.Common,
+        FurnitureType.Storage, 4005, 4, R.string.storage_triplebarrel, 100, 200, 1, BookRarity.Common,
         R.drawable.furniture_triple_barrel_n, R.drawable.furniture_triple_barrel_e),
     QuintupleBarrel(
-        FurnitureType.Storage, 4006, 5, R.string.storage_quintuplebarrel, 100, 10, 1, BookRarity.Common,
+        FurnitureType.Storage, 4006, 5, R.string.storage_quintuplebarrel, 100, 300, 1, BookRarity.Common,
         R.drawable.furniture_quintuple_barrel_n, R.drawable.furniture_quintuple_barrel_e)
 }
 
 fun Furniture.coinCapacity(): Int {
     if (this.type != FurnitureType.Storage) return 0
-    return this.capacity * 100
+    return this.capacity * 10
 }
 
 fun Furniture.bookCapacity(): Int {
     if (this.type != FurnitureType.Storage) return 0
-    return this.capacity * 10
+    return this.capacity
 }

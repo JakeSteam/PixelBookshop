@@ -12,6 +12,7 @@ import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
+import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
 import uk.co.jakelee.pixelbookshop.repository.ShopRepository
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
@@ -19,6 +20,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFloorRepo: OwnedFloorRepository
     private val ownedFurnitureRepo: OwnedFurnitureRepository
     private val shopRepo: ShopRepository
+    private val playerRepo: PlayerRepository
 
     private val ownedFloor: LiveData<List<OwnedFloor>>
     private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
@@ -41,6 +43,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
         shopRepo = ShopRepository(shopDao, 1)
         wall = shopRepo.wall
+
+        val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
+        playerRepo = PlayerRepository(playerDao)
     }
 
     fun setOrResetMode(selectedTab: ShopFragment.SelectedTab) {
@@ -82,7 +87,13 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     fun floorClick(floor: OwnedFloor) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
-                ShopFragment.SelectedTab.UPGRADE -> ownedFloorRepo.upgradeFloor(floor)
+                ShopFragment.SelectedTab.UPGRADE -> floor.floor?.let {
+                    if (playerRepo.canPurchase(it.cost, 0)) {
+                        ownedFloorRepo.upgradeFloor(floor)
+                        playerRepo.addXp(it.cost)
+                        playerRepo.removeCoins(it.cost)
+                    }
+                }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
                 ShopFragment.SelectedTab.MOVE -> {
                     ownedFurnitureRepo.moveFurni(floor, selectedFurni)

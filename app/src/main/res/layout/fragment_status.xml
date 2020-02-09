@@ -25,12 +25,15 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:gravity="center"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="@id/text_level_progress"
         app:layout_constraintTop_toTopOf="@id/text_level_progress"
         app:layout_constraintBottom_toBottomOf="@id/text_stock_progress"
         app:layout_constraintEnd_toEndOf="@id/text_level_progress"
-        tools:text="16"/>
+        tools:text="16"
+        android:fontFamily="@font/fenwickwoodtype"
+        app:fontFamily="@font/fenwickwoodtype"
+        android:textColor="@color/black"/>
 
     <ProgressBar
         android:id="@+id/text_time_progress"
@@ -52,11 +55,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="18sp"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@id/text_time_progress"
         app:layout_constraintEnd_toStartOf="@id/text_coins_progress"
         app:layout_constraintStart_toEndOf="@id/text_level_progress"
         app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/fenwickwoodtype"
+        app:fontFamily="@font/fenwickwoodtype"
+        android:textColor="@color/black"
         tools:text="Day 1: 4pm" />
 
     <ProgressBar
@@ -77,11 +83,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="18sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@id/text_stock_progress"
         app:layout_constraintTop_toTopOf="@id/text_stock_progress"
         app:layout_constraintEnd_toEndOf="@id/text_stock_progress"
         app:layout_constraintBottom_toBottomOf="@id/text_stock_progress"
+        android:fontFamily="@font/fenwickwoodtype"
+        app:fontFamily="@font/fenwickwoodtype"
+        android:textColor="@color/black"
         tools:text="100 books"/>
 
     <ProgressBar
@@ -102,11 +111,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="@id/text_coins_progress"
         app:layout_constraintTop_toTopOf="@id/text_coins_progress"
         app:layout_constraintBottom_toBottomOf="@id/text_coins_progress"
         app:layout_constraintEnd_toEndOf="@id/text_coins_progress"
+        android:fontFamily="@font/fenwickwoodtype"
+        app:fontFamily="@font/fenwickwoodtype"
+        android:textColor="@color/black"
         tools:text="16"/>
 
     <ProgressBar
@@ -117,7 +129,7 @@
         android:indeterminate="false"
         android:progressDrawable="@drawable/progressbar_vertical"
         android:layout_marginEnd="2dp"
-        tools:progress="50"
+        android:max="1"
         app:layout_constraintStart_toEndOf="@id/text_coins"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -127,10 +139,13 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="@id/text_notifications_progress"
         app:layout_constraintEnd_toEndOf="@id/text_notifications_progress"
         app:layout_constraintTop_toTopOf="@id/text_notifications_progress"
         app:layout_constraintBottom_toBottomOf="@id/text_notifications_progress"
+        android:fontFamily="@font/fenwickwoodtype"
+        app:fontFamily="@font/fenwickwoodtype"
+        android:textColor="@color/black"
         android:text="!"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
