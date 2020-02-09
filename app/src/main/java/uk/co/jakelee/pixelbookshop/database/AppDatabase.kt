@@ -59,7 +59,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         suspend fun initialiseDatabase(database: AppDatabase) {
-            database.playerDao().insert(Player("Jake", 100, 5000))
+            database.playerDao().insert(Player("Jake", 100, 5000, 5, 8))
 
             val wallInfo = WallInfo(Wall.StoneWindow, false, 3)
             database.shopDao().insert(

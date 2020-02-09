@@ -8,5 +8,7 @@ import androidx.room.PrimaryKey
 data class Player(
     @PrimaryKey val name: String,
     @ColumnInfo val xp: Long,
-    @ColumnInfo val coins: Long
+    @ColumnInfo val coins: Long,
+    @ColumnInfo val day: Int,
+    @ColumnInfo val hour: Int
 )

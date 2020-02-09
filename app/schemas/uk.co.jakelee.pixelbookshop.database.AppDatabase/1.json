@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a9eb39283a6b14ff7ea2bddbffac4d63",
+    "identityHash": "e32b6933f69e28027ad4e94eb1f7ef36",
     "entities": [
       {
         "tableName": "OwnedBook",
@@ -208,7 +208,7 @@
       },
       {
         "tableName": "Player",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `xp` INTEGER NOT NULL, `coins` INTEGER NOT NULL, PRIMARY KEY(`name`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `xp` INTEGER NOT NULL, `coins` INTEGER NOT NULL, `day` INTEGER NOT NULL, `hour` INTEGER NOT NULL, PRIMARY KEY(`name`))",
         "fields": [
           {
             "fieldPath": "name",
@@ -225,6 +225,18 @@
           {
             "fieldPath": "coins",
             "columnName": "coins",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "day",
+            "columnName": "day",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hour",
+            "columnName": "hour",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -292,7 +304,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a9eb39283a6b14ff7ea2bddbffac4d63')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e32b6933f69e28027ad4e94eb1f7ef36')"
     ]
   }
 }

@@ -76,8 +76,7 @@ enum class Furniture(
         R.drawable.furniture_crate_n, R.drawable.furniture_crate_e),
     TripleCrate(
         FurnitureType.Storage, 4003, 3, R.string.storage_triplecrate, 100, 10, 1, BookRarity.Common,
-        R.drawable.furniture_triple_crate_n, R.drawable.furniture_triple_crate_e
-    ),
+        R.drawable.furniture_triple_crate_n, R.drawable.furniture_triple_crate_e),
     Barrel(
         FurnitureType.Storage, 4004, 4, R.string.storage_barrel, 100, 10, 1, BookRarity.Common,
         R.drawable.furniture_barrel_n, R.drawable.furniture_barrel_e),
@@ -87,4 +86,14 @@ enum class Furniture(
     QuintupleBarrel(
         FurnitureType.Storage, 4006, 5, R.string.storage_quintuplebarrel, 100, 10, 1, BookRarity.Common,
         R.drawable.furniture_quintuple_barrel_n, R.drawable.furniture_quintuple_barrel_e)
+}
+
+fun Furniture.coinCapacity(): Int {
+    if (this.type != FurnitureType.Storage) return 0
+    return this.capacity * 100
+}
+
+fun Furniture.bookCapacity(): Int {
+    if (this.type != FurnitureType.Storage) return 0
+    return this.capacity * 10
 }

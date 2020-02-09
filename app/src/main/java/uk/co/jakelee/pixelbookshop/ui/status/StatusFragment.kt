@@ -9,9 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_status.*
 import uk.co.jakelee.pixelbookshop.R
-import uk.co.jakelee.pixelbookshop.maths.Xp
-import kotlin.math.ln
-import kotlin.math.pow
+import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
+import uk.co.jakelee.pixelbookshop.utils.FormatHelper
+import uk.co.jakelee.pixelbookshop.utils.Xp
+import java.text.SimpleDateFormat
+import java.util.*
 
 class StatusFragment : Fragment() {
 
@@ -23,33 +25,55 @@ class StatusFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         statusViewModel = ViewModelProvider(this).get(StatusViewModel::class.java)
-        statusViewModel.getBookData().observe(this.activity!!, Observer { it?.let {
-            if (!it.isValid()) return@Observer
-            text_stock.text = "${it.books} / ${it.max}"
-            text_stock_progress.max = it.max!!
-            text_stock_progress.progress = it.books!!
-        }})
-        statusViewModel.getCoinData().observe(this.activity!!, Observer { it?.let {
-            if (!it.isValid()) return@Observer
-            text_coins.text = it.coins!!.withSuffix()
-            text_coins_progress.max = it.max!!
-            text_coins_progress.progress = it.coins!!
-        }})
-        statusViewModel.xp.observe(this.activity!!, Observer { it?.let {
-            val level = Xp.xpToLevel(it)
-            text_level.text = "$level"
-            text_level_progress.progress = Xp.getLevelProgress(it)
-        }})
+        statusViewModel.getBookData().observe(this.activity!!, stockObserver)
+        statusViewModel.getCoinData().observe(this.activity!!, coinObserver)
+        statusViewModel.xp.observe(this.activity!!, xpObserver)
+        statusViewModel.date.observe(this.activity!!, dateObserver)
         return inflater.inflate(R.layout.fragment_status, container, false)
     }
 
-    private fun Int.withSuffix(): String {
-        if (this < 1000) return "" + this
-        val exp = (ln(this.toDouble()) / ln(1000.0)).toInt()
-        return String.format(
-            "%.1f%c",
-            this / 1000.0.pow(exp.toDouble()),
-            "kMGTPE"[exp - 1]
-        )
+    private val stockObserver: Observer<StatusViewModel.BookData> = Observer {
+        it?.let {
+            if (!it.isValid()) return@Observer
+            text_stock.text = String.format(
+                Locale.UK, getString(R.string.shop_stock),
+                it.assignedBooks, it.unassignedBooks, it.maxUnassignedBooks
+            )
+            text_stock_progress.max = it.maxUnassignedBooks!!
+            text_stock_progress.progress = it.unassignedBooks!!
+        }
+    }
+
+    private val coinObserver: Observer<StatusViewModel.CoinData> = Observer {
+        it?.let {
+            if (!it.isValid()) return@Observer
+            text_coins.text = FormatHelper.int(it.coins!!)
+            text_coins_progress.max = it.max!!
+            text_coins_progress.progress = it.coins!!
+        }
+    }
+
+    private val xpObserver: Observer<Long> = Observer {
+        it?.let {
+            val level = Xp.xpToLevel(it)
+            text_level.text = "$level"
+            text_level_progress.progress = Xp.getLevelProgress(it)
+        }
+    }
+
+    private val dateObserver: Observer<PlayerDao.PlayerDate> = Observer {
+        it?.let {
+            text_time_progress.progress = it.hour
+            val calendar = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, it.hour)
+            }
+            val formattedTime = SimpleDateFormat("ha", Locale.ROOT).format(calendar.time)
+            text_time.text = String.format(
+                Locale.UK,
+                getString(R.string.date_progression),
+                it.day,
+                formattedTime
+            )
+        }
     }
 }

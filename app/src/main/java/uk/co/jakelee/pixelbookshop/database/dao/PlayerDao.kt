@@ -22,8 +22,11 @@ interface PlayerDao {
     @Query("SELECT coins FROM player")
     fun getCoins(): LiveData<Long>
 
+    @Query("SELECT day, hour FROM player")
+    fun getDateTime(): LiveData<PlayerDate>
+
     @Query("UPDATE player SET xp = (xp + :xp)")
     fun addXp(xp: Int)
 
-
+    data class PlayerDate(val day: Int, val hour: Int)
 }

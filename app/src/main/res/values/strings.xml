@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Pixel Bookshop</string>
+
+    <string name="date_progression">Day %1$d: %2$s</string>
+    <string name="shop_stock">%1$d for sale, %2$d / %3$d stored</string>
+
     <string name="title_shop">Shop</string>
     <string name="title_stock">Stockroom</string>
     <string name="title_customise">Customise</string>

@@ -5,6 +5,7 @@ import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
 class PlayerRepository(private val playerDao: PlayerDao) {
 
     val name = playerDao.getName()
+    val date = playerDao.getDateTime()
     val xp = playerDao.getXp()
     val coins = playerDao.getCoins()
 
