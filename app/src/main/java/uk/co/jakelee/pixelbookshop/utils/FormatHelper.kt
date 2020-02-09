@@ -1,18 +1,19 @@
 package uk.co.jakelee.pixelbookshop.utils
 
-import kotlin.math.ln
-import kotlin.math.pow
+import java.text.DecimalFormat
 
 class FormatHelper {
     companion object {
         fun int(number: Int): String {
-            if (number < 1000) return "" + this
-            val exp = (ln(number.toDouble()) / ln(1000.0)).toInt()
-            return String.format(
-                "%.1f%c",
-                number / 1000.0.pow(exp.toDouble()),
-                "kMGTPE"[exp - 1]
-            )
+            val suffixes = arrayOf("", "K", "M", "B", "T", "P", "E")
+            var index = 0
+            var result = number
+            while (result / 1000 >= 1) {
+                result /= 1000
+                index++
+            }
+            val decimalFormat = DecimalFormat("#.##")
+            return String.format("%s%s", decimalFormat.format(result), suffixes[index])
         }
     }
 }
