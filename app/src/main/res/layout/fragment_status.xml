@@ -13,13 +13,13 @@
         android:layout_width="50dp"
         android:layout_height="0dp"
         android:indeterminate="false"
-        android:layout_marginRight="2dp"
+        android:layout_marginEnd="2dp"
         android:progressDrawable="@drawable/progressbar_vertical"
         tools:progress="50"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/text_stock_progress"
-        app:layout_constraintEnd_toStartOf="@id/text_time"/>
+        app:layout_constraintEnd_toStartOf="@id/text_time" />
     <TextView
         android:id="@+id/text_level"
         android:layout_width="wrap_content"

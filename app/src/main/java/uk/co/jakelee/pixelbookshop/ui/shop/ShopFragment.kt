@@ -88,25 +88,29 @@ class ShopFragment : Fragment() {
     private fun drawFloors(floors: List<OwnedFloor>, maxX: Int) {
         floor_layer.removeAllViews()
         floors.forEach {
-            val callback = { floor: OwnedFloor -> shopViewModel.floorClick(floor) }
+            val callback = { view: View, floor: OwnedFloor ->
+                shopViewModel.floorClick(floor)
+            }
             tileRenderer.drawFloor(floor_layer, maxX, it, callback)
         }
     }
 
     private fun drawWalls(floors: List<OwnedFloor>, wallInfo: WallInfo, maxX: Int, maxY: Int) {
         wall_layer.removeAllViews()
-        val wallCallback = { wall: WallInfo -> shopViewModel.wallClick(wall, 1) }
+        val callback = { view: View, wall: WallInfo ->
+            shopViewModel.wallClick(wall, 1) }
         floors
             .filter { it.x == 0 || it.y == maxY }
             .forEach {
-                tileRenderer.drawWall(wall_layer, it.x, it.y, maxX, maxY, wallInfo, wallCallback)
+                tileRenderer.drawWall(wall_layer, it.x, it.y, maxX, maxY, wallInfo, callback)
             }
     }
 
     private fun drawFurnitures(furnitures: List<OwnedFurnitureWithOwnedBooks>, maxX: Int) {
         furniture_layer.removeAllViews()
         furnitures.forEach {
-            val callback = { tile: OwnedFurniture -> shopViewModel.furniClick(tile) }
+            val callback = { view: View, tile: OwnedFurniture ->
+                shopViewModel.furniClick(tile) }
             tileRenderer.drawFurniture(furniture_layer, it, maxX, callback)
         }
     }

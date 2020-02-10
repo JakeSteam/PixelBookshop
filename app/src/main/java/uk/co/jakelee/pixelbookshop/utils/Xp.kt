@@ -13,6 +13,8 @@ class Xp {
 
         fun levelToXp(level: Int) = (level / levelModifier).pow(2).toInt()
 
+        fun getNextLevel(xp: Long) = xpToLevel(xp) + 1
+
         fun getLevelProgress(xp: Long): Int {
             val currentLevel = xpToLevel(xp)
 

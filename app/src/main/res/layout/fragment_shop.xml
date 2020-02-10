@@ -9,26 +9,9 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical|horizontal"
         android:background="@color/black"
-        app:alignment="center"
-        app:animationDuration="280"
-        app:flingEnabled="true"
         app:hasClickableChildren="true"
-        app:horizontalPanEnabled="true"
-        app:maxZoom="2.5"
-        app:maxZoomType="zoom"
-        app:minZoom="0.7"
-        app:minZoomType="zoom"
-        app:oneFingerScrollEnabled="true"
-        app:overPinchable="true"
-        app:overScrollHorizontal="true"
-        app:overScrollVertical="true"
-        app:scrollEnabled="true"
-        app:threeFingersScrollEnabled="true"
-        app:transformation="centerInside"
-        app:transformationGravity="auto"
-        app:twoFingersScrollEnabled="true"
-        app:verticalPanEnabled="true"
-        app:zoomEnabled="true">
+        app:maxZoom="4.5"
+        app:minZoom="0.7">
 
         <FrameLayout
             android:id="@+id/shop"

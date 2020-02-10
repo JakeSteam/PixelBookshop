@@ -20,7 +20,7 @@ class TileRenderer(private val context: Context) {
     private val tileWidth = 64
     private val tileHeight = 128
 
-    fun drawFloor(layout: ViewGroup, maxX: Int, ownedFloor: OwnedFloor, callback: (OwnedFloor) -> (Any)) {
+    fun drawFloor(layout: ViewGroup, maxX: Int, ownedFloor: OwnedFloor, callback: (View, OwnedFloor) -> (Any)) {
         val floorResource = ownedFloor.floor?.let { floor ->
             if (ownedFloor.isFacingEast) floor.imageEast else floor.imageNorth
         } ?: android.R.color.transparent
@@ -29,7 +29,7 @@ class TileRenderer(private val context: Context) {
         layout.addView(tile, params)
     }
 
-    fun drawWall(layout: ViewGroup, x: Int, y: Int, maxX: Int, maxY: Int, wallInfo: WallInfo, callback: (WallInfo) -> (Any)) {
+    fun drawWall(layout: ViewGroup, x: Int, y: Int, maxX: Int, maxY: Int, wallInfo: WallInfo, callback: (View, WallInfo) -> (Any)) {
         wallInfo.getAsset(x, y, maxY)?.let {
             val tile = createTile(wallInfo, it, callback)
             val params = getTileParams(x, y, maxX, true)
@@ -37,7 +37,7 @@ class TileRenderer(private val context: Context) {
         }
     }
 
-    fun drawFurniture(layout: ViewGroup, ownedFurniture: OwnedFurnitureWithOwnedBooks, maxX: Int, callback: (OwnedFurniture) -> Any) {
+    fun drawFurniture(layout: ViewGroup, ownedFurniture: OwnedFurnitureWithOwnedBooks, maxX: Int, callback: (View, OwnedFurniture) -> Any) {
         val books = ownedFurniture.ownedBooks
         val furniture = ownedFurniture.ownedFurniture
         val resource = getFurnitureResource(furniture.furniture, furniture.isFacingEast, books.isNotEmpty())
@@ -47,7 +47,7 @@ class TileRenderer(private val context: Context) {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    fun <T : Any> createTile(tile: T, @DrawableRes resource: Int, callback: (T) -> (Any)) =
+    fun <T : Any> createTile(tile: T, @DrawableRes resource: Int, callback: (View, T) -> (Any)) =
         ImageView(context).apply {
             isDrawingCacheEnabled = true
             setImageResource(resource)
@@ -59,7 +59,7 @@ class TileRenderer(private val context: Context) {
                     return@OnTouchListener false
                 } else {
                     if (event.action == MotionEvent.ACTION_UP) {
-                        callback.invoke(tile)
+                        callback.invoke(this, tile)
                     }
                     return@OnTouchListener true
                 }
