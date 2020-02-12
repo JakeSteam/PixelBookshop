@@ -13,6 +13,9 @@ interface PlayerDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(player: Player)
 
+    @Query("SELECT * FROM player")
+    fun getPlayer(): LiveData<Player>
+
     @Query("SELECT name FROM player")
     fun getName(): LiveData<String>
 

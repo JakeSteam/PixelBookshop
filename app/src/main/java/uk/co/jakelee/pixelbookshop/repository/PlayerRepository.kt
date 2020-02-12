@@ -9,10 +9,11 @@ class PlayerRepository(private val playerDao: PlayerDao) {
     val date = playerDao.getDateTime()
     val xp = playerDao.getXp()
     val coins = playerDao.getCoins()
+    val player = playerDao.getPlayer()
 
     suspend fun canPurchase(cost: Int, level: Int): Boolean {
-        return Xp.xpToLevel(xp.value ?: 0) >= level
-                && cost <= coins.value ?: 0
+        return Xp.xpToLevel(player.value?.xp ?: 0) >= level
+                && cost <= player.value?.coins ?: 0
     }
 
     suspend fun addXp(newXp: Int) {

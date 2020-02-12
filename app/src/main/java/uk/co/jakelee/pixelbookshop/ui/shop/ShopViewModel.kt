@@ -6,10 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
-import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
+import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
 import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
@@ -27,6 +24,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val wall: LiveData<WallInfo>
 
     private var selectedFurni: OwnedFurniture? = null
+    var player: LiveData<Player>
 
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
 
@@ -46,6 +44,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)
+        player = playerRepo.player
     }
 
     fun setOrResetMode(selectedTab: ShopFragment.SelectedTab) {
