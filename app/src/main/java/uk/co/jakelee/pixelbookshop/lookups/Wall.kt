@@ -6,7 +6,7 @@ import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.interfaces.Model
 
 enum class Wall(
-    override val id: Int, tier: Int, @StringRes name: Int, cost: Int, modifier: Double,
+    override val id: Int, tier: Int, @StringRes name: Int, val cost: Int, modifier: Double,
     @DrawableRes val imageNorth: Int, @DrawableRes val imageEast: Int, @DrawableRes val imageCorner: Int, @DrawableRes val imageDoor: Int
 ) : Model {
     Fence(1, 1, R.string.wall_fence, 10, 1.0, R.drawable.wall_fence_n, R.drawable.wall_fence_e, R.drawable.wall_fence_c, R.drawable.wall_fence_d),

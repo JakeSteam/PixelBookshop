@@ -77,7 +77,13 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     fun wallClick(wall: WallInfo, shopId: Int) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
-                ShopFragment.SelectedTab.UPGRADE -> shopRepo.upgradeWall(wall.wall, shopId)
+                ShopFragment.SelectedTab.UPGRADE -> wall.wall.also {
+                    if (playerRepo.canPurchase(it.cost, 0)) {
+                        shopRepo.upgradeWall(it, shopId)
+                        playerRepo.addXp(it.cost)
+                        playerRepo.removeCoins(it.cost)
+                    }
+                }
                 else -> null
             }
         }
@@ -106,7 +112,13 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     fun furniClick(furni: OwnedFurniture) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
-                ShopFragment.SelectedTab.UPGRADE -> ownedFurnitureRepo.upgradeFurni(furni)
+                ShopFragment.SelectedTab.UPGRADE -> furni.furniture.also {
+                    if (playerRepo.canPurchase(it.cost, it.level)) {
+                        ownedFurnitureRepo.upgradeFurni(furni)
+                        playerRepo.addXp(it.cost)
+                        playerRepo.removeCoins(it.cost)
+                    }
+                }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)
                 ShopFragment.SelectedTab.MOVE -> {
                     if (selectedFurni == null) {
