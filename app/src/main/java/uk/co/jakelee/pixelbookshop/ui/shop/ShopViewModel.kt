@@ -22,9 +22,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFloor: LiveData<List<OwnedFloor>>
     private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     private val wall: LiveData<WallInfo>
+    private val player: LiveData<Player>
 
     private var selectedFurni: OwnedFurniture? = null
-    var player: LiveData<Player>
 
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
 
@@ -70,6 +70,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             current.furnitures = list
             mediatorLiveData.setValue(current)
         }
+        mediatorLiveData.addSource(player) { player ->
+            current.player = player
+            mediatorLiveData.setValue(current)
+        }
         return mediatorLiveData
     }
 
@@ -80,8 +84,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 ShopFragment.SelectedTab.UPGRADE -> wall.wall.also {
                     if (playerRepo.canPurchase(it.cost, 0)) {
                         shopRepo.upgradeWall(it, shopId)
-                        playerRepo.addXp(it.cost)
-                        playerRepo.removeCoins(it.cost)
+                        playerRepo.purchase(it.cost)
                     }
                 }
                 else -> null
@@ -95,8 +98,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 ShopFragment.SelectedTab.UPGRADE -> floor.floor?.let {
                     if (playerRepo.canPurchase(it.cost, 0)) {
                         ownedFloorRepo.upgradeFloor(floor)
-                        playerRepo.addXp(it.cost)
-                        playerRepo.removeCoins(it.cost)
+                        playerRepo.purchase(it.cost)
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
@@ -115,8 +117,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 ShopFragment.SelectedTab.UPGRADE -> furni.furniture.also {
                     if (playerRepo.canPurchase(it.cost, it.level)) {
                         ownedFurnitureRepo.upgradeFurni(furni)
-                        playerRepo.addXp(it.cost)
-                        playerRepo.removeCoins(it.cost)
+                        playerRepo.purchase(it.cost)
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)

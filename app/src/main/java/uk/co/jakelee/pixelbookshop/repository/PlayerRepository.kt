@@ -16,6 +16,11 @@ class PlayerRepository(private val playerDao: PlayerDao) {
                 && cost <= player.value?.coins ?: 0
     }
 
+    suspend fun purchase(cost: Int) {
+        playerDao.addXp(cost)
+        playerDao.removeCoins(cost)
+    }
+
     suspend fun addXp(newXp: Int) {
         playerDao.addXp(newXp)
     }

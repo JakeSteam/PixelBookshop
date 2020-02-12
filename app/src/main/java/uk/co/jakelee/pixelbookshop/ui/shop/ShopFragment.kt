@@ -9,7 +9,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import kotlinx.android.synthetic.main.fragment_shop.view.*
-import uk.co.jakelee.pixelbookshop.database.entity.*
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
+import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
 
 class ShopFragment : Fragment() {
 
@@ -41,7 +44,6 @@ class ShopFragment : Fragment() {
         root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
-        shopViewModel.player.observe(viewLifecycleOwner, Observer<Player> {})
         return root
     }
 
