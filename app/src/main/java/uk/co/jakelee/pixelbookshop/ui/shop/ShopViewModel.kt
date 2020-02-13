@@ -102,9 +102,11 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
-                ShopFragment.SelectedTab.MOVE -> {
-                    ownedFurnitureRepo.moveFurni(floor, selectedFurni)
-                    selectedFurni = null
+                ShopFragment.SelectedTab.MOVE -> wall.value?.let {
+                    if (!it.isDoor(floor.x, floor.y, ownedFloor.value!!.first().y)) {
+                        ownedFurnitureRepo.moveFurni(floor, selectedFurni)
+                        selectedFurni = null
+                    }
                 }
                 else -> null
             }
@@ -121,10 +123,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)
-                ShopFragment.SelectedTab.MOVE -> {
+                ShopFragment.SelectedTab.MOVE -> wall.value?.let {
                     if (selectedFurni == null) {
                         selectedFurni = furni
-                    } else {
+                    } else if (!it.isDoor(furni.x, furni.y, ownedFloor.value!!.first().y)) {
                         ownedFurnitureRepo.swap(furni, selectedFurni!!)
                         selectedFurni = null
                     }
