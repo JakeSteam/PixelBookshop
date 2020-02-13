@@ -21,4 +21,7 @@ interface ShopDao {
     @Query("UPDATE shop SET wall = :wall WHERE id = :shopId")
     fun setWall(wall: Wall, shopId: Int)
 
+    @Query("UPDATE shop SET isDoorOnX = :isDoorOnX, doorPosition = :position WHERE id = :shopId")
+    fun setDoor(isDoorOnX: Boolean, position: Int, shopId: Int)
+
 }

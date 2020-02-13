@@ -21,7 +21,7 @@ class ShopFragment : Fragment() {
     enum class SelectedTab(val wall: Boolean, val floor: Boolean, val furniture: Boolean) {
         NONE(true, true, true),
         ROTATE(true, false, true),
-        MOVE(false, false, true),
+        MOVE(true, false, true),
         UPGRADE(true, true, true)
     }
 
@@ -97,11 +97,11 @@ class ShopFragment : Fragment() {
 
     private fun drawWalls(floors: List<OwnedFloor>, wallInfo: WallInfo, maxX: Int, maxY: Int) {
         wall_layer.removeAllViews()
-        val callback = { view: View, wall: WallInfo ->
-            shopViewModel.wallClick(wall, 1) }
         floors
             .filter { it.x == 0 || it.y == maxY }
             .forEach {
+                val callback = { view: View, wall: WallInfo ->
+                    shopViewModel.wallClick(wall, it.x, it.y, 1) }
                 tileRenderer.drawWall(wall_layer, it.x, it.y, maxX, maxY, wallInfo, callback)
             }
     }

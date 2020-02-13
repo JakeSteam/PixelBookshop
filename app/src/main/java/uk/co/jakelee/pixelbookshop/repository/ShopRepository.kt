@@ -9,6 +9,12 @@ class ShopRepository(private val shopDao: ShopDao, id: Int) {
 
     val wall: LiveData<WallInfo> = shopDao.getWall(id)
 
+    suspend fun setDoor(x: Int, y: Int, shopId: Int) {
+        val onY = x == 0
+        val position = if (onY) y else x
+        shopDao.setDoor(!onY, position, shopId)
+    }
+
     suspend fun upgradeWall(wall: Wall, id: Int) {
         val newWall = when (wall) {
             Wall.StoneWindow -> Wall.Fence
