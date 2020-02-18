@@ -20,7 +20,7 @@ class ShopFragment : Fragment() {
 
     enum class SelectedTab(val wall: Boolean, val floor: Boolean, val furniture: Boolean) {
         NONE(true, true, true),
-        ROTATE(true, false, true),
+        ROTATE(false, false, true),
         MOVE(true, false, true),
         UPGRADE(true, true, true)
     }

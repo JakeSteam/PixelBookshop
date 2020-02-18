@@ -19,11 +19,15 @@ data class WallInfo(
     val isDoorOnX: Boolean,
     val doorPosition: Int
 ) {
-    fun isDoor(x: Int, y: Int, maxY: Int) = isDoorOnX && x == doorPosition && y == maxY
-            || !isDoorOnX && y == doorPosition && x == 0
+    fun isDoor(x: Int, y: Int, maxY: Int) = isXTileDoor(x, y, maxY) || isYTileDoor(x, y)
+
+    private fun isXTileDoor(x: Int, y: Int, maxY: Int) = isDoorOnX && x == doorPosition && y == maxY
+
+    private fun isYTileDoor(x: Int, y: Int, minX: Int = 0) = !isDoorOnX && y == doorPosition && x == minX
 
     fun getAsset(x: Int, y: Int, maxY: Int) = when {
-        isDoor(x, y, maxY) -> wall.imageDoor
+        isXTileDoor(x, y, maxY) -> wall.imageDoorNorth
+        isYTileDoor(x, y) -> wall.imageDoorEast
         x == 0 && y == maxY -> wall.imageCorner
         x == 0 -> wall.imageEast
         y == maxY -> wall.imageNorth
