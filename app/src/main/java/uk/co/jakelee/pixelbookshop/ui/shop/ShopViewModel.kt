@@ -81,8 +81,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     fun wallClick(wall: WallInfo, x: Int, y: Int, shopId: Int) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
-                ShopFragment.SelectedTab.MOVE -> {
-                    shopRepo.setDoor(x, y, shopId)
+                ShopFragment.SelectedTab.MOVE -> ownedFurniture.value?.let { furnitures ->
+                    if (!furnitures.any { it.ownedFurniture.x == x && it.ownedFurniture.y == y }) {
+                        shopRepo.setDoor(x, y, shopId)
+                    }
                 }
                 ShopFragment.SelectedTab.UPGRADE -> wall.wall.also {
                     if (playerRepo.canPurchase(it.cost, 0)) {
