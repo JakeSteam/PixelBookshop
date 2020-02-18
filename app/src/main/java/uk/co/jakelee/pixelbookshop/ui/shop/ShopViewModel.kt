@@ -26,6 +26,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     private var selectedFurni: OwnedFurniture? = null
 
+    var latestMessage: MutableLiveData<Pair<Boolean, String>> = MutableLiveData(Pair(false, ""))
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
 
     init {
@@ -90,6 +91,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (playerRepo.canPurchase(it.cost, 0)) {
                         shopRepo.upgradeWall(it, shopId)
                         playerRepo.purchase(it.cost)
+                        latestMessage.postValue(Pair(true, "Purchased wall upgrade!"))
+                    } else {
+                        latestMessage.postValue(Pair(false, "Can't afford wall upgrade!"))
                     }
                 }
                 else -> null
@@ -104,6 +108,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (playerRepo.canPurchase(it.cost, 0)) {
                         ownedFloorRepo.upgradeFloor(floor)
                         playerRepo.purchase(it.cost)
+                        latestMessage.postValue(Pair(true, "Purchased floor upgrade!"))
+                    } else {
+                        latestMessage.postValue(Pair(false, "Can't afford floor upgrade!"))
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
@@ -125,6 +132,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (playerRepo.canPurchase(it.cost, it.level)) {
                         ownedFurnitureRepo.upgradeFurni(furni)
                         playerRepo.purchase(it.cost)
+                        latestMessage.postValue(Pair(true, "Purchased furniture upgrade!"))
+                    } else {
+                        latestMessage.postValue(Pair(false, "Can't afford furniture upgrade!"))
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)

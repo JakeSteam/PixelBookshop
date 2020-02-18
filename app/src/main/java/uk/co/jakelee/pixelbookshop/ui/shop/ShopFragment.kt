@@ -42,9 +42,18 @@ class ShopFragment : Fragment() {
         root.button_rotate.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.ROTATE) }
         root.button_upgrade.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.UPGRADE) }
         root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
+        root.alertClose.setOnClickListener { alert.visibility = View.GONE }
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
+        shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
         return root
+    }
+
+    private val latestMessageObserver = Observer<Pair<Boolean, String>> {
+        if (it.second.isNotEmpty()) {
+            alertText.text = it.second
+            alert.visibility = View.VISIBLE
+        }
     }
 
     private val shopTabObserver = Observer<SelectedTab> {
