@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
+import uk.co.jakelee.pixelbookshop.lookups.NotificationType
 import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
 import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
@@ -26,7 +27,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     private var selectedFurni: OwnedFurniture? = null
 
-    var latestMessage: MutableLiveData<Pair<Boolean, String>> = MutableLiveData(Pair(false, ""))
+    var latestMessage: MutableLiveData<Notification> = MutableLiveData()
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
 
     init {
@@ -91,9 +92,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (playerRepo.canPurchase(it.cost, 0)) {
                         shopRepo.upgradeWall(it, shopId)
                         playerRepo.purchase(it.cost)
-                        latestMessage.postValue(Pair(true, "Purchased wall upgrade!"))
+                        latestMessage.postValue(Notification(0, NotificationType.Positive, "Purchased ${it.name}!", System.currentTimeMillis()))
                     } else {
-                        latestMessage.postValue(Pair(false, "Can't afford wall upgrade!"))
+                        latestMessage.postValue(Notification(0, NotificationType.Negative, "Can't afford upgrade, need ${it.cost} coins!", System.currentTimeMillis()))
                     }
                 }
                 else -> null
@@ -108,9 +109,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (playerRepo.canPurchase(it.cost, 0)) {
                         ownedFloorRepo.upgradeFloor(floor)
                         playerRepo.purchase(it.cost)
-                        latestMessage.postValue(Pair(true, "Purchased floor upgrade!"))
+                        latestMessage.postValue(Notification(0, NotificationType.Positive, "Purchased ${it.name}!", System.currentTimeMillis()))
                     } else {
-                        latestMessage.postValue(Pair(false, "Can't afford floor upgrade!"))
+                        latestMessage.postValue(Notification(0, NotificationType.Negative, "Can't afford upgrade, need ${it.cost} coins!", System.currentTimeMillis()))
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
@@ -132,9 +133,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (playerRepo.canPurchase(it.cost, it.level)) {
                         ownedFurnitureRepo.upgradeFurni(furni)
                         playerRepo.purchase(it.cost)
-                        latestMessage.postValue(Pair(true, "Purchased furniture upgrade!"))
+                        latestMessage.postValue(Notification(0, NotificationType.Positive, "Purchased ${it.name}!", System.currentTimeMillis()))
                     } else {
-                        latestMessage.postValue(Pair(false, "Can't afford furniture upgrade!"))
+                        latestMessage.postValue(Notification(0, NotificationType.Negative, "Can't afford upgrade, need ${it.cost} coins!", System.currentTimeMillis()))
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)

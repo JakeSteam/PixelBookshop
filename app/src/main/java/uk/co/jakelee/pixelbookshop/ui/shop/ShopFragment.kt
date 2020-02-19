@@ -9,10 +9,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_shop.*
 import kotlinx.android.synthetic.main.fragment_shop.view.*
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
-import uk.co.jakelee.pixelbookshop.database.entity.WallInfo
+import uk.co.jakelee.pixelbookshop.R
+import uk.co.jakelee.pixelbookshop.database.entity.*
+import uk.co.jakelee.pixelbookshop.lookups.NotificationType
 
 class ShopFragment : Fragment() {
 
@@ -34,7 +33,7 @@ class ShopFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(uk.co.jakelee.pixelbookshop.R.layout.fragment_shop, container, false)
+        val root = inflater.inflate(R.layout.fragment_shop, container, false)
         tileRenderer = TileRenderer(activity!!)
         shopViewModel = ViewModelProvider(this).get(ShopViewModel::class.java)
         root.button_show.setOnClickListener { showControls() }
@@ -42,16 +41,18 @@ class ShopFragment : Fragment() {
         root.button_rotate.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.ROTATE) }
         root.button_upgrade.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.UPGRADE) }
         root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
-        root.alertClose.setOnClickListener { alert.visibility = View.GONE }
+        root.alert.setOnClickListener { alert.visibility = View.GONE }
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
         return root
     }
 
-    private val latestMessageObserver = Observer<Pair<Boolean, String>> {
-        if (it.second.isNotEmpty()) {
-            alertText.text = it.second
+    private val latestMessageObserver = Observer<Notification> {
+        if (it.message.isNotEmpty()) {
+            alertText.text = it.message
+            val resource = if (it.type == NotificationType.Positive) R.drawable.ui_element else R.drawable.ui_element_greyscale
+            alertText.setBackgroundResource(resource)
             alert.visibility = View.VISIBLE
         }
     }

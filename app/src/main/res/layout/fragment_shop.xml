@@ -47,14 +47,6 @@
         android:padding="8dp"
         android:visibility="gone"
         tools:visibility="visible">
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:src="@drawable/ui_background" />
         <TextView
             android:id="@+id/alertText"
             android:layout_width="0dp"
@@ -73,7 +65,7 @@
             android:id="@+id/alertClose"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_customise"
+            android:src="@drawable/ic_close"
             android:background="@drawable/ui_element"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
