@@ -8,7 +8,9 @@ import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.lookups.Floor
+import uk.co.jakelee.pixelbookshop.lookups.Furniture
 import uk.co.jakelee.pixelbookshop.lookups.MessageType
+import uk.co.jakelee.pixelbookshop.lookups.Wall
 import uk.co.jakelee.pixelbookshop.repository.*
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
@@ -100,12 +102,15 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
                 ShopFragment.SelectedTab.UPGRADE -> wall.wall.also {
-                    if (playerRepo.canPurchase(it.cost, 0)) {
-                        shopRepo.upgradeWall(it, shopId)
-                        playerRepo.purchase(it.cost)
-                        messageRepo.addMessage(MessageType.Positive, "Purchased ${it.name}!")
+                    val nextWall = Wall.values().firstOrNull { wall -> wall.tier > it.tier }
+                    if (nextWall != null && playerRepo.canPurchase(nextWall.cost, 0)) {
+                        shopRepo.upgradeWall(nextWall, shopId)
+                        playerRepo.purchase(nextWall.cost)
+                        messageRepo.addMessage(MessageType.Positive, "Purchased ${nextWall.title}!")
+                    } else if (nextWall != null) {
+                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${nextWall.cost} coins!")
                     } else {
-                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${it.cost} coins!")
+                        messageRepo.addMessage(MessageType.Neutral, "This wall is already fully upgraded!")
                     }
                 }
                 else -> null
@@ -125,7 +130,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     } else if (nextFloor != null) {
                         messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${nextFloor.cost} coins!")
                     } else {
-                        messageRepo.addMessage(MessageType.Neutral, "This tile is already fully upgraded!")
+                        messageRepo.addMessage(MessageType.Neutral, "This floor tile is already fully upgraded!")
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
@@ -144,12 +149,17 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
                 ShopFragment.SelectedTab.UPGRADE -> furni.furniture.also {
-                    if (playerRepo.canPurchase(it.cost, it.level)) {
-                        ownedFurnitureRepo.upgradeFurni(furni)
-                        playerRepo.purchase(it.cost)
-                        messageRepo.addMessage(MessageType.Positive, "Purchased ${it.name}!")
+                    val nextFurni = Furniture.values().firstOrNull { furni ->
+                        furni.type == it.type && furni.tier > it.tier
+                    }
+                    if (nextFurni != null && playerRepo.canPurchase(nextFurni.cost, nextFurni.level)) {
+                        ownedFurnitureRepo.upgradeFurni(furni, nextFurni)
+                        playerRepo.purchase(nextFurni.cost)
+                        messageRepo.addMessage(MessageType.Positive, "Purchased ${nextFurni.title}!")
+                    } else if (nextFurni != null) {
+                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${nextFurni.cost} coins!")
                     } else {
-                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${it.cost} coins!")
+                        messageRepo.addMessage(MessageType.Neutral, "This furniture is already fully upgraded!")
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)

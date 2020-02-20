@@ -60,50 +60,50 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         suspend fun initialiseDatabase(database: AppDatabase) {
-            database.messageDao().insert(Message(0, MessageType.Positive, "First message!", false, System.currentTimeMillis()))
+            database.messageDao().insert(Message(0, MessageType.Positive, "Welcome to the game!", true, System.currentTimeMillis()))
 
             database.playerDao().insert(Player("Jake", 100, 5000, 5, 8))
 
-            val wallInfo = WallInfo(Wall.StoneWindow, false, 3)
+            val wallInfo = WallInfo(Wall.Brick, false, 3)
             database.shopDao().insert(
                 Shop(1, "Jake's Shop", wallInfo, System.currentTimeMillis()))
 
             database.ownedFloorDao().insert(
-                OwnedFloor(1, 0, 0, true, Floor.Stone),
-                OwnedFloor(1, 1, 0, true, Floor.Stone),
-                OwnedFloor(1, 2, 0, true, Floor.Stone),
-                OwnedFloor(1, 3, 0, true, Floor.Stone),
-                OwnedFloor(1, 4, 0, true, Floor.Stone),
-                OwnedFloor(1, 5, 0, true, Floor.Stone),
-                OwnedFloor(1, 6, 0, true, Floor.Stone),
-                OwnedFloor(1, 7, 0, true, Floor.Stone),
+                OwnedFloor(1, 0, 0, true, Floor.StoneMissing),
+                OwnedFloor(1, 1, 0, true, Floor.StoneMissing),
+                OwnedFloor(1, 2, 0, true, Floor.StoneMissing),
+                OwnedFloor(1, 3, 0, true, Floor.StoneMissing),
+                OwnedFloor(1, 4, 0, true, Floor.StoneMissing),
+                OwnedFloor(1, 5, 0, true, Floor.StoneMissing),
+                OwnedFloor(1, 6, 0, true, Floor.StoneMissing),
+                OwnedFloor(1, 7, 0, true, Floor.StoneMissing),
 
-                OwnedFloor(1, 0, 1, true, Floor.Stone),
-                OwnedFloor(1, 1, 1, true, Floor.Stone),
-                OwnedFloor(1, 2, 1, true, Floor.Stone),
-                OwnedFloor(1, 3, 1, true, Floor.Stone),
-                OwnedFloor(1, 4, 1, true, Floor.Stone),
-                OwnedFloor(1, 5, 1, true, Floor.Stone),
-                OwnedFloor(1, 6, 1, true, Floor.Stone),
-                OwnedFloor(1, 7, 1, true, Floor.Stone),
+                OwnedFloor(1, 0, 1, true, Floor.Dirt),
+                OwnedFloor(1, 1, 1, true, Floor.Dirt),
+                OwnedFloor(1, 2, 1, true, Floor.Dirt),
+                OwnedFloor(1, 3, 1, true, Floor.Dirt),
+                OwnedFloor(1, 4, 1, true, Floor.Dirt),
+                OwnedFloor(1, 5, 1, true, Floor.Dirt),
+                OwnedFloor(1, 6, 1, true, Floor.Dirt),
+                OwnedFloor(1, 7, 1, true, Floor.Dirt),
 
-                OwnedFloor(1, 0, 2, true, Floor.Stone),
-                OwnedFloor(1, 1, 2, true, Floor.Stone),
-                OwnedFloor(1, 2, 2, true, Floor.Stone),
-                OwnedFloor(1, 3, 2, true, Floor.Stone),
-                OwnedFloor(1, 4, 2, true, Floor.Stone),
-                OwnedFloor(1, 5, 2, true, Floor.Stone),
-                OwnedFloor(1, 6, 2, true, Floor.Stone),
-                OwnedFloor(1, 7, 2, true, Floor.Stone),
+                OwnedFloor(1, 0, 2, true, Floor.StoneUneven),
+                OwnedFloor(1, 1, 2, true, Floor.StoneUneven),
+                OwnedFloor(1, 2, 2, true, Floor.StoneUneven),
+                OwnedFloor(1, 3, 2, true, Floor.StoneUneven),
+                OwnedFloor(1, 4, 2, true, Floor.StoneUneven),
+                OwnedFloor(1, 5, 2, true, Floor.StoneUneven),
+                OwnedFloor(1, 6, 2, true, Floor.StoneUneven),
+                OwnedFloor(1, 7, 2, true, Floor.StoneUneven),
 
-                OwnedFloor(1, 0, 3, true, Floor.Stone),
-                OwnedFloor(1, 1, 3, true, Floor.Stone),
-                OwnedFloor(1, 2, 3, true, Floor.Stone),
-                OwnedFloor(1, 3, 3, true, Floor.Stone),
-                OwnedFloor(1, 4, 3, true, Floor.Stone),
-                OwnedFloor(1, 5, 3, true, Floor.Stone),
-                OwnedFloor(1, 6, 3, true, Floor.Stone),
-                OwnedFloor(1, 7, 3, true, Floor.Stone),
+                OwnedFloor(1, 0, 3, true, Floor.WoodOld),
+                OwnedFloor(1, 1, 3, true, Floor.WoodOld),
+                OwnedFloor(1, 2, 3, true, Floor.WoodOld),
+                OwnedFloor(1, 3, 3, true, Floor.WoodOld),
+                OwnedFloor(1, 4, 3, true, Floor.WoodOld),
+                OwnedFloor(1, 5, 3, true, Floor.WoodOld),
+                OwnedFloor(1, 6, 3, true, Floor.WoodOld),
+                OwnedFloor(1, 7, 3, true, Floor.WoodOld),
 
                 OwnedFloor(1, 0, 4, true, Floor.Stone),
                 OwnedFloor(1, 1, 4, true, Floor.Stone),

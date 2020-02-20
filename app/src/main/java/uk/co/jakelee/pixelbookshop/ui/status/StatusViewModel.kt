@@ -5,12 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao.PlayerDate
-import uk.co.jakelee.pixelbookshop.database.entity.OwnedBook
 import uk.co.jakelee.pixelbookshop.lookups.bookCapacity
 import uk.co.jakelee.pixelbookshop.lookups.coinCapacity
 import uk.co.jakelee.pixelbookshop.repository.OwnedBookRepository
@@ -76,16 +72,6 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
             mediatorLiveData.setValue(current)
         }
         return mediatorLiveData
-    }
-
-    fun insert(ownedBook: OwnedBook) = viewModelScope.launch {
-       //ownedBookRepo.insert(ownedBook)
-    }
-
-    fun addXp(xp: Int) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            playerRepo.addXp(xp)
-        }
     }
 
 }

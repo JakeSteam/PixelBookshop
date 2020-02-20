@@ -21,15 +21,9 @@ class OwnedFurnitureRepository(private val ownedFurnitureDao: OwnedFurnitureDao)
         ownedFurnitureDao.insert(ownedFurniture)
     }
 
-    suspend fun upgradeFurni(furniture: OwnedFurniture) {
-        val allUpgrades = Furniture.values()
-            .filter { it.type == furniture.furniture.type }
-            .sortedBy { it.tier }
-        val validUpgrades = allUpgrades
-            .filter { it.tier > furniture.furniture.tier }
-
-        furniture.furniture = validUpgrades.firstOrNull() ?: allUpgrades.first()
-        insert(furniture)
+    suspend fun upgradeFurni(ownedFurni: OwnedFurniture, nextFurniture: Furniture) {
+        ownedFurni.furniture = nextFurniture
+        insert(ownedFurni)
     }
 
     suspend fun rotateFurni(furniture: OwnedFurniture) {
