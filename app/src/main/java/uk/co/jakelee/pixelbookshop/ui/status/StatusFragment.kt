@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_status.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
+import uk.co.jakelee.pixelbookshop.database.entity.Message
 import uk.co.jakelee.pixelbookshop.utils.FormatHelper
 import uk.co.jakelee.pixelbookshop.utils.Xp
 import java.text.SimpleDateFormat
@@ -30,10 +31,11 @@ class StatusFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         statusViewModel = ViewModelProvider(this).get(StatusViewModel::class.java)
-        statusViewModel.getBookData().observe(this.activity!!, stockObserver)
-        statusViewModel.getCoinData().observe(this.activity!!, coinObserver)
-        statusViewModel.xp.observe(this.activity!!, xpObserver)
-        statusViewModel.date.observe(this.activity!!, dateObserver)
+        statusViewModel.getBookData().observe(viewLifecycleOwner, stockObserver)
+        statusViewModel.getCoinData().observe(viewLifecycleOwner, coinObserver)
+        statusViewModel.xp.observe(viewLifecycleOwner, xpObserver)
+        statusViewModel.date.observe(viewLifecycleOwner, dateObserver)
+        statusViewModel.messages.observe(viewLifecycleOwner, messagesObserver)
 
         val root = inflater.inflate(R.layout.fragment_status, container, false)
         root.text_level_progress.setOnClickListener { xpClick() }
@@ -104,6 +106,15 @@ class StatusFragment : Fragment() {
                 it.day,
                 formattedTime
             )
+        }
+    }
+
+    private val messagesObserver: Observer<List<Message>> = Observer {
+        it?.let { messages ->
+            val unreadMessages = messages.filter { !it.dismissed }
+            val size = minOf(99, unreadMessages.size)
+            text_messages.text = "$size"
+            text_messages_progress.progress = size
         }
     }
 }

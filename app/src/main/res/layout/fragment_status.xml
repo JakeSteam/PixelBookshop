@@ -103,7 +103,7 @@
         android:layout_marginEnd="2dp"
         tools:progress="50"
         app:layout_constraintStart_toEndOf="@id/text_time"
-        app:layout_constraintEnd_toStartOf="@id/text_notifications_progress"
+        app:layout_constraintEnd_toStartOf="@id/text_messages_progress"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/text_stock_progress"/>
     <TextView
@@ -122,30 +122,31 @@
         tools:text="16"/>
 
     <ProgressBar
-        android:id="@+id/text_notifications_progress"
+        android:id="@+id/text_messages_progress"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="25dp"
+        android:layout_width="30dp"
         android:layout_height="0dp"
         android:indeterminate="false"
         android:progressDrawable="@drawable/progressbar_vertical"
         android:layout_marginEnd="2dp"
-        android:max="1"
+        android:max="100"
         app:layout_constraintStart_toEndOf="@id/text_coins"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/text_coins_progress"/>
+        app:layout_constraintBottom_toBottomOf="@id/text_coins_progress"
+        tools:progress="11"/>
     <TextView
-        android:id="@+id/text_notifications"
+        android:id="@+id/text_messages"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
         android:textSize="30sp"
-        app:layout_constraintStart_toStartOf="@id/text_notifications_progress"
-        app:layout_constraintEnd_toEndOf="@id/text_notifications_progress"
-        app:layout_constraintTop_toTopOf="@id/text_notifications_progress"
-        app:layout_constraintBottom_toBottomOf="@id/text_notifications_progress"
+        app:layout_constraintStart_toStartOf="@id/text_messages_progress"
+        app:layout_constraintEnd_toEndOf="@id/text_messages_progress"
+        app:layout_constraintTop_toTopOf="@id/text_messages_progress"
+        app:layout_constraintBottom_toBottomOf="@id/text_messages_progress"
         android:fontFamily="@font/fenwickwoodtype"
         app:fontFamily="@font/fenwickwoodtype"
         android:textColor="@color/black"
-        android:text="!"/>
+        tools:text="11"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

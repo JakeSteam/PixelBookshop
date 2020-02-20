@@ -10,6 +10,8 @@ class MessageRepository(private val messageDao: MessageDao) {
         messageDao.insert(Message(0, type, message, false, System.currentTimeMillis()))
     }
 
+    fun getMessagesList() = messageDao.getAllMessages()
+
     fun latestMessage() = messageDao.getLatestMessage()
 
     fun dismissMessage(id: Int) = messageDao.dismissMessage(id)

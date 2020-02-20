@@ -7,8 +7,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao.PlayerDate
+import uk.co.jakelee.pixelbookshop.database.entity.Message
 import uk.co.jakelee.pixelbookshop.lookups.bookCapacity
 import uk.co.jakelee.pixelbookshop.lookups.coinCapacity
+import uk.co.jakelee.pixelbookshop.repository.MessageRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedBookRepository
 import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
 import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
@@ -19,9 +21,11 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     private val ownedFurnitureRepo: OwnedFurnitureRepository
     private val ownedBookRepo: OwnedBookRepository
     private val playerRepo: PlayerRepository
+    private val messageRepo: MessageRepository
 
     val date: LiveData<PlayerDate>
     val xp: LiveData<Long>
+    val messages: LiveData<List<Message>>
 
     data class CoinData(var coins: Int?, var max: Int?) {
         fun isValid() = coins != null && max != null
@@ -36,6 +40,9 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
         ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
         val ownedBookDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()
         ownedBookRepo = OwnedBookRepository(ownedBookDao)
+        val messageDao = AppDatabase.getDatabase(application, viewModelScope).messageDao()
+        messageRepo = MessageRepository(messageDao)
+        messages = messageRepo.getMessagesList()
 
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)
@@ -63,13 +70,17 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     fun getCoinData(): MediatorLiveData<CoinData> {
         val mediatorLiveData = MediatorLiveData<CoinData>()
         val current = CoinData(null, null)
-        mediatorLiveData.addSource(playerRepo.coins) { coins ->
-            current.coins = coins.toInt()
-            mediatorLiveData.setValue(current)
+        mediatorLiveData.addSource(playerRepo.coins) {
+            it?.let { coins ->
+                current.coins = coins.toInt()
+                mediatorLiveData.value = current
+            }
         }
-        mediatorLiveData.addSource(ownedFurnitureRepo.allFurniture) { furniture ->
-            current.max = furniture.sumBy { it.furniture.coinCapacity() }
-            mediatorLiveData.setValue(current)
+        mediatorLiveData.addSource(ownedFurnitureRepo.allFurniture) {
+            it?.let { furnitures ->
+                current.max = furnitures.sumBy { furniture -> furniture.furniture.coinCapacity() }
+                mediatorLiveData.value = current
+            }
         }
         return mediatorLiveData
     }
