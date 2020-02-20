@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/shopFragment">
+
+    <fragment
+        android:id="@+id/shopFragment"
+        android:name="uk.co.jakelee.pixelbookshop.ui.shop.ShopFragment"
+        android:label="ShopFragment"
+        tools:layout="@layout/fragment_shop">
+        <action
+            android:id="@+id/action_shopFragment_to_messageFragment"
+            app:destination="@id/messageFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="uk.co.jakelee.pixelbookshop.ui.message.MessageFragment"
+        android:label="MessageFragment"
+        tools:layout="@layout/fragment_message">
+        <action
+            android:id="@+id/action_messageFragment_to_shopFragment"
+            app:destination="@id/shopFragment" />
+    </fragment>
+</navigation>

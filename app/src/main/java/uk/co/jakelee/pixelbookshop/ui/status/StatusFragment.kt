@@ -8,6 +8,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.skydoves.balloon.ArrowOrientation
 import com.skydoves.balloon.Balloon
 import com.skydoves.balloon.BalloonAnimation
@@ -39,6 +40,13 @@ class StatusFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_status, container, false)
         root.text_level_progress.setOnClickListener { xpClick() }
+        root.text_messages_progress.setOnClickListener {
+            if (findNavController().currentDestination?.label == "ShopFragment") {
+                findNavController().navigate(R.id.action_shopFragment_to_messageFragment)
+            } else {
+                findNavController().navigate(R.id.action_messageFragment_to_shopFragment)
+            }
+        }
         return root
     }
 
