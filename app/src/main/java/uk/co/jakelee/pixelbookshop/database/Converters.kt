@@ -37,6 +37,6 @@ class Converters {
     @TypeConverter fun wallToInt(value: Wall) = value.id
     @TypeConverter fun intToWall(id: Int) = Wall.values().first { it.id == id }
 
-    @TypeConverter fun notificationTypeToInt(value: NotificationType) = value.id
-    @TypeConverter fun intToNotificationType(id: Int) = NotificationType.values().first { it.id == id }
+    @TypeConverter fun messageTypeToInt(value: MessageType) = value.id
+    @TypeConverter fun intToMessageType(id: Int) = MessageType.values().first { it.id == id }
 }

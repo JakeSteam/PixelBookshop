@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.interfaces.Model
 
-enum class BookGenre(override val id: Int, @StringRes name: Int, isFiction: Boolean): Model {
+enum class BookGenre(override val id: Int, @StringRes val title: Int, isFiction: Boolean): Model {
     ActionAdventure(1, R.string.genre_actionadventure, true),
     Anthology(2, R.string.genre_anthology, true),
     Comic(4, R.string.genre_comic, true),

@@ -13,23 +13,13 @@ class OwnedFloorRepository(private val ownedFloorDao: OwnedFloorDao) {
         ownedFloorDao.insert(ownedFloor)
     }
 
-    suspend fun upgradeFloor(ownedFloor: OwnedFloor) {
-        ownedFloor.apply {
-            floor = when (floor) {
-                Floor.Stone -> Floor.Dirt
-                Floor.Dirt -> Floor.WoodOld
-                Floor.WoodOld -> Floor.Wood
-                Floor.Wood -> Floor.StoneUneven
-                Floor.StoneUneven -> Floor.StoneMissing
-                Floor.StoneMissing -> Floor.Stone
-                else -> null
-            }
-        }
+    suspend fun upgradeFloor(ownedFloor: OwnedFloor, nextFloor: Floor) {
+        ownedFloor.floor = nextFloor
         insert(ownedFloor)
     }
 
     suspend fun rotateFloor(ownedFloor: OwnedFloor) {
-        ownedFloor.apply { isFacingEast = !isFacingEast }
+        ownedFloor.isFacingEast = !ownedFloor.isFacingEast
         insert(ownedFloor)
     }
 }

@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_shop.*
 import kotlinx.android.synthetic.main.fragment_shop.view.*
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.*
-import uk.co.jakelee.pixelbookshop.lookups.NotificationType
+import uk.co.jakelee.pixelbookshop.lookups.MessageType
 
 class ShopFragment : Fragment() {
 
@@ -41,19 +41,26 @@ class ShopFragment : Fragment() {
         root.button_rotate.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.ROTATE) }
         root.button_upgrade.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.UPGRADE) }
         root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
-        root.alert.setOnClickListener { alert.visibility = View.GONE }
+        root.alert.setOnClickListener {
+            alert.visibility = View.GONE
+            shopViewModel.markMessageAsDismissed()
+        }
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
         return root
     }
 
-    private val latestMessageObserver = Observer<Notification> {
-        if (it.message.isNotEmpty()) {
-            alertText.text = it.message
-            val resource = if (it.type == NotificationType.Positive) R.drawable.ui_element else R.drawable.ui_element_greyscale
-            alertText.setBackgroundResource(resource)
-            alert.visibility = View.VISIBLE
+    private val latestMessageObserver = Observer<Message> {
+        it?.let {
+            if (it.dismissed) {
+                alert.visibility = View.GONE
+            } else {
+                alertText.text = it.message
+                val resource = if (it.type == MessageType.Positive) R.drawable.ui_element else R.drawable.ui_element_greyscale
+                alertText.setBackgroundResource(resource)
+                alert.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -111,7 +118,8 @@ class ShopFragment : Fragment() {
             .filter { it.x == 0 || it.y == maxY }
             .forEach {
                 val callback = { view: View, wall: WallInfo ->
-                    shopViewModel.wallClick(wall, it.x, it.y, 1) }
+                    shopViewModel.wallClick(wall, it.x, it.y, 1)
+                }
                 tileRenderer.drawWall(wall_layer, it.x, it.y, maxX, maxY, wallInfo, callback)
             }
     }
@@ -120,7 +128,8 @@ class ShopFragment : Fragment() {
         furniture_layer.removeAllViews()
         furnitures.forEach {
             val callback = { view: View, tile: OwnedFurniture ->
-                shopViewModel.furniClick(tile) }
+                shopViewModel.furniClick(tile)
+            }
             tileRenderer.drawFurniture(furniture_layer, it, maxX, callback)
         }
     }

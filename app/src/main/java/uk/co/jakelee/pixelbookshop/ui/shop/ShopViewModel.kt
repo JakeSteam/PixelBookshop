@@ -7,11 +7,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
-import uk.co.jakelee.pixelbookshop.lookups.NotificationType
-import uk.co.jakelee.pixelbookshop.repository.OwnedFloorRepository
-import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
-import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
-import uk.co.jakelee.pixelbookshop.repository.ShopRepository
+import uk.co.jakelee.pixelbookshop.lookups.Floor
+import uk.co.jakelee.pixelbookshop.lookups.MessageType
+import uk.co.jakelee.pixelbookshop.repository.*
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -19,15 +17,16 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFurnitureRepo: OwnedFurnitureRepository
     private val shopRepo: ShopRepository
     private val playerRepo: PlayerRepository
+    private val messageRepo: MessageRepository
 
     private val ownedFloor: LiveData<List<OwnedFloor>>
     private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     private val wall: LiveData<WallInfo>
     private val player: LiveData<Player>
+    var latestMessage: LiveData<Message>
 
     private var selectedFurni: OwnedFurniture? = null
 
-    var latestMessage: MutableLiveData<Notification> = MutableLiveData()
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
 
     init {
@@ -47,7 +46,19 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)
         player = playerRepo.player
+
+        val messageDao = AppDatabase.getDatabase(application, viewModelScope).messageDao()
+        messageRepo = MessageRepository(messageDao)
+        latestMessage = messageRepo.latestMessage()
     }
+
+    fun markMessageAsDismissed() = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                latestMessage.value?.let {
+                    messageRepo.dismissMessage(it.id)
+                }
+            }
+        }
 
     fun setOrResetMode(selectedTab: ShopFragment.SelectedTab) {
         if (currentTab.value == selectedTab) {
@@ -92,9 +103,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (playerRepo.canPurchase(it.cost, 0)) {
                         shopRepo.upgradeWall(it, shopId)
                         playerRepo.purchase(it.cost)
-                        latestMessage.postValue(Notification(0, NotificationType.Positive, "Purchased ${it.name}!", System.currentTimeMillis()))
+                        messageRepo.addMessage(MessageType.Positive, "Purchased ${it.name}!")
                     } else {
-                        latestMessage.postValue(Notification(0, NotificationType.Negative, "Can't afford upgrade, need ${it.cost} coins!", System.currentTimeMillis()))
+                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${it.cost} coins!")
                     }
                 }
                 else -> null
@@ -106,12 +117,15 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
                 ShopFragment.SelectedTab.UPGRADE -> floor.floor?.let {
-                    if (playerRepo.canPurchase(it.cost, 0)) {
-                        ownedFloorRepo.upgradeFloor(floor)
-                        playerRepo.purchase(it.cost)
-                        latestMessage.postValue(Notification(0, NotificationType.Positive, "Purchased ${it.name}!", System.currentTimeMillis()))
+                    val nextFloor = Floor.values().firstOrNull { floor -> floor.tier > it.tier }
+                    if (nextFloor != null && playerRepo.canPurchase(nextFloor.cost, 0)) {
+                        ownedFloorRepo.upgradeFloor(floor, nextFloor)
+                        playerRepo.purchase(nextFloor.cost)
+                        messageRepo.addMessage(MessageType.Positive, "Purchased ${nextFloor.title}!")
+                    } else if (nextFloor != null) {
+                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${nextFloor.cost} coins!")
                     } else {
-                        latestMessage.postValue(Notification(0, NotificationType.Negative, "Can't afford upgrade, need ${it.cost} coins!", System.currentTimeMillis()))
+                        messageRepo.addMessage(MessageType.Neutral, "This tile is already fully upgraded!")
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
@@ -133,9 +147,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (playerRepo.canPurchase(it.cost, it.level)) {
                         ownedFurnitureRepo.upgradeFurni(furni)
                         playerRepo.purchase(it.cost)
-                        latestMessage.postValue(Notification(0, NotificationType.Positive, "Purchased ${it.name}!", System.currentTimeMillis()))
+                        messageRepo.addMessage(MessageType.Positive, "Purchased ${it.name}!")
                     } else {
-                        latestMessage.postValue(Notification(0, NotificationType.Negative, "Can't afford upgrade, need ${it.cost} coins!", System.currentTimeMillis()))
+                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${it.cost} coins!")
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)

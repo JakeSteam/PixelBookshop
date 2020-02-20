@@ -13,7 +13,7 @@ import uk.co.jakelee.pixelbookshop.database.dao.*
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.lookups.*
 
-@Database(entities = [OwnedBook::class, OwnedFloor::class, OwnedFurniture::class, Player::class, Shop::class], version = 1)
+@Database(entities = [Message::class, OwnedBook::class, OwnedFloor::class, OwnedFurniture::class, Player::class, Shop::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -22,6 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun ownedFurnitureDao(): OwnedFurnitureDao
     abstract fun playerDao(): PlayerDao
     abstract fun shopDao(): ShopDao
+    abstract fun messageDao(): MessageDao
 
     companion object {
         @Volatile
@@ -59,6 +60,8 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         suspend fun initialiseDatabase(database: AppDatabase) {
+            database.messageDao().insert(Message(0, MessageType.Positive, "First message!", false, System.currentTimeMillis()))
+
             database.playerDao().insert(Player("Jake", 100, 5000, 5, 8))
 
             val wallInfo = WallInfo(Wall.StoneWindow, false, 3)

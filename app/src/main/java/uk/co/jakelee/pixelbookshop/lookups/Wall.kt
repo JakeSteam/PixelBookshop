@@ -6,7 +6,7 @@ import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.interfaces.Model
 
 enum class Wall(
-    override val id: Int, tier: Int, @StringRes name: Int, val cost: Int, modifier: Double,
+    override val id: Int, tier: Int, @StringRes val title: Int, val cost: Int, modifier: Double,
     @DrawableRes val imageNorth: Int, @DrawableRes val imageEast: Int, @DrawableRes val imageCorner: Int,
     @DrawableRes val imageDoorNorth: Int, @DrawableRes val imageDoorEast: Int
 ) : Model {

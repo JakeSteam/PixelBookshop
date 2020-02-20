@@ -2,8 +2,52 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e32b6933f69e28027ad4e94eb1f7ef36",
+    "identityHash": "3c70b03b19ded0a7ea26c2ce1413bd96",
     "entities": [
+      {
+        "tableName": "Message",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` INTEGER NOT NULL, `message` TEXT NOT NULL, `dismissed` INTEGER NOT NULL, `time` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dismissed",
+            "columnName": "dismissed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
       {
         "tableName": "OwnedBook",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `book` INTEGER NOT NULL, `ownedFurnitureId` INTEGER, `bookDefect` INTEGER NOT NULL, `bookQuality` INTEGER NOT NULL, `bookSource` INTEGER NOT NULL, `bookType` INTEGER NOT NULL)",
@@ -304,7 +348,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e32b6933f69e28027ad4e94eb1f7ef36')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3c70b03b19ded0a7ea26c2ce1413bd96')"
     ]
   }
 }
