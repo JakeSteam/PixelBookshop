@@ -123,25 +123,49 @@
         tools:text="16"/>
 
     <ProgressBar
+        android:id="@+id/text_settings_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/progressbar_vertical"
+        android:layout_marginEnd="2dp"
+        android:max="1"
+        android:progress="1"
+        app:layout_constraintStart_toEndOf="@id/text_coins"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <ImageView
+        android:id="@+id/text_settings"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="@id/text_settings_progress"
+        app:layout_constraintEnd_toEndOf="@id/text_settings_progress"
+        app:layout_constraintTop_toTopOf="@id/text_settings_progress"
+        app:layout_constraintBottom_toBottomOf="@id/text_settings_progress"
+        android:src="@drawable/ic_settings"/>
+
+    <ProgressBar
         android:id="@+id/text_messages_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="30dp"
-        android:layout_height="0dp"
+        android:layout_height="30dp"
         android:indeterminate="false"
         android:progressDrawable="@drawable/progressbar_vertical"
         android:layout_marginEnd="2dp"
         android:max="100"
         app:layout_constraintStart_toEndOf="@id/text_coins"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/text_coins_progress"
+        app:layout_constraintTop_toBottomOf="@id/text_settings_progress"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:progress="11"/>
     <TextView
         android:id="@+id/text_messages"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@id/text_messages_progress"
         app:layout_constraintEnd_toEndOf="@id/text_messages_progress"
         app:layout_constraintTop_toTopOf="@id/text_messages_progress"

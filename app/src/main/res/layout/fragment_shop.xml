@@ -87,7 +87,7 @@
             android:background="@drawable/ui_element"
             android:src="@drawable/ic_right"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/button_hide"
@@ -97,7 +97,7 @@
             android:background="@drawable/ui_element"
             android:src="@drawable/ic_left"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/button_rotate"
@@ -107,7 +107,7 @@
             android:background="@drawable/ui_element"
             android:src="@drawable/ic_rotate"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/button_hide" />
+            app:layout_constraintStart_toEndOf="@id/button_hide" />
 
         <ImageView
             android:id="@+id/button_upgrade"
@@ -117,7 +117,7 @@
             android:background="@drawable/ui_element"
             android:src="@drawable/ic_upgrade"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/button_rotate" />
+            app:layout_constraintStart_toEndOf="@id/button_rotate" />
 
         <ImageView
             android:id="@+id/button_move"
@@ -127,7 +127,9 @@
             android:background="@drawable/ui_element"
             android:src="@drawable/ic_move"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/button_upgrade" />
+            app:layout_constraintStart_toEndOf="@id/button_upgrade"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/controls"
@@ -135,6 +137,25 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             app:constraint_referenced_ids="button_hide,button_rotate,button_upgrade,button_move" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/ui_background">
+
+        <ImageView
+            android:id="@+id/button_travel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/ui_element"
+            android:src="@drawable/ic_travel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
