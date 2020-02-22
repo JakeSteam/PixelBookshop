@@ -42,9 +42,9 @@ class ShopFragment : Fragment() {
         root.button_upgrade.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.UPGRADE) }
         root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
         root.button_arrow_sw.setOnClickListener { shopViewModel.addNegativeY() }
-        root.button_arrow_ne.setOnClickListener { shopViewModel.addPositiveY() }
+        root.button_arrow_ne.setOnClickListener { shopViewModel.addPositive(false) }
         root.button_arrow_nw.setOnClickListener { shopViewModel.addNegativeX() }
-        root.button_arrow_se.setOnClickListener { shopViewModel.addPositiveX() }
+        root.button_arrow_se.setOnClickListener { shopViewModel.addPositive(true) }
         root.alert.setOnClickListener {
             alert.visibility = View.GONE
             shopViewModel.markMessageAsDismissed()

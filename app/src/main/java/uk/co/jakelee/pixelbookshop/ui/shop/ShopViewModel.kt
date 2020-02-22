@@ -56,14 +56,17 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         latestMessage = messageRepo.latestMessage()
     }
 
-    fun addPositiveX() = viewModelScope.launch {
+    fun addPositive(isX: Boolean) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             ownedFloor.value?.let {
                 val maxX = it.last().x
                 val maxY = it.first().y
+                val max = if (isX) maxY else maxX
                 val list: MutableList<OwnedFloor> = mutableListOf()
-                for (y in 0..maxY) {
-                    list.add(OwnedFloor(shopId, maxX + 1, y, false, Floor.Dirt))
+                for (i in 0..max) {
+                    val x = if (isX) (maxX + 1) else i
+                    val y = if (isX) i else (maxY + 1)
+                    list.add(OwnedFloor(shopId, x, y, false, Floor.Dirt))
                 }
                 ownedFloorRepo.insert(list)
             }
@@ -87,20 +90,6 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
                 ownedFurnitureRepo.increaseX(shopId)
-            }
-        }
-    }
-
-    fun addPositiveY() = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            ownedFloor.value?.let {
-                val maxX = it.last().x
-                val maxY = it.first().y
-                val list: MutableList<OwnedFloor> = mutableListOf()
-                for (x in 0..maxX) {
-                    list.add(OwnedFloor(shopId, x, maxY + 1, false, Floor.Dirt))
-                }
-                ownedFloorRepo.insert(list)
             }
         }
     }
