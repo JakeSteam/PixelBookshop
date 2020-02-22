@@ -85,9 +85,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:background="@drawable/ui_element"
-            android:src="@drawable/ic_right"
+            android:src="@drawable/ic_up"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <ImageView
             android:id="@+id/button_hide"
@@ -95,9 +96,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:background="@drawable/ui_element"
-            android:src="@drawable/ic_left"
+            android:src="@drawable/ic_down"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/button_rotate"
@@ -106,8 +108,9 @@
             android:layout_margin="3dp"
             android:background="@drawable/ui_element"
             android:src="@drawable/ic_rotate"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_hide" />
+            app:layout_constraintBottom_toTopOf="@id/button_hide"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/button_upgrade"
@@ -116,8 +119,9 @@
             android:layout_margin="3dp"
             android:background="@drawable/ui_element"
             android:src="@drawable/ic_upgrade"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_rotate" />
+            app:layout_constraintBottom_toTopOf="@id/button_rotate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ImageView
             android:id="@+id/button_move"
@@ -126,8 +130,9 @@
             android:layout_margin="3dp"
             android:background="@drawable/ui_element"
             android:src="@drawable/ic_move"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_upgrade"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/button_upgrade"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.Group
