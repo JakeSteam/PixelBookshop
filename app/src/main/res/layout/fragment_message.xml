@@ -18,23 +18,16 @@
         android:textColor="@color/black"
         android:gravity="center"
         android:textSize="30sp"
-        android:text="Messages" />
-    <ScrollView
-        android:layout_width="0dp"
+        android:text="@string/title_messages" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesRecycler"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:paddingBottom="3dp"
         app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <TextView
-            android:id="@+id/text_messages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp" />
-    </ScrollView>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

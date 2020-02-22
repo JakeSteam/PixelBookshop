@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_message.*
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.Message
@@ -28,8 +29,8 @@ class MessageFragment : Fragment() {
 
     private val messagesObserver = Observer<List<Message>> { messages ->
         if (messages != null) {
-            val messagesText = messages.joinToString(separator = "\n") { it.message }
-            text_messages.text = messagesText
+            messagesRecycler.layoutManager = LinearLayoutManager(activity)
+            messagesRecycler.adapter = MessageAdapter(activity!!, messages)
         }
     }
 }

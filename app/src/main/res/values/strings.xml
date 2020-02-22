@@ -4,11 +4,7 @@
     <string name="date_progression">Day %1$d: %2$s</string>
     <string name="shop_stock">%1$d for sale, %2$d / %3$d stored</string>
 
-    <string name="title_shop">Shop</string>
-    <string name="title_stock">Stockroom</string>
-    <string name="title_customise">Customise</string>
-    <string name="title_travel">Travel</string>
-    <string name="title_settings">Settings</string>
+    <string name="title_messages">Messages</string>
 
     <string name="quality_new">New</string>
     <string name="quality_fine">Fine</string>
