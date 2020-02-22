@@ -54,6 +54,34 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         latestMessage = messageRepo.latestMessage()
     }
 
+    fun addX() = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                ownedFloor.value?.let {
+                    val maxX = it.last().x
+                    val maxY = it.first().y
+                    val list: MutableList<OwnedFloor> = mutableListOf()
+                    for (y in 0..maxY) {
+                        list.add(OwnedFloor(1, maxX + 1, y, false, Floor.Dirt))
+                    }
+                    ownedFloorRepo.insert(list)
+                }
+            }
+        }
+
+    fun addY() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            ownedFloor.value?.let {
+                val maxX = it.last().x
+                val maxY = it.first().y
+                val list: MutableList<OwnedFloor> = mutableListOf()
+                for (x in 0..maxX) {
+                    list.add(OwnedFloor(1, x, maxY + 1, false, Floor.Dirt))
+                }
+                ownedFloorRepo.insert(list)
+            }
+        }
+    }
+
     fun markMessageAsDismissed() = viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 latestMessage.value?.let {

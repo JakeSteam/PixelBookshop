@@ -9,17 +9,17 @@ class OwnedFloorRepository(private val ownedFloorDao: OwnedFloorDao) {
 
     val allFloor: LiveData<List<OwnedFloor>> = ownedFloorDao.getAll()
 
-    suspend fun insert(ownedFloor: OwnedFloor) {
+    suspend fun insert(ownedFloor: List<OwnedFloor>) {
         ownedFloorDao.insert(ownedFloor)
     }
 
-    suspend fun upgradeFloor(ownedFloor: OwnedFloor, nextFloor: Floor) {
+    fun upgradeFloor(ownedFloor: OwnedFloor, nextFloor: Floor) {
         ownedFloor.floor = nextFloor
-        insert(ownedFloor)
+        ownedFloorDao.update(ownedFloor)
     }
 
-    suspend fun rotateFloor(ownedFloor: OwnedFloor) {
+    fun rotateFloor(ownedFloor: OwnedFloor) {
         ownedFloor.isFacingEast = !ownedFloor.isFacingEast
-        insert(ownedFloor)
+        ownedFloorDao.update(ownedFloor)
     }
 }

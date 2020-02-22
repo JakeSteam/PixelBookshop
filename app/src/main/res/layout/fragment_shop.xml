@@ -128,8 +128,7 @@
             android:src="@drawable/ic_move"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/button_upgrade"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/controls"
@@ -139,12 +138,45 @@
             app:constraint_referenced_ids="button_hide,button_rotate,button_upgrade,button_move" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:background="@drawable/ui_background">
+        android:background="@drawable/ui_background"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/addX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/ui_element"
+            android:text="+X" />
+
+        <TextView
+            android:id="@+id/addY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/ui_element"
+            android:text="+Y" />
+
+        <TextView
+            android:id="@+id/minusX"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/ui_element"
+            android:text="-X" />
+
+        <TextView
+            android:id="@+id/minusY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/ui_element"
+            android:text="-Y" />
 
         <ImageView
             android:id="@+id/button_travel"
@@ -152,10 +184,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:background="@drawable/ui_element"
-            android:src="@drawable/ic_travel"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:src="@drawable/ic_travel"/>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

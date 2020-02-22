@@ -68,7 +68,7 @@ abstract class AppDatabase : RoomDatabase() {
             database.shopDao().insert(
                 Shop(1, "Jake's Shop", wallInfo, System.currentTimeMillis()))
 
-            database.ownedFloorDao().insert(
+            database.ownedFloorDao().insert(listOf(
                 OwnedFloor(1, 0, 0, true, Floor.StoneMissing),
                 OwnedFloor(1, 1, 0, true, Floor.StoneMissing),
                 OwnedFloor(1, 2, 0, true, Floor.StoneMissing),
@@ -122,7 +122,7 @@ abstract class AppDatabase : RoomDatabase() {
                 OwnedFloor(1, 5, 5, true, Floor.Stone),
                 OwnedFloor(1, 6, 5, true, Floor.Stone),
                 OwnedFloor(1, 7, 5, true, Floor.Stone)
-            )
+            ))
             database.ownedFurnitureDao().insert(
                 OwnedFurniture(1, 1, 0, 0, true, Furniture.WideBookcase),
                 OwnedFurniture(2, 1, 1, 0, true, Furniture.WideShelf),

@@ -1,10 +1,7 @@
 package uk.co.jakelee.pixelbookshop.database.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 
 @Dao
@@ -14,5 +11,11 @@ interface OwnedFloorDao {
     fun getAll(): LiveData<List<OwnedFloor>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vararg ownedFloor: OwnedFloor)
+    fun insert(ownedFloor: OwnedFloor)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(ownedFloors: List<OwnedFloor>)
+
+    @Update
+    fun update(ownedFloor: OwnedFloor)
 }
