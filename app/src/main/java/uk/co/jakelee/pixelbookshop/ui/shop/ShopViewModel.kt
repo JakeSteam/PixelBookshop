@@ -73,44 +73,33 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addNegativeX() = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            ownedFloor.value?.let { floors ->
-                val maxY = floors.first().y
-                val list: MutableList<OwnedFloor> = mutableListOf()
-                floors.forEach { it.x = it.x + 1 }
-                for (y in 0..maxY) {
-                    list.add(OwnedFloor(shopId, 0, y, false, Floor.Dirt))
-                }
-                list.addAll(floors)
-                ownedFloorRepo.insert(list)
-                shopRepo.wall.value?.let {
-                    if (it.isDoorOnX) {
-                        shopRepo.setDoor(it.doorPosition + 1, maxY, shopId)
-                    }
-                }
-                ownedFurnitureRepo.increaseX(shopId)
-            }
-        }
-    }
-
-    fun addNegativeY() = viewModelScope.launch {
+    fun addNegative(isX: Boolean) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             ownedFloor.value?.let { floors ->
                 val maxX = floors.last().x
-                floors.forEach { it.y = it.y + 1 }
+                val maxY = floors.first().y
+                val max = if (isX) maxY else maxX
                 val list: MutableList<OwnedFloor> = mutableListOf()
-                for (x in 0..maxX) {
-                    list.add(OwnedFloor(shopId, x, 0, false, Floor.Dirt))
+                floors.forEach {
+                    if (isX) it.x++ else it.y++
+                }
+                for (i in 0..max) {
+                    val x = if (isX) 0 else i
+                    val y = if (isX) i else 0
+                    list.add(OwnedFloor(shopId, x, y, false, Floor.Dirt))
                 }
                 list.addAll(floors)
                 ownedFloorRepo.insert(list)
                 shopRepo.wall.value?.let {
-                    if (!it.isDoorOnX) {
+                    if (isX && it.isDoorOnX) {
+                        shopRepo.setDoor(it.doorPosition + 1, maxY, shopId)
+                    } else if (!isX && !it.isDoorOnX) {
                         shopRepo.setDoor(0, it.doorPosition + 1, shopId)
                     }
                 }
-                ownedFurnitureRepo.increaseY(shopId)
+                ownedFurnitureRepo.apply {
+                    if (isX) increaseX(shopId) else increaseY(shopId)
+                }
             }
         }
     }
