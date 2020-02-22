@@ -56,7 +56,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         latestMessage = messageRepo.latestMessage()
     }
 
-    fun addX() = viewModelScope.launch {
+    fun addPositiveX() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             ownedFloor.value?.let {
                 val maxX = it.last().x
@@ -70,7 +70,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun minusX() = viewModelScope.launch {
+    fun addNegativeX() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             ownedFloor.value?.let { floors ->
                 val maxY = floors.first().y
@@ -91,7 +91,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addY() = viewModelScope.launch {
+    fun addPositiveY() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             ownedFloor.value?.let {
                 val maxX = it.last().x
@@ -105,7 +105,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun minusY() = viewModelScope.launch {
+    fun addNegativeY() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             ownedFloor.value?.let { floors ->
                 val maxX = floors.last().x

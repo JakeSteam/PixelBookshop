@@ -130,20 +130,66 @@
             android:layout_margin="3dp"
             android:background="@drawable/ui_element"
             android:src="@drawable/ic_move"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/button_upgrade"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/button_arrow_se"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/ui_element"
+            android:src="@drawable/ic_x_negative"
+            android:scaleX="-1"
+            app:layout_constraintBottom_toTopOf="@id/button_move"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/button_arrow_nw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/ui_element"
+            android:src="@drawable/ic_x_positive"
+            android:scaleX="-1"
+            app:layout_constraintBottom_toTopOf="@id/button_arrow_se"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/button_arrow_sw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/ui_element"
+            android:src="@drawable/ic_x_negative"
+            app:layout_constraintBottom_toTopOf="@id/button_arrow_nw"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/button_arrow_ne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:background="@drawable/ui_element"
+            android:src="@drawable/ic_x_positive"
+            app:layout_constraintBottom_toTopOf="@id/button_arrow_sw"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/controls"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            app:constraint_referenced_ids="button_hide,button_rotate,button_upgrade,button_move" />
+            app:constraint_referenced_ids="button_hide,button_rotate,button_upgrade,button_move,button_arrow_sw,button_arrow_ne,button_arrow_nw,button_arrow_se" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -151,45 +197,18 @@
         android:background="@drawable/ui_background"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/addX"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:background="@drawable/ui_element"
-            android:text="+X" />
-
-        <TextView
-            android:id="@+id/addY"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:background="@drawable/ui_element"
-            android:text="+Y" />
-
-        <TextView
-            android:id="@+id/minusX"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:background="@drawable/ui_element"
-            android:text="-X" />
-
-        <TextView
-            android:id="@+id/minusY"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:background="@drawable/ui_element"
-            android:text="-Y" />
-
         <ImageView
             android:id="@+id/button_travel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:background="@drawable/ui_element"
-            android:src="@drawable/ic_travel"/>
-    </LinearLayout>
+            android:src="@drawable/ic_travel"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent
+"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

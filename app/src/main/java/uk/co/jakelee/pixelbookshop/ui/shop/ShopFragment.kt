@@ -41,10 +41,10 @@ class ShopFragment : Fragment() {
         root.button_rotate.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.ROTATE) }
         root.button_upgrade.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.UPGRADE) }
         root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
-        root.addX.setOnClickListener { shopViewModel.addX() }
-        root.addY.setOnClickListener { shopViewModel.addY() }
-        root.minusX.setOnClickListener { shopViewModel.minusX() }
-        root.minusY.setOnClickListener { shopViewModel.minusY() }
+        root.button_arrow_sw.setOnClickListener { shopViewModel.addNegativeY() }
+        root.button_arrow_ne.setOnClickListener { shopViewModel.addPositiveY() }
+        root.button_arrow_nw.setOnClickListener { shopViewModel.addNegativeX() }
+        root.button_arrow_se.setOnClickListener { shopViewModel.addPositiveX() }
         root.alert.setOnClickListener {
             alert.visibility = View.GONE
             shopViewModel.markMessageAsDismissed()
