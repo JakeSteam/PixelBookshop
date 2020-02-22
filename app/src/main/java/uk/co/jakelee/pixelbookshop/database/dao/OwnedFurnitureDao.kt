@@ -20,4 +20,10 @@ interface OwnedFurnitureDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg ownedFurniture: OwnedFurniture)
 
+    @Query("UPDATE OwnedFurniture SET x = x + 1 WHERE shopId = :shopId")
+    suspend fun increaseX(shopId: Int)
+
+    @Query("UPDATE OwnedFurniture SET y = y + 1 WHERE shopId = :shopId")
+    suspend fun increaseY(shopId: Int)
+
 }

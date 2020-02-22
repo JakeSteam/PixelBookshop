@@ -43,8 +43,8 @@ class ShopFragment : Fragment() {
         root.button_move.setOnClickListener { shopViewModel.setOrResetMode(SelectedTab.MOVE) }
         root.addX.setOnClickListener { shopViewModel.addX() }
         root.addY.setOnClickListener { shopViewModel.addY() }
-        root.minusX.setOnClickListener { shopViewModel.addX() }
-        root.minusY.setOnClickListener { shopViewModel.addY() }
+        root.minusX.setOnClickListener { shopViewModel.minusX() }
+        root.minusY.setOnClickListener { shopViewModel.minusY() }
         root.alert.setOnClickListener {
             alert.visibility = View.GONE
             shopViewModel.markMessageAsDismissed()

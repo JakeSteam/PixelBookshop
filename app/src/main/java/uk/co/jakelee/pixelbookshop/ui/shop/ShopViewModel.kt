@@ -15,6 +15,8 @@ import uk.co.jakelee.pixelbookshop.repository.*
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val shopId = 1
+
     private val ownedFloorRepo: OwnedFloorRepository
     private val ownedFurnitureRepo: OwnedFurnitureRepository
     private val shopRepo: ShopRepository
@@ -42,7 +44,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         ownedFurniture = ownedFurnitureRepo.allFurnitureWithBooks
 
         val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
-        shopRepo = ShopRepository(shopDao, 1)
+        shopRepo = ShopRepository(shopDao, shopId)
         wall = shopRepo.wall
 
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
@@ -55,18 +57,39 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addX() = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                ownedFloor.value?.let {
-                    val maxX = it.last().x
-                    val maxY = it.first().y
-                    val list: MutableList<OwnedFloor> = mutableListOf()
-                    for (y in 0..maxY) {
-                        list.add(OwnedFloor(1, maxX + 1, y, false, Floor.Dirt))
-                    }
-                    ownedFloorRepo.insert(list)
+        withContext(Dispatchers.IO) {
+            ownedFloor.value?.let {
+                val maxX = it.last().x
+                val maxY = it.first().y
+                val list: MutableList<OwnedFloor> = mutableListOf()
+                for (y in 0..maxY) {
+                    list.add(OwnedFloor(shopId, maxX + 1, y, false, Floor.Dirt))
                 }
+                ownedFloorRepo.insert(list)
             }
         }
+    }
+
+    fun minusX() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            ownedFloor.value?.let { floors ->
+                val maxY = floors.first().y
+                val list: MutableList<OwnedFloor> = mutableListOf()
+                floors.forEach { it.x = it.x + 1 }
+                for (y in 0..maxY) {
+                    list.add(OwnedFloor(shopId, 0, y, false, Floor.Dirt))
+                }
+                list.addAll(floors)
+                ownedFloorRepo.insert(list)
+                shopRepo.wall.value?.let {
+                    if (it.isDoorOnX) {
+                        shopRepo.setDoor(it.doorPosition + 1, maxY, shopId)
+                    }
+                }
+                ownedFurnitureRepo.increaseX(shopId)
+            }
+        }
+    }
 
     fun addY() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
@@ -75,9 +98,30 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 val maxY = it.first().y
                 val list: MutableList<OwnedFloor> = mutableListOf()
                 for (x in 0..maxX) {
-                    list.add(OwnedFloor(1, x, maxY + 1, false, Floor.Dirt))
+                    list.add(OwnedFloor(shopId, x, maxY + 1, false, Floor.Dirt))
                 }
                 ownedFloorRepo.insert(list)
+            }
+        }
+    }
+
+    fun minusY() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            ownedFloor.value?.let { floors ->
+                val maxX = floors.last().x
+                floors.forEach { it.y = it.y + 1 }
+                val list: MutableList<OwnedFloor> = mutableListOf()
+                for (x in 0..maxX) {
+                    list.add(OwnedFloor(shopId, x, 0, false, Floor.Dirt))
+                }
+                list.addAll(floors)
+                ownedFloorRepo.insert(list)
+                shopRepo.wall.value?.let {
+                    if (!it.isDoorOnX) {
+                        shopRepo.setDoor(0, it.doorPosition + 1, shopId)
+                    }
+                }
+                ownedFurnitureRepo.increaseY(shopId)
             }
         }
     }

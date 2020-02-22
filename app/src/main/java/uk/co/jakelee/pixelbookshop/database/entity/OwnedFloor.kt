@@ -16,8 +16,8 @@ import uk.co.jakelee.pixelbookshop.lookups.Floor
     indices = [Index("shopId")])
 data class OwnedFloor(
     @ColumnInfo override val shopId: Int,
-    @ColumnInfo override val x: Int,
-    @ColumnInfo override val y: Int,
+    @ColumnInfo override var x: Int,
+    @ColumnInfo override var y: Int,
     @ColumnInfo override var isFacingEast: Boolean,
     @ColumnInfo var floor: Floor?
 ) : Tile
