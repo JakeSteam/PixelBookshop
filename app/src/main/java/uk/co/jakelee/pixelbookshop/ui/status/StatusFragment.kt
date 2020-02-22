@@ -44,7 +44,7 @@ class StatusFragment : Fragment() {
             if (findNavController().currentDestination?.label == "ShopFragment") {
                 findNavController().navigate(R.id.action_shopFragment_to_messageFragment)
             } else {
-                findNavController().navigate(R.id.action_messageFragment_to_shopFragment)
+                findNavController().popBackStack(R.id.shopFragment, false)
             }
         }
         return root

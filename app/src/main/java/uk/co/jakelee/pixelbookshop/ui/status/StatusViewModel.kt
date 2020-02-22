@@ -42,7 +42,7 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
         ownedBookRepo = OwnedBookRepository(ownedBookDao)
         val messageDao = AppDatabase.getDatabase(application, viewModelScope).messageDao()
         messageRepo = MessageRepository(messageDao)
-        messages = messageRepo.getMessagesList()
+        messages = messageRepo.getRecentMessages()
 
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)

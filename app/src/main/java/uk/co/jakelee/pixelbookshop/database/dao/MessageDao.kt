@@ -16,10 +16,15 @@ interface MessageDao {
     @Query("SELECT * FROM message ORDER BY time DESC LIMIT 1")
     fun getLatestMessage(): LiveData<Message>
 
-    @Query("SELECT * FROM message")
-    fun getAllMessages(): LiveData<List<Message>>
+    @Query("SELECT * FROM message ORDER BY TIME DESC LIMIT :limit")
+    fun getRecentMessages(limit: Int = 100): LiveData<List<Message>>
 
     @Query("UPDATE message SET dismissed = 1 WHERE id = :id")
     fun dismissMessage(id: Int)
 
+    @Query("UPDATE message SET dismissed = 1")
+    fun dismissAllMessages()
+
+    @Query("DELETE FROM message WHERE id NOT IN (SELECT id FROM message ORDER BY time DESC LIMIT 100)")
+    fun deleteAllOlderMessages()
 }

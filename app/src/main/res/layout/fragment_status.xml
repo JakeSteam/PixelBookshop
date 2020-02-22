@@ -106,12 +106,13 @@
         app:layout_constraintEnd_toStartOf="@id/text_messages_progress"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/text_stock_progress"/>
+
     <TextView
         android:id="@+id/text_coins"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@id/text_coins_progress"
         app:layout_constraintTop_toTopOf="@id/text_coins_progress"
         app:layout_constraintBottom_toBottomOf="@id/text_coins_progress"

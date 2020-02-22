@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_message.*
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.Message
-import uk.co.jakelee.pixelbookshop.ui.shop.MessageViewModel
 
 class MessageFragment : Fragment() {
 
@@ -29,7 +28,7 @@ class MessageFragment : Fragment() {
 
     private val messagesObserver = Observer<List<Message>> { messages ->
         if (messages != null) {
-            val messagesText = messages.joinToString { "$it\n" }
+            val messagesText = messages.joinToString(separator = "\n") { it.message }
             text_messages.text = messagesText
         }
     }
