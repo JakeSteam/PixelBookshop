@@ -13,12 +13,12 @@ class OwnedFloorRepository(private val ownedFloorDao: OwnedFloorDao) {
         ownedFloorDao.insert(ownedFloor)
     }
 
-    fun upgradeFloor(ownedFloor: OwnedFloor, nextFloor: Floor) {
+    suspend fun upgradeFloor(ownedFloor: OwnedFloor, nextFloor: Floor) {
         ownedFloor.floor = nextFloor
         ownedFloorDao.update(ownedFloor)
     }
 
-    fun rotateFloor(ownedFloor: OwnedFloor) {
+    suspend fun rotateFloor(ownedFloor: OwnedFloor) {
         ownedFloor.isFacingEast = !ownedFloor.isFacingEast
         ownedFloorDao.update(ownedFloor)
     }

@@ -56,61 +56,49 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         latestMessage = messageRepo.latestMessage()
     }
 
-    fun addPositive(isX: Boolean) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            ownedFloor.value?.let {
-                val maxX = it.last().x
-                val maxY = it.first().y
-                val max = if (isX) maxY else maxX
-                val list: MutableList<OwnedFloor> = mutableListOf()
-                for (i in 0..max) {
-                    val x = if (isX) (maxX + 1) else i
-                    val y = if (isX) i else (maxY + 1)
-                    list.add(OwnedFloor(shopId, x, y, false, Floor.Dirt))
-                }
-                ownedFloorRepo.insert(list)
-            }
-        }
-    }
-
-    fun addNegative(isX: Boolean) = viewModelScope.launch {
+    fun addStrip(isPositive: Boolean, isX: Boolean) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             ownedFloor.value?.let { floors ->
                 val maxX = floors.last().x
                 val maxY = floors.first().y
                 val max = if (isX) maxY else maxX
                 val list: MutableList<OwnedFloor> = mutableListOf()
-                floors.forEach {
-                    if (isX) it.x++ else it.y++
-                }
                 for (i in 0..max) {
-                    val x = if (isX) 0 else i
-                    val y = if (isX) i else 0
+                    val x = if (isX) (if (isPositive) maxX + 1 else 0) else i
+                    val y = if (isX) i else (if (isPositive) maxY + 1 else 0)
                     list.add(OwnedFloor(shopId, x, y, false, Floor.Dirt))
                 }
-                list.addAll(floors)
-                ownedFloorRepo.insert(list)
-                shopRepo.wall.value?.let {
-                    if (isX && it.isDoorOnX) {
-                        shopRepo.setDoor(it.doorPosition + 1, maxY, shopId)
-                    } else if (!isX && !it.isDoorOnX) {
-                        shopRepo.setDoor(0, it.doorPosition + 1, shopId)
-                    }
+                if (!isPositive) {
+                    list.addAll(floors.apply { forEach {
+                        if (isX) it.x++ else it.y++
+                    } })
                 }
-                ownedFurnitureRepo.apply {
-                    if (isX) increaseX(shopId) else increaseY(shopId)
+                ownedFloorRepo.insert(list)
+                if (!isPositive) {
+                    updatesTablesAfterNegativeStrip(isX, maxY)
                 }
             }
         }
     }
 
-    fun markMessageAsDismissed() = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                latestMessage.value?.let {
-                    messageRepo.dismissMessage(it.id)
-                }
+    private suspend fun updatesTablesAfterNegativeStrip(isX: Boolean, maxY: Int) {
+        shopRepo.wall.value?.let {
+            if (isX && it.isDoorOnX) {
+                shopRepo.setDoor(it.doorPosition + 1, maxY, shopId)
+            } else if (!isX && !it.isDoorOnX) {
+                shopRepo.setDoor(0, it.doorPosition + 1, shopId)
             }
         }
+        ownedFurnitureRepo.apply { if (isX) increaseX(shopId) else increaseY(shopId) }
+    }
+
+    fun markMessageAsDismissed() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            latestMessage.value?.let {
+                messageRepo.dismissMessage(it.id)
+            }
+        }
+    }
 
     fun setOrResetMode(selectedTab: ShopFragment.SelectedTab) {
         if (currentTab.value == selectedTab) {
@@ -158,9 +146,15 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                         playerRepo.purchase(nextWall.cost)
                         messageRepo.addMessage(MessageType.Positive, "Purchased ${nextWall.title}!")
                     } else if (nextWall != null) {
-                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${nextWall.cost} coins!")
+                        messageRepo.addMessage(
+                            MessageType.Negative,
+                            "Can't afford upgrade, need ${nextWall.cost} coins!"
+                        )
                     } else {
-                        messageRepo.addMessage(MessageType.Neutral, "This wall is already fully upgraded!")
+                        messageRepo.addMessage(
+                            MessageType.Neutral,
+                            "This wall is already fully upgraded!"
+                        )
                     }
                 }
                 else -> null
@@ -176,11 +170,20 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (nextFloor != null && playerRepo.canPurchase(nextFloor.cost, 0)) {
                         ownedFloorRepo.upgradeFloor(floor, nextFloor)
                         playerRepo.purchase(nextFloor.cost)
-                        messageRepo.addMessage(MessageType.Positive, "Purchased ${nextFloor.title}!")
+                        messageRepo.addMessage(
+                            MessageType.Positive,
+                            "Purchased ${nextFloor.title}!"
+                        )
                     } else if (nextFloor != null) {
-                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${nextFloor.cost} coins!")
+                        messageRepo.addMessage(
+                            MessageType.Negative,
+                            "Can't afford upgrade, need ${nextFloor.cost} coins!"
+                        )
                     } else {
-                        messageRepo.addMessage(MessageType.Neutral, "This floor tile is already fully upgraded!")
+                        messageRepo.addMessage(
+                            MessageType.Neutral,
+                            "This floor tile is already fully upgraded!"
+                        )
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
@@ -202,14 +205,27 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     val nextFurni = Furniture.values().firstOrNull { furni ->
                         furni.type == it.type && furni.tier > it.tier
                     }
-                    if (nextFurni != null && playerRepo.canPurchase(nextFurni.cost, nextFurni.level)) {
+                    if (nextFurni != null && playerRepo.canPurchase(
+                            nextFurni.cost,
+                            nextFurni.level
+                        )
+                    ) {
                         ownedFurnitureRepo.upgradeFurni(furni, nextFurni)
                         playerRepo.purchase(nextFurni.cost)
-                        messageRepo.addMessage(MessageType.Positive, "Purchased ${nextFurni.title}!")
+                        messageRepo.addMessage(
+                            MessageType.Positive,
+                            "Purchased ${nextFurni.title}!"
+                        )
                     } else if (nextFurni != null) {
-                        messageRepo.addMessage(MessageType.Negative, "Can't afford upgrade, need ${nextFurni.cost} coins!")
+                        messageRepo.addMessage(
+                            MessageType.Negative,
+                            "Can't afford upgrade, need ${nextFurni.cost} coins!"
+                        )
                     } else {
-                        messageRepo.addMessage(MessageType.Neutral, "This furniture is already fully upgraded!")
+                        messageRepo.addMessage(
+                            MessageType.Neutral,
+                            "This furniture is already fully upgraded!"
+                        )
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)

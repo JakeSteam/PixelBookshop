@@ -11,11 +11,12 @@ interface OwnedFloorDao {
     fun getAll(): LiveData<List<OwnedFloor>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(ownedFloor: OwnedFloor)
+    suspend fun insert(ownedFloor: OwnedFloor)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(ownedFloors: List<OwnedFloor>)
+    suspend fun insert(ownedFloors: List<OwnedFloor>)
 
     @Update
-    fun update(ownedFloor: OwnedFloor)
+    suspend fun update(ownedFloor: OwnedFloor)
+
 }
