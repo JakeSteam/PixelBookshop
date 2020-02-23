@@ -40,6 +40,13 @@ class StatusFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_status, container, false)
         root.text_level_progress.setOnClickListener { xpClick() }
+        root.text_stock_progress.setOnClickListener {
+            if (findNavController().currentDestination?.label == "ShopFragment") {
+                findNavController().navigate(R.id.action_shopFragment_to_stockFragment)
+            } else {
+                findNavController().popBackStack(R.id.shopFragment, false)
+            }
+        }
         root.text_messages_progress.setOnClickListener {
             if (findNavController().currentDestination?.label == "ShopFragment") {
                 findNavController().navigate(R.id.action_shopFragment_to_messageFragment)

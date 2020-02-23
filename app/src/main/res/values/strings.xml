@@ -5,6 +5,7 @@
     <string name="shop_stock">%1$d for sale, %2$d / %3$d stored</string>
 
     <string name="title_messages">Messages</string>
+    <string name="title_stock">Stockroom</string>
 
     <string name="quality_new">New</string>
     <string name="quality_fine">Fine</string>
@@ -77,11 +78,6 @@
     <string name="author_orwell">George Orwell</string>
     <string name="author_moore">Roger Moore</string>
     <string name="author_rrmartin">George R.R. Martin</string>
-
-    <string name="url_tolkienhobbit">https://www.goodreads.com/book/show/5907.The_Hobbit_or_There_and_Back_Again</string>
-    <string name="url_orwell1984">https://www.goodreads.com/book/show/40961427-1984</string>
-    <string name="url_moorevendetta">https://www.goodreads.com/book/show/5805.V_for_Vendetta</string>
-    <string name="url_martingameofthrones">https://www.goodreads.com/book/show/13496.A_Game_of_Thrones</string>
 
     <string name="furniture_decoration">Decoration</string>
     <string name="furniture_display">Display</string>
