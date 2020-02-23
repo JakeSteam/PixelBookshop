@@ -74,7 +74,7 @@ dependencies {
 
     // Zoom layout
     implementation 'com.otaliastudios:zoomlayout:1.7.0'
-
+    implementation 'com.github.aliab:Two-Step-Picker-Dialog:V1.1.0'
     implementation "com.github.skydoves:balloon:1.0.9"
 
     testImplementation 'junit:junit:4.12'

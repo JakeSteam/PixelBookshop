@@ -4,6 +4,19 @@
     <string name="date_progression">Day %1$d: %2$s</string>
     <string name="shop_stock">%1$d for sale, %2$d / %3$d stored</string>
 
+    <string name="book_sort_ascending">Ascending</string>
+    <string name="book_sort_descending">Descending</string>
+    <string name="book_title">Title</string>
+    <string name="book_author">Author</string>
+    <string name="book_genre">Genre</string>
+    <string name="book_rarity">Rarity</string>
+    <string name="book_published">Year Published</string>
+    <string name="book_type">Type</string>
+    <string name="book_source">Source</string>
+    <string name="book_quality">Quality</string>
+    <string name="book_defect">Defect</string>
+    <string name="book_furniture">Assigned furniture</string>
+
     <string name="title_messages">Messages</string>
     <string name="title_stock">Stockroom</string>
 
