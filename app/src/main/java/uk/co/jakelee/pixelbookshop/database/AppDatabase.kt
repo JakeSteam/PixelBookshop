@@ -170,7 +170,7 @@ abstract class AppDatabase : RoomDatabase() {
             )
             database.ownedBookDao().insert(
                 OwnedBook(
-                    1,
+                    0,
                     Book.Orwell1984,
                     1,
                     OwnedBookDefect.FoldedPages,
@@ -179,11 +179,47 @@ abstract class AppDatabase : RoomDatabase() {
                     OwnedBookType.Paperback
                 ),
                 OwnedBook(
-                    2,
+                    0,
                     Book.MartinGameOfThrones,
                     null,
                     OwnedBookDefect.None,
                     OwnedBookQuality.New,
+                    OwnedBookSource.Gift,
+                    OwnedBookType.Paperback
+                ),
+                OwnedBook(
+                    0,
+                    Book.TolkienHobbit,
+                    null,
+                    OwnedBookDefect.MissingCover,
+                    OwnedBookQuality.Poor,
+                    OwnedBookSource.Gift,
+                    OwnedBookType.Paperback
+                ),
+                OwnedBook(
+                    0,
+                    Book.MooreVendetta,
+                    null,
+                    OwnedBookDefect.MissingCover,
+                    OwnedBookQuality.Poor,
+                    OwnedBookSource.Gift,
+                    OwnedBookType.Paperback
+                ),
+                OwnedBook(
+                    0,
+                    Book.Orwell1984,
+                    1,
+                    OwnedBookDefect.FoldedPages,
+                    OwnedBookQuality.Poor,
+                    OwnedBookSource.Store,
+                    OwnedBookType.ReviewCopy
+                ),
+                OwnedBook(
+                    0,
+                    Book.Orwell1984,
+                    1,
+                    OwnedBookDefect.Stickered,
+                    OwnedBookQuality.Fine,
                     OwnedBookSource.Gift,
                     OwnedBookType.Paperback
                 )
