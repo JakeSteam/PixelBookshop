@@ -4,10 +4,10 @@ import uk.co.jakelee.pixelbookshop.database.entity.OwnedBook
 
 class FullBookData {
     var books: List<OwnedBook>? = null
-    var sortFieldIndex: Int? = null
-    var sortOrderIndex: Int? = null
+    var sortField: Pair<Int, Int>? = null
+    var filterField: Pair<Int, Int>? = null
 
     fun isValid() = books != null
-            && sortFieldIndex != null
-            && sortOrderIndex != null
+            && sortField != null
+            && filterField != null
 }

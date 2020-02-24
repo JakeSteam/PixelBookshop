@@ -11,8 +11,8 @@ class StockViewModel(application: Application) : AndroidViewModel(application) {
     private val booksRepo: OwnedBookRepository
 
     private val books: LiveData<List<OwnedBook>>
-    private val sortFieldIndex = MutableLiveData(0)
-    private val sortOrderIndex = MutableLiveData(0)
+    private val sortField = MutableLiveData(Pair(0, 0))
+    private val filterField = MutableLiveData(Pair(-1, -1))
 
     init {
         val booksDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()
@@ -27,19 +27,22 @@ class StockViewModel(application: Application) : AndroidViewModel(application) {
             current.books = list
             mediatorLiveData.setValue(current)
         }
-        mediatorLiveData.addSource(sortFieldIndex) { index ->
-            current.sortFieldIndex = index
+        mediatorLiveData.addSource(sortField) { field ->
+            current.sortField = field
             mediatorLiveData.setValue(current)
         }
-        mediatorLiveData.addSource(sortOrderIndex) { index ->
-            current.sortOrderIndex = index
+        mediatorLiveData.addSource(filterField) { field ->
+            current.filterField = field
             mediatorLiveData.setValue(current)
         }
         return mediatorLiveData
     }
 
     fun sortBooks(field: Int, order: Int) {
-        sortFieldIndex.value = field
-        sortOrderIndex.value = order
+        sortField.value = Pair(field, order)
+    }
+
+    fun filterBooks(field: Int, value: Int) {
+        filterField.value = Pair(field, value)
     }
 }
