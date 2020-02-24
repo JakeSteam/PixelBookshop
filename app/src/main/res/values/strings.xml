@@ -4,6 +4,13 @@
     <string name="date_progression">Day %1$d: %2$s</string>
     <string name="shop_stock">%1$d for sale, %2$d / %3$d stored</string>
 
+    <string name="title_messages">Messages</string>
+
+    <string name="title_stock">Stockroom</string>
+    <string name="stock_sort_text">Sorted by: %1$s (%2$s)</string>
+    <string name="stock_dialog_order">Order</string>
+    <string name="stock_dialog_cancel">Cancel</string>
+
     <string name="book_sort_ascending">Ascending</string>
     <string name="book_sort_descending">Descending</string>
     <string name="book_title">Title</string>
@@ -16,9 +23,6 @@
     <string name="book_quality">Quality</string>
     <string name="book_defect">Defect</string>
     <string name="book_furniture">Assigned furniture</string>
-
-    <string name="title_messages">Messages</string>
-    <string name="title_stock">Stockroom</string>
 
     <string name="quality_new">New</string>
     <string name="quality_fine">Fine</string>

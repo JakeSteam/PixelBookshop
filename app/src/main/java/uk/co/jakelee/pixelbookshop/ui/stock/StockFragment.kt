@@ -25,7 +25,7 @@ class StockFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_stock, container, false)
         stockViewModel = ViewModelProvider(this).get(StockViewModel::class.java)
         stockViewModel.getBooks().observe(viewLifecycleOwner, stockObserver)
-        root.title.setOnClickListener { sortDialog.show() }
+        root.sorting.setOnClickListener { sortDialog.show() }
         return root
     }
 
@@ -55,8 +55,8 @@ class StockFragment : Fragment() {
             .withOnStepDataRequested {
                 SortOrder.values().map { getString(it.resource) }.toMutableList()
             }
-            .withOkButton("Order")
-            .withCancelButton("Cancel")
+            .withOkButton(getString(R.string.stock_dialog_order))
+            .withCancelButton(getString(R.string.stock_dialog_cancel))
             .withDialogListener(object : OnStepPickListener {
                 override fun onStepPicked(step: Int, position: Int) {
                     stockViewModel.sortBooks(step, position)
@@ -70,8 +70,11 @@ class StockFragment : Fragment() {
     private val stockObserver = Observer<FullBookData> { data ->
         if (data.isValid()) {
             val books = data.books!!
-            val isAscending = SortOrder.values()[data.sortOrderIndex!!] == SortOrder.ASCENDING
-            val sorted = when (SortField.values()[data.sortFieldIndex!!]) {
+            val sortOrder =SortOrder.values()[data.sortOrderIndex!!]
+            val sortField = SortField.values()[data.sortFieldIndex!!]
+
+            val isAscending = sortOrder == SortOrder.ASCENDING
+            val sorted = when (sortField) {
                 SortField.TITLE -> if (isAscending) books.sortedBy { it.book.title } else books.sortedByDescending { it.book.title }
                 SortField.AUTHOR -> if (isAscending) books.sortedBy { it.book.authorSurname } else books.sortedByDescending { it.book.authorSurname }
                 SortField.GENRE -> if (isAscending) books.sortedBy { it.book.genre } else books.sortedByDescending { it.book.genre }
@@ -83,6 +86,7 @@ class StockFragment : Fragment() {
                 SortField.BOOKDEFECT -> if (isAscending) books.sortedBy { it.bookDefect } else books.sortedByDescending { it.bookDefect }
                 SortField.FURNITUREID -> if (isAscending) books.sortedBy { it.ownedFurnitureId } else books.sortedByDescending { it.ownedFurnitureId }
             }
+            sorting.text = String.format(getString(R.string.stock_sort_text), getString(sortField.resource), getString(sortOrder.resource))
             booksRecycler.adapter = StockAdapter(activity!!, sorted)
         }
     }
