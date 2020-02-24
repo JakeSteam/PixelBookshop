@@ -73,7 +73,7 @@ class StockFragment : Fragment() {
             val isAscending = SortOrder.values()[data.sortOrderIndex!!] == SortOrder.ASCENDING
             val sorted = when (SortField.values()[data.sortFieldIndex!!]) {
                 SortField.TITLE -> if (isAscending) books.sortedBy { it.book.title } else books.sortedByDescending { it.book.title }
-                SortField.AUTHOR -> if (isAscending) books.sortedBy { it.book.author } else books.sortedByDescending { it.book.author }
+                SortField.AUTHOR -> if (isAscending) books.sortedBy { it.book.authorSurname } else books.sortedByDescending { it.book.authorSurname }
                 SortField.GENRE -> if (isAscending) books.sortedBy { it.book.genre } else books.sortedByDescending { it.book.genre }
                 SortField.RARITY -> if (isAscending) books.sortedBy { it.book.rarity } else books.sortedByDescending { it.book.rarity }
                 SortField.PUBLISHED -> if (isAscending) books.sortedBy { it.book.published } else books.sortedByDescending { it.book.published }

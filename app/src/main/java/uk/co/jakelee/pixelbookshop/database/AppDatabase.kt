@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import uk.co.jakelee.pixelbookshop.database.dao.*
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.lookups.*
+import kotlin.random.Random
 
 @Database(entities = [Message::class, OwnedBook::class, OwnedFloor::class, OwnedFurniture::class, Player::class, Shop::class], version = 1)
 @TypeConverters(Converters::class)
@@ -168,62 +169,17 @@ abstract class AppDatabase : RoomDatabase() {
                 OwnedFurniture(57, 1, 6, 5, false, Furniture.WideBookcase),
                 OwnedFurniture(58, 1, 7, 5, false, Furniture.WideBookcase)
             )
-            database.ownedBookDao().insert(
-                OwnedBook(
-                    0,
-                    Book.Orwell1984,
-                    1,
-                    OwnedBookDefect.FoldedPages,
-                    OwnedBookQuality.Poor,
-                    OwnedBookSource.Gift,
-                    OwnedBookType.Paperback
-                ),
-                OwnedBook(
-                    0,
-                    Book.MartinGameOfThrones,
+            val bookList = (0..50).map {
+                OwnedBook(0,
+                    Book.values()[Random.nextInt(Book.values().size)],
                     null,
-                    OwnedBookDefect.None,
-                    OwnedBookQuality.New,
-                    OwnedBookSource.Gift,
-                    OwnedBookType.Paperback
-                ),
-                OwnedBook(
-                    0,
-                    Book.TolkienHobbit,
-                    null,
-                    OwnedBookDefect.MissingCover,
-                    OwnedBookQuality.Poor,
-                    OwnedBookSource.Gift,
-                    OwnedBookType.Paperback
-                ),
-                OwnedBook(
-                    0,
-                    Book.MooreVendetta,
-                    null,
-                    OwnedBookDefect.MissingCover,
-                    OwnedBookQuality.Poor,
-                    OwnedBookSource.Gift,
-                    OwnedBookType.Paperback
-                ),
-                OwnedBook(
-                    0,
-                    Book.Orwell1984,
-                    1,
-                    OwnedBookDefect.FoldedPages,
-                    OwnedBookQuality.Poor,
-                    OwnedBookSource.Store,
-                    OwnedBookType.ReviewCopy
-                ),
-                OwnedBook(
-                    0,
-                    Book.Orwell1984,
-                    1,
-                    OwnedBookDefect.Stickered,
-                    OwnedBookQuality.Fine,
-                    OwnedBookSource.Gift,
-                    OwnedBookType.Paperback
+                    OwnedBookDefect.values()[Random.nextInt(OwnedBookDefect.values().size)],
+                    OwnedBookQuality.values()[Random.nextInt(OwnedBookQuality.values().size)],
+                    OwnedBookSource.values()[Random.nextInt(OwnedBookSource.values().size)],
+                    OwnedBookType.values()[Random.nextInt(OwnedBookType.values().size)]
                 )
-            )
+            }
+            database.ownedBookDao().insert(*bookList.toTypedArray())
         }
     }
 }

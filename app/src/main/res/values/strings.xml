@@ -82,16 +82,6 @@
     <string name="defect_stickered">Stickered</string>
     <string name="defect_missingpages">Missing Pages</string>
 
-    <string name="title_hobbit">The Hobbit</string>
-    <string name="title_1984">1984</string>
-    <string name="title_vforvendetta">The Hobbit</string>
-    <string name="title_gameofthrones">A Game of Thrones</string>
-
-    <string name="author_tolkien">J.R.R. Tolkien</string>
-    <string name="author_orwell">George Orwell</string>
-    <string name="author_moore">Roger Moore</string>
-    <string name="author_rrmartin">George R.R. Martin</string>
-
     <string name="furniture_decoration">Decoration</string>
     <string name="furniture_display">Display</string>
     <string name="furniture_seating">Seating</string>

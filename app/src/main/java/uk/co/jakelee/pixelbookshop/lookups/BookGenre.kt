@@ -24,6 +24,7 @@ enum class BookGenre(override val id: Int, @StringRes val title: Int, isFiction:
     Satire(18, R.string.genre_satire, true),
     ScienceFiction(19, R.string.genre_sciencefiction, true),
     Thriller(20, R.string.genre_thriller, true),
+
     Autobiography(21, R.string.genre_autobiography, false),
     Biography(22, R.string.genre_biography, false),
     Essay(23, R.string.genre_essay, false),

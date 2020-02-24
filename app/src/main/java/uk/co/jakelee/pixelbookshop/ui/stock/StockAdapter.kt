@@ -26,7 +26,7 @@ class StockAdapter(var context: Activity, private val books: List<OwnedBook>) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val book = books[position]
         val viewHolder = holder as RecyclerViewViewHolder
-        viewHolder.name.text = String.format("%1s by %2s", context.getString(book.book.title), context.getString(book.book.author))
+        viewHolder.name.text = String.format("%1s by %2s %3s", book.book.title, book.book.authorFirstName, book.book.authorSurname)
 
         viewHolder.genre.text = context.getString(book.book.genre.title)
         viewHolder.rarity.text = context.getString(book.book.rarity.title)
