@@ -16,7 +16,7 @@ enum class Book(
     TwainTheAdventuresofHuckleberryFinn(2956, BookGenre.HistoricalFiction, BookRarity.Common, "The Adventures of Huckleberry Finn", "Mark", "Twain", 1876, "https://www.goodreads.com/book/show/2956.The_Adventures_of_Huckleberry_Finn"),
     CarrollAlicesAdventuresinWonderland(6324090, BookGenre.Fantasy, BookRarity.Common, "Alice's Adventures in Wonderland", "Lewis", "Carroll", 1865, "https://www.goodreads.com/book/show/6324090-alice-s-adventures-in-wonderland"),
     RemarqueAllQuietontheWesternFront(355697, BookGenre.HistoricalFiction, BookRarity.Common, "All Quiet on the Western Front", "Erich Maria", "Remarque", 1928, "https://www.goodreads.com/book/show/355697.All_Quiet_on_the_Western_Front"),
-    GaimanAmericanGods(30165203, BookGenre.Fantasy, BookRarity.Common, "American Gods ", "Neil", "Gaiman", 2001, "https://www.goodreads.com/book/show/30165203-american-gods"),
+    GaimanAmericanGods(30165203, BookGenre.Fantasy, BookRarity.Common, "American Gods", "Neil", "Gaiman", 2001, "https://www.goodreads.com/book/show/30165203-american-gods"),
     EllisAmericanPsycho(28676, BookGenre.Horror, BookRarity.Common, "American Psycho", "Bret Easton", "Ellis", 1991, "https://www.goodreads.com/book/show/28676.American_Psycho"),
     OrwellAnimalFarm(170448, BookGenre.Fantasy, BookRarity.Common, "Animal Farm", "George", "Orwell", 1945, "https://www.goodreads.com/book/show/170448.Animal_Farm"),
     TolstoyAnnaKarenina(15823480, BookGenre.Romance, BookRarity.Common, "Anna Karenina", "Leo", "Tolstoy", 1877, "https://www.goodreads.com/book/show/15823480-anna-karenina"),

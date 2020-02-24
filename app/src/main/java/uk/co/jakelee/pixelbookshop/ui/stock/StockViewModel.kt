@@ -11,7 +11,7 @@ class StockViewModel(application: Application) : AndroidViewModel(application) {
     private val booksRepo: OwnedBookRepository
 
     private val books: LiveData<List<OwnedBook>>
-    private val sortField = MutableLiveData(Pair(0, 0))
+    val sortField = MutableLiveData(Pair(0, 0))
     private val filterField = MutableLiveData(Pair(-1, -1))
 
     init {
