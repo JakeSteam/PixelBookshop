@@ -44,6 +44,7 @@ class StockFragment : Fragment() {
         stockViewModel.getBooks().observe(viewLifecycleOwner, stockObserver)
         root.sorting.setOnClickListener { showSortDialog() }
         root.filtering.setOnClickListener { showFilterDialog() }
+        root.assign.setOnClickListener {  }
         return root
     }
 

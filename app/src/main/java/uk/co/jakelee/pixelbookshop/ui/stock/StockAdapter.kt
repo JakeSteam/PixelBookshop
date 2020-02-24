@@ -23,10 +23,22 @@ class StockAdapter(var context: Activity, private val books: List<OwnedBook>) :
         return RecyclerViewViewHolder(rootView)
     }
 
+    private val selectedItems = mutableListOf<Int>()
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val book = books[position]
         val viewHolder = holder as RecyclerViewViewHolder
         viewHolder.name.text = String.format("%1s by %2s %3s", book.book.title, book.book.authorFirstName, book.book.authorSurname)
+        viewHolder.name.alpha = if (selectedItems.contains(book.id)) 0.5f else 1f
+        viewHolder.name.setOnClickListener {
+            if (selectedItems.contains(book.id)) {
+                selectedItems.remove(book.id)
+                it.alpha = 1f
+            } else {
+                selectedItems.add(book.id)
+                it.alpha = 0.5f
+            }
+        }
 
         viewHolder.genre.text = context.getString(book.book.genre.title)
         viewHolder.rarity.text = context.getString(book.book.rarity.title)
