@@ -16,6 +16,7 @@
     <string name="stock_published_filter">Before %1$d</string>
     <string name="stock_in_furniture">On Display</string>
     <string name="stock_in_storage">In Storage</string>
+    <string name="stock_assign_button">Assign (%d)</string>
 
     <string name="book_sort_ascending">Ascending</string>
     <string name="book_sort_descending">Descending</string>

@@ -52,6 +52,7 @@ class ShopFragment : Fragment() {
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
+        val a = arguments?.getInt("booksToAssign")
         return root
     }
 

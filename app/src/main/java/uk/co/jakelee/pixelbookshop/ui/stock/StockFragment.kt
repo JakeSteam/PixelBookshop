@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.hamsa.twosteppickerdialog.OnStepPickListener
 import com.hamsa.twosteppickerdialog.TwoStepPickerDialog
 import kotlinx.android.synthetic.main.fragment_stock.*
@@ -44,7 +46,10 @@ class StockFragment : Fragment() {
         stockViewModel.getBooks().observe(viewLifecycleOwner, stockObserver)
         root.sorting.setOnClickListener { showSortDialog() }
         root.filtering.setOnClickListener { showFilterDialog() }
-        root.assign.setOnClickListener {  }
+        root.assign.setOnClickListener {
+            val bundle = bundleOf("booksToAssign" to stockViewModel.selectedBooks.first())
+            findNavController().navigate(R.id.action_stockFragment_to_shopFragment, bundle)
+        }
         return root
     }
 
@@ -106,9 +111,25 @@ class StockFragment : Fragment() {
                 getString(sortField.resource),
                 getString(sortOrder.resource)
             )
-
-            booksRecycler.adapter = StockAdapter(activity!!, books)
+            updateAssignButton()
+            booksRecycler.adapter = StockAdapter(activity!!, books,
+                { id: Int ->
+                    stockViewModel.selectedBooks.add(id)
+                    updateAssignButton()
+                },
+                { id: Int ->
+                    stockViewModel.selectedBooks.remove(id)
+                    updateAssignButton()
+                },
+                { id: Int -> stockViewModel.selectedBooks.contains(id) })
         }
+    }
+
+    private fun updateAssignButton() {
+        val selectedItems = stockViewModel.selectedBooks.size
+        assign.text = String.format(getString(R.string.stock_assign_button), selectedItems)
+        assign.alpha = if(selectedItems > 0) 1f else 0.5f
+
     }
 
     private fun getFilterSteps(step: Int): MutableList<String> {

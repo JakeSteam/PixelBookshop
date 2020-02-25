@@ -13,6 +13,7 @@ class StockViewModel(application: Application) : AndroidViewModel(application) {
     private val books: LiveData<List<OwnedBook>>
     val sortField = MutableLiveData(Pair(0, 0))
     private val filterField = MutableLiveData(Pair(-1, -1))
+    val selectedBooks = mutableListOf<Int>()
 
     init {
         val booksDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()

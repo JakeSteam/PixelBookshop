@@ -29,15 +29,17 @@
             app:layout_constraintEnd_toEndOf="parent"/>
         <TextView
             android:id="@+id/assign"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:background="@drawable/ui_element_greyscale"
             android:fontFamily="@font/fenwickwoodtype"
             app:fontFamily="@font/fenwickwoodtype"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:padding="8dp"
-            tools:text="Assign 5"
+            android:text="Assign books"
+            android:alpha="0.5"
             app:layout_constraintTop_toTopOf="@id/title"
             app:layout_constraintBottom_toBottomOf="@id/title"
             app:layout_constraintEnd_toEndOf="parent"/>
