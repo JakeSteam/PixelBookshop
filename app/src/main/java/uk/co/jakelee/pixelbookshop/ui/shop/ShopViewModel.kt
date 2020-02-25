@@ -7,10 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
-import uk.co.jakelee.pixelbookshop.lookups.Floor
-import uk.co.jakelee.pixelbookshop.lookups.Furniture
-import uk.co.jakelee.pixelbookshop.lookups.MessageType
-import uk.co.jakelee.pixelbookshop.lookups.Wall
+import uk.co.jakelee.pixelbookshop.lookups.*
 import uk.co.jakelee.pixelbookshop.repository.*
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
@@ -31,6 +28,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     private var selectedFurni: OwnedFurniture? = null
 
+    var booksToAssign = arrayOf<Int>()
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
 
     init {
@@ -198,10 +196,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun furniClick(furni: OwnedFurniture) = viewModelScope.launch {
+    fun furniClick(furni: OwnedFurnitureWithOwnedBooks) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             when (currentTab.value) {
-                ShopFragment.SelectedTab.UPGRADE -> furni.furniture.also {
+                ShopFragment.SelectedTab.UPGRADE -> furni.ownedFurniture.furniture.also {
                     val nextFurni = Furniture.values().firstOrNull { furni ->
                         furni.type == it.type && furni.tier > it.tier
                     }
@@ -210,7 +208,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                             nextFurni.level
                         )
                     ) {
-                        ownedFurnitureRepo.upgradeFurni(furni, nextFurni)
+                        ownedFurnitureRepo.upgradeFurni(furni.ownedFurniture, nextFurni)
                         playerRepo.purchase(nextFurni.cost)
                         messageRepo.addMessage(
                             MessageType.Positive,
@@ -228,14 +226,35 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                         )
                     }
                 }
-                ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni)
+                ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni.ownedFurniture)
                 ShopFragment.SelectedTab.MOVE -> wall.value?.let {
                     if (selectedFurni == null) {
-                        selectedFurni = furni
-                    } else if (!it.isDoor(furni.x, furni.y, ownedFloor.value!!.first().y)) {
-                        ownedFurnitureRepo.swap(furni, selectedFurni!!)
+                        selectedFurni = furni.ownedFurniture
+                    } else if (!it.isDoor(furni.ownedFurniture.x, furni.ownedFurniture.y, ownedFloor.value!!.first().y)) {
+                        ownedFurnitureRepo.swap(furni.ownedFurniture, selectedFurni!!)
                         selectedFurni = null
                     }
+                }
+                ShopFragment.SelectedTab.ASSIGN -> {
+                    if (furni.ownedFurniture.furniture.type != FurnitureType.Display) {
+                        messageRepo.addMessage(MessageType.Negative, "Books can only be assigned to display furniture!")
+                        return@withContext
+                    }
+                    val furnitureCapacity = furni.ownedFurniture.furniture.bookCapacity()
+                    val capacity = furnitureCapacity - furni.ownedBooks.size
+                    val slicedBooksToAssign = booksToAssign.take(capacity)
+                    if (capacity == 0) {
+                        messageRepo.addMessage(MessageType.Negative, "There are already $furnitureCapacity books here!")
+                        return@withContext
+                    }
+                    ownedFurnitureRepo.assignBooks(furni.ownedFurniture.id, slicedBooksToAssign)
+                    if (slicedBooksToAssign.size < booksToAssign.size) {
+                        messageRepo.addMessage(MessageType.Neutral, "There was only space for ${slicedBooksToAssign.size}/${booksToAssign.size} books, they've been assigned!")
+                    } else {
+                        messageRepo.addMessage(MessageType.Positive, "${slicedBooksToAssign.size} books assigned!")
+                    }
+                    booksToAssign = arrayOf()
+                    launch(Dispatchers.Main) { setOrResetMode(ShopFragment.SelectedTab.NONE) }
                 }
                 else -> null
             }

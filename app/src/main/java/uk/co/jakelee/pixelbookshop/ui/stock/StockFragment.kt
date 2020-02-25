@@ -47,7 +47,7 @@ class StockFragment : Fragment() {
         root.sorting.setOnClickListener { showSortDialog() }
         root.filtering.setOnClickListener { showFilterDialog() }
         root.assign.setOnClickListener {
-            val bundle = bundleOf("booksToAssign" to stockViewModel.selectedBooks.first())
+            val bundle = bundleOf("booksToAssign" to stockViewModel.selectedBooks.toIntArray())
             findNavController().navigate(R.id.action_stockFragment_to_shopFragment, bundle)
         }
         return root

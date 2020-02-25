@@ -94,6 +94,6 @@ fun Furniture.coinCapacity(): Int {
 }
 
 fun Furniture.bookCapacity(): Int {
-    if (this.type != FurnitureType.Storage) return 0
+    if (this.type != FurnitureType.Display) return 0
     return this.capacity
 }

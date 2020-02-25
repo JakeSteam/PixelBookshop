@@ -51,4 +51,8 @@ class OwnedFurnitureRepository(private val ownedFurnitureDao: OwnedFurnitureDao)
         two.y = originalY
         ownedFurnitureDao.insert(one, two)
     }
+
+    suspend fun assignBooks(furnitureId: Int, bookIds: List<Int>) {
+        ownedFurnitureDao.assignBooks(furnitureId, bookIds)
+    }
 }

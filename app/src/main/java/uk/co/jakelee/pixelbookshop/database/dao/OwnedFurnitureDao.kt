@@ -26,4 +26,6 @@ interface OwnedFurnitureDao {
     @Query("UPDATE OwnedFurniture SET y = y + 1 WHERE shopId = :shopId")
     suspend fun increaseY(shopId: Int)
 
+    @Query("UPDATE OwnedBook SET ownedFurnitureId = :furniId WHERE id IN(:bookIds)")
+    suspend fun assignBooks(furniId: Int, bookIds: List<Int>)
 }

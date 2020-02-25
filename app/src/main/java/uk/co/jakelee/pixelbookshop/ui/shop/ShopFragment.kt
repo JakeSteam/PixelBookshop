@@ -21,7 +21,8 @@ class ShopFragment : Fragment() {
         NONE(true, true, true),
         ROTATE(false, true, true),
         MOVE(true, false, true),
-        UPGRADE(true, true, true)
+        UPGRADE(true, true, true),
+        ASSIGN(false, false, true)
     }
 
     private val visibleAlpha = 1.0f
@@ -52,7 +53,10 @@ class ShopFragment : Fragment() {
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
-        val a = arguments?.getInt("booksToAssign")
+        arguments?.getIntArray("booksToAssign")?.let {
+            shopViewModel.booksToAssign = it.toTypedArray()
+            shopViewModel.setOrResetMode(SelectedTab.ASSIGN)
+        }
         return root
     }
 
@@ -133,7 +137,7 @@ class ShopFragment : Fragment() {
         furniture_layer.removeAllViews()
         furnitures.forEach {
             val callback = { view: View, tile: OwnedFurniture ->
-                shopViewModel.furniClick(tile)
+                shopViewModel.furniClick(it)
             }
             tileRenderer.drawFurniture(furniture_layer, it, maxX, callback)
         }
