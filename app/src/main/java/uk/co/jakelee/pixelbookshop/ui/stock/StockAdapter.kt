@@ -14,7 +14,7 @@ import uk.co.jakelee.pixelbookshop.database.entity.OwnedBook
 
 class StockAdapter(
     var context: Activity,
-    private val books: List<OwnedBook>,
+    val books: List<OwnedBook>,
     private val addSelected: (Int) -> Unit,
     private val removeSelected: (Int) -> Unit,
     private val selectedContains: (Int) -> Boolean) :

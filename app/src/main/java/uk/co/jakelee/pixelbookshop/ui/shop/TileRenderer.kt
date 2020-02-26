@@ -53,7 +53,7 @@ class TileRenderer(private val context: Context) {
             setImageResource(resource)
             setOnTouchListener(View.OnTouchListener { v, event ->
                 val bmp = Bitmap.createBitmap(v.drawingCache)
-                if (event.x.toInt() > bmp.width || event.y.toInt() > bmp.height) return@OnTouchListener true
+                if (event.x.toInt() >= bmp.width || event.y.toInt() >= bmp.height) return@OnTouchListener true
                 val color = bmp.getPixel(event.x.toInt(), event.y.toInt())
                 if (color == Color.TRANSPARENT) {
                     return@OnTouchListener false

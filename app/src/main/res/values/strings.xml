@@ -17,6 +17,8 @@
     <string name="stock_in_furniture">On Display</string>
     <string name="stock_in_storage">In Storage</string>
     <string name="stock_assign_button">Assign (%d)</string>
+    <string name="stock_assign_default">Assign (0)</string>
+    <string name="stock_select_all">Select all</string>
 
     <string name="book_sort_ascending">Ascending</string>
     <string name="book_sort_descending">Descending</string>

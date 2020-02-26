@@ -35,6 +35,7 @@ class StockFragment : Fragment() {
         StockSortOrder.values().map { getString(it.resource) }.toMutableList()
     }
 
+    private var adapter: StockAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,12 +45,20 @@ class StockFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_stock, container, false)
         stockViewModel = ViewModelProvider(this).get(StockViewModel::class.java)
         stockViewModel.getBooks().observe(viewLifecycleOwner, stockObserver)
-        root.sorting.setOnClickListener { showSortDialog() }
-        root.filtering.setOnClickListener { showFilterDialog() }
+        root.selectAll.setOnClickListener {
+            adapter?.let { adapter ->
+                stockViewModel.selectedBooks.addAll(adapter.books.map { it.id })
+                selectAll.alpha = 0.5f
+                adapter.notifyDataSetChanged()
+                updateAssignButton()
+            }
+        }
         root.assign.setOnClickListener {
             val bundle = bundleOf("booksToAssign" to stockViewModel.selectedBooks.toIntArray())
             findNavController().navigate(R.id.action_stockFragment_to_shopFragment, bundle)
         }
+        root.sorting.setOnClickListener { showSortDialog() }
+        root.filtering.setOnClickListener { showFilterDialog() }
         return root
     }
 
@@ -112,7 +121,7 @@ class StockFragment : Fragment() {
                 getString(sortOrder.resource)
             )
             updateAssignButton()
-            booksRecycler.adapter = StockAdapter(activity!!, books,
+            adapter = StockAdapter(activity!!, books,
                 { id: Int ->
                     stockViewModel.selectedBooks.add(id)
                     updateAssignButton()
@@ -122,6 +131,8 @@ class StockFragment : Fragment() {
                     updateAssignButton()
                 },
                 { id: Int -> stockViewModel.selectedBooks.contains(id) })
+            booksRecycler.adapter = adapter
+            selectAll.alpha = 1f
         }
     }
 
