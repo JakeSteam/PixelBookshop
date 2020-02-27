@@ -53,9 +53,12 @@ class ShopFragment : Fragment() {
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
-        arguments?.getIntArray("booksToAssign")?.let {
-            shopViewModel.booksToAssign = it.toTypedArray()
+        if (arguments?.getIntArray("booksToAssign") != null) {
+            shopViewModel.booksToAssign = arguments!!.getIntArray("booksToAssign")!!.toTypedArray()
             shopViewModel.setOrResetMode(SelectedTab.ASSIGN)
+            arguments = null
+        } else {
+            shopViewModel.setOrResetMode(SelectedTab.NONE)
         }
         return root
     }

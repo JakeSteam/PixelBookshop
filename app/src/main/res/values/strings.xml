@@ -18,6 +18,7 @@
     <string name="stock_assign_button">Assign (%d)</string>
     <string name="stock_assign_default">Assign (0)</string>
     <string name="stock_select_all">Select all</string>
+    <string name="stock_title">%1s (%2d) by %3s %4s</string>
 
     <string name="book_sort_ascending">Ascending</string>
     <string name="book_sort_descending">Descending</string>

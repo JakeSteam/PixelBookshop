@@ -55,20 +55,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/name"
         app:layout_constraintStart_toEndOf="@id/genre"
-        app:layout_constraintEnd_toStartOf="@id/published"
-        android:textSize="16sp"
-        android:fontFamily="@font/fenwickwoodtype"
-        app:fontFamily="@font/fenwickwoodtype"
-        android:textColor="@color/black"
-        android:gravity="center"
-        android:background="@drawable/ui_element_greyscale"
-        tools:text="Rare" />
-    <TextView
-        android:id="@+id/published"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/name"
-        app:layout_constraintStart_toEndOf="@id/rarity"
         app:layout_constraintEnd_toEndOf="parent"
         android:textSize="16sp"
         android:fontFamily="@font/fenwickwoodtype"
@@ -76,7 +62,7 @@
         android:textColor="@color/black"
         android:gravity="center"
         android:background="@drawable/ui_element_greyscale"
-        tools:text="1946" />
+        tools:text="Rare" />
 
     <TextView
         android:id="@+id/type"
