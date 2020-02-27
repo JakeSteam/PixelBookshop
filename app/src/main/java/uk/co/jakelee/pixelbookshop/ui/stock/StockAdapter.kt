@@ -6,9 +6,9 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_book_row.view.*
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedBook
 
@@ -30,32 +30,37 @@ class StockAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val book = books[position]
-        val viewHolder = holder as RecyclerViewViewHolder
-        viewHolder.name.text = String.format("%1s by %2s %3s", book.book.title, book.book.authorFirstName, book.book.authorSurname)
-        viewHolder.name.alpha = if (selectedContains.invoke(book.id)) 0.5f else 1f
-        viewHolder.name.setOnClickListener {
+        val view  = (holder as RecyclerViewViewHolder).view
+
+        val isSelected = selectedContains.invoke(book.id)
+        view.alpha = if (isSelected) 0.5f else 1f
+        view.setOnClickListener {
             if (selectedContains.invoke(book.id)) {
                 removeSelected.invoke(book.id)
                 it.alpha = 1f
+                it.checkbox.isChecked = false
             } else {
                 addSelected.invoke(book.id)
                 it.alpha = 0.5f
+                it.checkbox.isChecked = true
             }
         }
+        view.checkbox.isChecked = isSelected
+        view.name.text = String.format("%1s by %2s %3s", book.book.title, book.book.authorFirstName, book.book.authorSurname)
 
-        viewHolder.genre.text = context.getString(book.book.genre.title)
-        viewHolder.rarity.text = context.getString(book.book.rarity.title)
-        viewHolder.published.text = book.book.published.toString()
+        view.genre.text = context.getString(book.book.genre.title)
+        view.rarity.text = context.getString(book.book.rarity.title)
+        view.published.text = book.book.published.toString()
 
-        viewHolder.type.text = context.getString(book.bookType.title)
-        viewHolder.source.text = context.getString(book.bookSource.title)
-        viewHolder.quality.text = context.getString(book.bookQuality.title)
-        viewHolder.defect.text = context.getString(book.bookDefect.title)
+        view.type.text = context.getString(book.bookType.title)
+        view.source.text = context.getString(book.bookSource.title)
+        view.quality.text = context.getString(book.bookQuality.title)
+        view.defect.text = context.getString(book.bookDefect.title)
 
         val furnitureResource = if (book.ownedFurnitureId ?: 0 > 0) R.drawable.ic_store_green else android.R.color.transparent
-        viewHolder.furniture.setImageResource(furnitureResource)
+        view.furniture.setImageResource(furnitureResource)
 
-        viewHolder.url.setOnClickListener {
+        view.url.setOnClickListener {
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(book.book.url))) 
         }
     }
@@ -64,17 +69,6 @@ class StockAdapter(
 
     internal inner class RecyclerViewViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
-        var name: TextView = itemView.findViewById(R.id.name)
-
-        var genre: TextView = itemView.findViewById(R.id.genre)
-        var rarity: TextView = itemView.findViewById(R.id.rarity)
-        var published: TextView = itemView.findViewById(R.id.published)
-
-        var type: TextView = itemView.findViewById(R.id.type)
-        var source: TextView = itemView.findViewById(R.id.source)
-        var quality: TextView = itemView.findViewById(R.id.quality)
-        var defect: TextView = itemView.findViewById(R.id.defect)
-        var furniture: ImageView = itemView.findViewById(R.id.furniture)
-        var url: ImageView = itemView.findViewById(R.id.url)
+        var view: ConstraintLayout = itemView as ConstraintLayout
     }
 }

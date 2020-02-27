@@ -68,7 +68,10 @@
             android:textColor="@color/black"
             android:gravity="center"
             android:textSize="20sp"
-            tools:text="Sort by Genre"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            tools:text="Title (Ascending)"
+            android:drawableStart="@drawable/ic_sort"
             app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/filtering"/>
@@ -82,7 +85,10 @@
             android:textColor="@color/black"
             android:gravity="center"
             android:textSize="20sp"
-            tools:text="Filtered"
+            android:paddingEnd="10dp"
+            android:paddingStart="0dp"
+            tools:text="Genre"
+            android:drawableEnd="@drawable/ic_filter"
             app:layout_constraintTop_toBottomOf="@id/title"
             app:layout_constraintStart_toEndOf="@id/sorting"
             app:layout_constraintEnd_toEndOf="parent"/>

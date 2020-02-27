@@ -110,7 +110,7 @@ class StockFragment : Fragment() {
                 val filterField = filterFields[data.filterField!!.first]
                 val filterFieldIndex = data.filterField!!.second
                 books = filterBooks(books, filterField, filterFieldIndex)
-                filtering.text = String.format(getString(R.string.stock_filter_text_set), getString(filterField.resource))
+                filtering.text = getString(filterField.resource)
             } else {
                 filtering.text = getString(R.string.stock_filter_text_unset)
             }

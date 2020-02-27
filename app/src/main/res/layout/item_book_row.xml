@@ -10,6 +10,16 @@
     android:layout_marginEnd="2dp"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp">
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:checked="true"
+        android:button="@drawable/ic_checkbox"
+        android:clickable="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/name"
+        app:layout_constraintBottom_toBottomOf="@id/name"/>
     <TextView
         android:id="@+id/name"
         android:layout_width="0dp"
@@ -18,8 +28,9 @@
         android:fontFamily="@font/fenwickwoodtype"
         app:fontFamily="@font/fenwickwoodtype"
         android:textColor="@color/black"
+        android:layout_marginStart="8dp"
         tools:text="A Book, by A Long Named Author"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/checkbox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:ellipsize="end"/>
