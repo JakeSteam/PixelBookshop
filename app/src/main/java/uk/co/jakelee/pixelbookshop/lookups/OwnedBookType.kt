@@ -4,7 +4,12 @@ import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.interfaces.Model
 
-enum class OwnedBookType(override val id: Int, @StringRes val title: Int, frequency: Double, val modifier: Double): Model {
+enum class OwnedBookType(
+    override val id: Int,
+    @StringRes val title: Int,
+    val frequency: Double,
+    val modifier: Double
+): Model {
     FirstEdition(1, R.string.type_firstedition, 0.005, 20.0),
     SignedEdition(2, R.string.type_signed, 0.01, 4.0),
     Hardback(3, R.string.type_hardback, 0.7, 1.5),
