@@ -54,11 +54,11 @@ class ShopFragment : Fragment() {
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
 
-        enterAssignModeIfBooksToAssign()
+        handleArguments()
         return root
     }
 
-    private fun enterAssignModeIfBooksToAssign() {
+    private fun handleArguments() {
         arguments?.let {
             val booksToAssign = ShopFragmentArgs.fromBundle(it).booksToAssign
             booksToAssign?.let {
