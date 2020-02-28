@@ -108,7 +108,7 @@ class StatusFragment : Fragment() {
         }
     }
 
-    private val dateObserver: Observer<PlayerDao.PlayerDate> = Observer {
+    private val dateObserver: Observer<PlayerDao.GameTime> = Observer {
         it?.let {
             text_time_progress.progress = it.hour
             val calendar = Calendar.getInstance().apply {

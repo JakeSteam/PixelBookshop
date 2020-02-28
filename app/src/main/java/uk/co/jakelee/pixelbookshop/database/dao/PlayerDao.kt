@@ -32,7 +32,7 @@ interface PlayerDao {
     fun removeCoins(coins: Int)
 
     @Query("SELECT day, hour FROM player")
-    fun getDateTime(): LiveData<PlayerDate>
+    fun getDateTime(): LiveData<GameTime>
 
-    data class PlayerDate(val day: Int, val hour: Int)
+    data class GameTime(val day: Int, val hour: Int)
 }

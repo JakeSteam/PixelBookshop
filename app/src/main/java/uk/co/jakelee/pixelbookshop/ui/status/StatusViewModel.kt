@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
-import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao.PlayerDate
+import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao.GameTime
 import uk.co.jakelee.pixelbookshop.database.entity.Message
 import uk.co.jakelee.pixelbookshop.lookups.bookCapacity
 import uk.co.jakelee.pixelbookshop.lookups.coinCapacity
@@ -23,7 +23,7 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     private val playerRepo: PlayerRepository
     private val messageRepo: MessageRepository
 
-    val date: LiveData<PlayerDate>
+    val date: LiveData<GameTime>
     val xp: LiveData<Long>
     val messages: LiveData<List<Message>>
 
