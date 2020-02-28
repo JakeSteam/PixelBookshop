@@ -53,14 +53,21 @@ class ShopFragment : Fragment() {
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
-        if (arguments?.getIntArray("booksToAssign") != null) {
-            shopViewModel.booksToAssign = arguments!!.getIntArray("booksToAssign")!!.toTypedArray()
-            shopViewModel.setOrResetMode(SelectedTab.ASSIGN)
-            arguments = null
-        } else {
-            shopViewModel.setOrResetMode(SelectedTab.NONE)
-        }
+
+        enterAssignModeIfBooksToAssign()
         return root
+    }
+
+    private fun enterAssignModeIfBooksToAssign() {
+        arguments?.let {
+            val booksToAssign = ShopFragmentArgs.fromBundle(it).booksToAssign
+            booksToAssign?.let {
+                if (booksToAssign.isEmpty()) { return }
+                shopViewModel.booksToAssign = booksToAssign.toTypedArray()
+                shopViewModel.setOrResetMode(SelectedTab.ASSIGN)
+                arguments = null
+            }
+        }
     }
 
     private val latestMessageObserver = Observer<Message> {

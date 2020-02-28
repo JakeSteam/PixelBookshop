@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -54,8 +53,9 @@ class StockFragment : Fragment() {
             }
         }
         root.assign.setOnClickListener {
-            val bundle = bundleOf("booksToAssign" to stockViewModel.selectedBooks.toIntArray())
-            findNavController().navigate(R.id.action_stockFragment_to_shopFragment, bundle)
+            val booksToAssign = stockViewModel.selectedBooks.toIntArray()
+            val action = StockFragmentDirections.actionStockFragmentToShopFragment(booksToAssign)
+            findNavController().navigate(action)
         }
         root.sorting.setOnClickListener { showSortDialog() }
         root.filtering.setOnClickListener { showFilterDialog() }

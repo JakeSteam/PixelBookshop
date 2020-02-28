@@ -19,6 +19,7 @@
         <argument
             android:name="booksToAssign"
             app:argType="integer[]"
+            app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
 
