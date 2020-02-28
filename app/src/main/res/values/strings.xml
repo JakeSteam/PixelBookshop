@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Pixel Bookshop</string>
 
-    <string name="date_progression">Day %1$d: %2$s</string>
-    <string name="shop_stock">%1$d for sale, %2$d / %3$d stored</string>
+    <string name="status_day">Day %1$d: %2$s</string>
+    <string name="status_stock">%1$d for sale, %2$d / %3$d stored</string>
 
-    <string name="title_messages">Messages</string>
+    <string name="messages_title">Messages</string>
 
-    <string name="title_stock">Stockroom</string>
+    <string name="stock_title">Stockroom</string>
     <string name="stock_sort_text">%1$s (%2$s)</string>
     <string name="stock_dialog_order">Order</string>
     <string name="stock_dialog_cancel">Cancel</string>
@@ -18,7 +18,7 @@
     <string name="stock_assign_button">Assign (%d)</string>
     <string name="stock_assign_default">Assign (0)</string>
     <string name="stock_select_all">Select all</string>
-    <string name="stock_title">%1s (%2d) by %3s %4s</string>
+    <string name="stock_item_title">%1s (%2d) by %3s %4s</string>
 
     <string name="book_sort_ascending">Ascending</string>
     <string name="book_sort_descending">Descending</string>
@@ -143,4 +143,7 @@
     <string name="wall_stone">Stone</string>
     <string name="wall_stoneholes">Stone (Holes)</string>
     <string name="wall_stonewindow">Stone (Window)</string>
+
+    <string name="visitor_testVisitor_name">Test Visitor</string>
+    <string name="visitor_testVisitor_desc">This is a test visitor.</string>
 </resources>

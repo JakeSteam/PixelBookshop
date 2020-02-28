@@ -46,7 +46,7 @@ class StockAdapter(
             }
         }
         view.checkbox.isChecked = isSelected
-        view.name.text = String.format(context.getString(R.string.stock_title), book.book.title, book.book.published, book.book.authorFirstName, book.book.authorSurname)
+        view.name.text = String.format(context.getString(R.string.stock_item_title), book.book.title, book.book.published, book.book.authorFirstName, book.book.authorSurname)
 
         view.genre.text = context.getString(book.book.genre.title)
         view.rarity.text = context.getString(book.book.rarity.title)

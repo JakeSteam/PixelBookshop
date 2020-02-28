@@ -83,7 +83,7 @@ class StatusFragment : Fragment() {
         it?.let {
             if (!it.isValid()) return@Observer
             text_stock.text = String.format(
-                Locale.UK, getString(R.string.shop_stock),
+                Locale.UK, getString(R.string.status_stock),
                 it.assignedBooks, it.unassignedBooks, it.maxUnassignedBooks
             )
             text_stock_progress.max = it.maxUnassignedBooks!!
@@ -117,7 +117,7 @@ class StatusFragment : Fragment() {
             val formattedTime = SimpleDateFormat("ha", Locale.ROOT).format(calendar.time).toLowerCase()
             text_time.text = String.format(
                 Locale.UK,
-                getString(R.string.date_progression),
+                getString(R.string.status_day),
                 it.day,
                 formattedTime
             )

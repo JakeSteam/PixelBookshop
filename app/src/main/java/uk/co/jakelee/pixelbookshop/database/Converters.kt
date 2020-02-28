@@ -19,6 +19,9 @@ class Converters {
     @TypeConverter fun furnitureToInt(value: Furniture) = value.id
     @TypeConverter fun intToFurniture(id: Int) = Furniture.values().first { it.id == id }
 
+    @TypeConverter fun messageTypeToInt(value: MessageType) = value.id
+    @TypeConverter fun intToMessageType(id: Int) = MessageType.values().first { it.id == id }
+
     @TypeConverter fun furnitureTypeToInt(value: FurnitureType) = value.id
     @TypeConverter fun intToFurnitureType(id: Int) = FurnitureType.values().first { it.id == id }
 
@@ -37,6 +40,6 @@ class Converters {
     @TypeConverter fun wallToInt(value: Wall) = value.id
     @TypeConverter fun intToWall(id: Int) = Wall.values().first { it.id == id }
 
-    @TypeConverter fun messageTypeToInt(value: MessageType) = value.id
-    @TypeConverter fun intToMessageType(id: Int) = MessageType.values().first { it.id == id }
+    @TypeConverter fun visitorToInt(value: Visitor) = value.id
+    @TypeConverter fun intToVisitor(id: Int) = Visitor.values().first { it.id == id }
 }
