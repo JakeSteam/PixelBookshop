@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.interfaces.Model
 
-enum class BookRarity(override val id: Int, @StringRes val title: Int, frequency: Double, modifier: Double): Model {
+enum class BookRarity(override val id: Int, @StringRes val title: Int, frequency: Double, val modifier: Double): Model {
     Unique(1, R.string.rarity_unique, 0.01, 20.0),
     ExtremelyRare(2, R.string.rarity_extremelyrare, 0.1, 3.0),
     VeryRare(3, R.string.rarity_veryrare, 0.2, 2.0),

@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.interfaces.Model
 
-enum class OwnedBookDefect(override val id: Int, @StringRes val title: Int, frequency: Double, modifier: Double): Model {
+enum class OwnedBookDefect(override val id: Int, @StringRes val title: Int, frequency: Double, val modifier: Double): Model {
     None(1, R.string.defect_none, 1.0, 1.0),
     FoldedPages(2, R.string.defect_foldedpages, 0.05, 0.9),
     StainedPages(3, R.string.defect_stainedpages, 0.05, 0.8),

@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.interfaces.Model
 
-enum class OwnedBookQuality(override val id: Int, @StringRes val title: Int, canHaveDefects: Boolean, frequency: Double, modifier: Double): Model {
+enum class OwnedBookQuality(override val id: Int, @StringRes val title: Int, canHaveDefects: Boolean, frequency: Double, val modifier: Double): Model {
     New(1, R.string.quality_new, false, 0.1, 1.0),
     Fine(2, R.string.quality_fine, false, 0.2, 0.95),
     VeryGood(3, R.string.quality_verygood, false, 0.4,0.9),
