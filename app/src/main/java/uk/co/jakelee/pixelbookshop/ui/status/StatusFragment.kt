@@ -41,17 +41,17 @@ class StatusFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_status, container, false)
         root.text_level_progress.setOnClickListener { xpClick() }
         root.text_stock_progress.setOnClickListener {
-            if (findNavController().currentDestination?.label == "ShopFragment") {
-                findNavController().navigate(R.id.action_shopFragment_to_stockFragment)
-            } else {
+            if (findNavController().currentDestination?.id == R.id.stockFragment) {
                 findNavController().popBackStack(R.id.shopFragment, false)
+            } else {
+                findNavController().navigate(R.id.action_global_stockFragment)
             }
         }
         root.text_messages_progress.setOnClickListener {
-            if (findNavController().currentDestination?.label == "ShopFragment") {
-                findNavController().navigate(R.id.action_shopFragment_to_messageFragment)
-            } else {
+            if (findNavController().currentDestination?.id == R.id.messageFragment) {
                 findNavController().popBackStack(R.id.shopFragment, false)
+            } else {
+                findNavController().navigate(R.id.action_global_messageFragment)
             }
         }
         return root

@@ -54,7 +54,7 @@ class StockFragment : Fragment() {
         }
         root.assign.setOnClickListener {
             val booksToAssign = stockViewModel.selectedBooks.toIntArray()
-            val action = StockFragmentDirections.actionStockFragmentToShopFragment(booksToAssign)
+            val action = StockFragmentDirections.actionGlobalShopFragment(booksToAssign)
             findNavController().navigate(action)
         }
         root.sorting.setOnClickListener { showSortDialog() }
