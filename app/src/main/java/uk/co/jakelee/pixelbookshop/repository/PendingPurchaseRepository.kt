@@ -5,7 +5,10 @@ import uk.co.jakelee.pixelbookshop.database.entity.PendingPurchase
 
 class PendingPurchaseRepository(private val pendingPurchaseDao: PendingPurchaseDao) {
 
-    suspend fun addPurchase(vararg pendingPurchase: PendingPurchase) = pendingPurchaseDao.insert(*pendingPurchase)
+    suspend fun addPurchases(pendingPurchases: List<PendingPurchase>){
+        pendingPurchaseDao.deletePendingPurchases()
+        pendingPurchaseDao.insert(pendingPurchases)
+    }
 
     suspend fun deletePurchase(vararg pendingPurchase: PendingPurchase) = pendingPurchaseDao.deletePendingPurchase(*pendingPurchase)
 

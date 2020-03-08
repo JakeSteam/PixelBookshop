@@ -63,10 +63,11 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         latestMessage = messageRepo.latestMessage()
     }
 
-    fun scheduleNextDay() {
-        val todaysPurchases = PendingPurchaseGenerator().generate(player.value!!.day, ownedFurniture.value!!)
-        // Save in database, clearing existing first (just in case). Need Dao etc first
-        val a = 10
+    fun scheduleNextDay() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val todaysPurchases = PendingPurchaseGenerator().generate(player.value!!.day, ownedFurniture.value!!)
+            pendingPurchaseRepo.addPurchases(todaysPurchases)
+        }
     }
 
     fun playNextDay() {
