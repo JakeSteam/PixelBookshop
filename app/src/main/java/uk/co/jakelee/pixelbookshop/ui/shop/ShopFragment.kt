@@ -46,6 +46,7 @@ class ShopFragment : Fragment() {
         root.button_arrow_ne.setOnClickListener { shopViewModel.addStrip(true, false) }
         root.button_arrow_nw.setOnClickListener { shopViewModel.addStrip(false, true) }
         root.button_arrow_se.setOnClickListener { shopViewModel.addStrip(true, true) }
+        root.button_travel.setOnClickListener { shopViewModel.scheduleNextDay() }
         root.alert.setOnClickListener {
             alert.visibility = View.GONE
             shopViewModel.markMessageAsDismissed()

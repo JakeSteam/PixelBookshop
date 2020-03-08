@@ -7,7 +7,7 @@ import uk.co.jakelee.pixelbookshop.interfaces.Model
 import uk.co.jakelee.pixelbookshop.lookups.*
 
 @Entity
-data class Visit(
+data class PastVisit(
     @PrimaryKey(autoGenerate = true) override val id: Int,
     @ColumnInfo val day: Int,
     @ColumnInfo val time: Int,

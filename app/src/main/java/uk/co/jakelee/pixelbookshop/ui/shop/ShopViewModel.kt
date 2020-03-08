@@ -9,6 +9,7 @@ import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.lookups.*
 import uk.co.jakelee.pixelbookshop.repository.*
+import uk.co.jakelee.pixelbookshop.utils.VisitGenerator
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -17,6 +18,8 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFloorRepo: OwnedFloorRepository
     private val ownedFurnitureRepo: OwnedFurnitureRepository
     private val shopRepo: ShopRepository
+    private val pastVisitRepo: PastVisitRepository
+    private val pendingVisitRepo: PendingVisitRepository
     private val playerRepo: PlayerRepository
     private val messageRepo: MessageRepository
 
@@ -49,9 +52,28 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         playerRepo = PlayerRepository(playerDao)
         player = playerRepo.player
 
+        val pastVisitDao = AppDatabase.getDatabase(application, viewModelScope).pastVisitDao()
+        pastVisitRepo = PastVisitRepository(pastVisitDao)
+
+        val pendingVisitDao = AppDatabase.getDatabase(application, viewModelScope).pendingVisitDao()
+        pendingVisitRepo = PendingVisitRepository(pendingVisitDao)
+
         val messageDao = AppDatabase.getDatabase(application, viewModelScope).messageDao()
         messageRepo = MessageRepository(messageDao)
         latestMessage = messageRepo.latestMessage()
+    }
+
+    fun scheduleNextDay() {
+        val todaysVisits = VisitGenerator().generate(player.value!!.day, ownedFurniture.value!!)
+        // Save in database, clearing existing first (just in case). Need Dao etc first
+        val a = 10
+    }
+
+    fun playNextDay() {
+        // Fetch scheduled visits
+        // If none already scheduled, run scheduler and wait for result. Otherwise use list.
+        // For each, run through each visitor, with artificial delay.
+        // When all steps finished, remove total gold, add xp, delete pending visit, add past visit, all as transaction
     }
 
     fun addStrip(isPositive: Boolean, isX: Boolean) = viewModelScope.launch {
