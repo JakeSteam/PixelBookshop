@@ -13,5 +13,10 @@ data class PendingPurchase(
     @ColumnInfo val time: Int,
     @ColumnInfo val visitor: Visitor,
     @ColumnInfo val ownedBookId: Int,
-    @ColumnInfo val ownedFurnitureId: Int
-): Model
+    @ColumnInfo val seatingAreaId: Int
+): Model {
+    fun toPastPurchase(book: OwnedBook, satisfaction: Int) = PastPurchase(
+        0, day, time, visitor, satisfaction, book.book, book.bookDefect, book.bookSource,
+        book.bookType
+    )
+}

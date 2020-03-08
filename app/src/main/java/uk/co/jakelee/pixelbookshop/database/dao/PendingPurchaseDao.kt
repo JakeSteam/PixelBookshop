@@ -10,7 +10,7 @@ interface PendingPurchaseDao {
     suspend fun insert(pendingPurchases: List<PendingPurchase>)
 
     @Delete
-    fun deletePendingPurchase(vararg pendingPurchase: PendingPurchase)
+    fun deletePendingPurchases(pendingPurchase: List<PendingPurchase>)
 
     @Query("DELETE FROM PendingPurchase")
     fun deletePendingPurchases()

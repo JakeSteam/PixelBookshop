@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9b6497876080975a7e6422448191b751",
+    "identityHash": "67cb556037ceeb564b0b994738df36bf",
     "entities": [
       {
         "tableName": "Message",
@@ -320,7 +320,7 @@
       },
       {
         "tableName": "PendingPurchase",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `day` INTEGER NOT NULL, `time` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `ownedBookId` INTEGER NOT NULL, `ownedFurnitureId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `day` INTEGER NOT NULL, `time` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `ownedBookId` INTEGER NOT NULL, `seatingAreaId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -353,8 +353,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "ownedFurnitureId",
-            "columnName": "ownedFurnitureId",
+            "fieldPath": "seatingAreaId",
+            "columnName": "seatingAreaId",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -466,7 +466,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9b6497876080975a7e6422448191b751')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '67cb556037ceeb564b0b994738df36bf')"
     ]
   }
 }

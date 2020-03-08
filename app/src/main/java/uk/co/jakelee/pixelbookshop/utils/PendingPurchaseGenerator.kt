@@ -54,6 +54,4 @@ class PendingPurchaseGenerator {
             probabilityIterator >= randomNumber
         } ?: Visitor.values().first()
     }
-
-
 }

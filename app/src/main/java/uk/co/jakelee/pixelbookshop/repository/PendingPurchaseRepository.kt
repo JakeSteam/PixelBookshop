@@ -10,7 +10,7 @@ class PendingPurchaseRepository(private val pendingPurchaseDao: PendingPurchaseD
         pendingPurchaseDao.insert(pendingPurchases)
     }
 
-    suspend fun deletePurchase(vararg pendingPurchase: PendingPurchase) = pendingPurchaseDao.deletePendingPurchase(*pendingPurchase)
+    suspend fun deletePurchase(pendingPurchases: List<PendingPurchase>) = pendingPurchaseDao.deletePendingPurchases(pendingPurchases)
 
-    suspend fun deletePurchase() = pendingPurchaseDao.deletePendingPurchases()
+    suspend fun deletePurchases() = pendingPurchaseDao.deletePendingPurchases()
 }

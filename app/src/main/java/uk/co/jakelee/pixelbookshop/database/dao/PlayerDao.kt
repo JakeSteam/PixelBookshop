@@ -31,6 +31,9 @@ interface PlayerDao {
     @Query("UPDATE player SET coins = (coins - :coins)")
     fun removeCoins(coins: Int)
 
+    @Query("UPDATE player SET coins = (coins + :coins)")
+    fun addCoins(coins: Int)
+
     @Query("SELECT day, hour FROM player")
     fun getDateTime(): LiveData<GameTime>
 

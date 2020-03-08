@@ -6,7 +6,7 @@ import uk.co.jakelee.pixelbookshop.lookups.Visitor
 
 class PastPurchaseRepository(private val pastPurchaseDao: PastPurchaseDao) {
 
-    suspend fun addPurchase(vararg pastPurchase: PastPurchase) = pastPurchaseDao.insert(*pastPurchase)
+    suspend fun addPurchases(pastPurchases: List<PastPurchase>) = pastPurchaseDao.insert(pastPurchases)
 
     fun getRecentPurchases() = pastPurchaseDao.getLatestPurchases()
 

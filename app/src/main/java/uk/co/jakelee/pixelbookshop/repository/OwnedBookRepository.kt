@@ -9,7 +9,9 @@ class OwnedBookRepository(private val ownedBookDao: OwnedBookDao) {
 
     val allBooks = ownedBookDao.getAll()
 
-    suspend fun insert(ownedBook: OwnedBook) {
-        ownedBookDao.insert(ownedBook)
-    }
+    suspend fun getBook(ownedBookId: Int) = ownedBookDao.get(ownedBookId)
+
+    suspend fun delete(ownedBooks: List<OwnedBook>) = ownedBookDao.delete(ownedBooks)
+
+    suspend fun insert(ownedBook: OwnedBook) = ownedBookDao.insert(ownedBook)
 }

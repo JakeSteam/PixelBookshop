@@ -12,7 +12,7 @@ import uk.co.jakelee.pixelbookshop.lookups.Visitor
 interface PastPurchaseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(vararg pastPurchase: PastPurchase)
+    suspend fun insert(pastPurchase: List<PastPurchase>)
 
     @Query("SELECT * FROM pastpurchase ORDER BY day DESC, time DESC LIMIT :limit")
     fun getLatestPurchases(limit: Int = 100): LiveData<List<PastPurchase>>

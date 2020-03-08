@@ -7,9 +7,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
+import uk.co.jakelee.pixelbookshop.extensions.defaultValue
 import uk.co.jakelee.pixelbookshop.lookups.*
 import uk.co.jakelee.pixelbookshop.repository.*
 import uk.co.jakelee.pixelbookshop.utils.PendingPurchaseGenerator
+import java.math.BigDecimal
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -17,6 +19,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     private val ownedFloorRepo: OwnedFloorRepository
     private val ownedFurnitureRepo: OwnedFurnitureRepository
+    private val ownedBookRepo: OwnedBookRepository
     private val shopRepo: ShopRepository
     private val pastPurchaseRepo: PastPurchaseRepository
     private val pendingPurchaseRepo: PendingPurchaseRepository
@@ -39,10 +42,12 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         ownedFloorRepo = OwnedFloorRepository(ownedFloorDao)
         ownedFloor = ownedFloorRepo.allFloor
 
-        val ownedFurnitureDao =
-            AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
+        val ownedFurnitureDao = AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
         ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
         ownedFurniture = ownedFurnitureRepo.allFurnitureWithBooks
+
+        val ownedBookDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()
+        ownedBookRepo = OwnedBookRepository(ownedBookDao)
 
         val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
         shopRepo = ShopRepository(shopDao, shopId)
@@ -67,15 +72,70 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         withContext(Dispatchers.IO) {
             val todaysPurchases = PendingPurchaseGenerator().generate(player.value!!.day, ownedFurniture.value!!)
             pendingPurchaseRepo.addPurchases(todaysPurchases)
+            playPurchases(todaysPurchases)
         }
     }
 
-    fun playNextDay() {
-        // Fetch scheduled visits
-        // If none already scheduled, run scheduler and wait for result. Otherwise use list.
-        // For each, run through each visitor, with artificial delay.
-        // When all steps finished, remove total gold, add xp, delete pending visit, add past visit, all as transaction
+    suspend fun playPurchases(unsortedPurchases: List<PendingPurchase>) {
+        unsortedPurchases
+            .groupBy { it.visitor }
+            .forEach { purchasesByVisitor ->
+                val purchases = purchasesByVisitor.value.sortedBy { purchase -> purchase.time }
+                val books = mutableListOf<OwnedBook>()
+                var totalCost = 0
+                val pastPurchases = purchases.map {
+                    messageRepo.addMessage(MessageType.Positive, "${it.visitor.name} picked up ${it.ownedBookId}")
+                    Thread.sleep(1000)
+                    val book = ownedBookRepo.getBook(it.ownedBookId)
+                    books.add(book)
+                    val satisfaction = it.visitor.getSatisfaction(book)
+                    totalCost += satisfaction.bookValue.toInt()
+                    it.toPastPurchase(book, satisfaction.satisfaction)
+                }
+                // Look up seating area
+
+                // Start transaction
+                playerRepo.addCoins(totalCost)
+                playerRepo.addXp(totalCost)
+                pendingPurchaseRepo.deletePurchase(purchases)
+                pastPurchaseRepo.addPurchases(pastPurchases)
+                ownedBookRepo.delete(books)
+                messageRepo.addMessage(MessageType.Positive, "${purchasesByVisitor.key.name} purchased ${purchases.size} books for a total of $totalCost!")
+                // End transaction
+            }
     }
+
+    fun Visitor.getSatisfaction(book: OwnedBook): VisitorSatisfaction {
+        var bookValue = book.defaultValue()
+        var satisfaction = 0
+        if (bookPreference.first == book.book) {
+            satisfaction++
+            bookValue = bookValue.times(BigDecimal(bookPreference.second))
+        }
+        if (bookGenrePreference.first == book.book.genre) {
+            satisfaction++
+            bookValue = bookValue.times(BigDecimal(bookGenrePreference.second))
+        }
+        if (bookRarityPreference.first == book.book.rarity) {
+            satisfaction++
+            bookValue = bookValue.times(BigDecimal(bookRarityPreference.second))
+        }
+        if (bookDefectPreference.first == book.bookDefect) {
+            satisfaction++
+            bookValue = bookValue.times(BigDecimal(bookDefectPreference.second))
+        }
+        if (bookSourcePreference.first == book.bookSource) {
+            satisfaction++
+            bookValue = bookValue.times(BigDecimal(bookSourcePreference.second))
+        }
+        if (bookTypePreference.first == book.bookType) {
+            satisfaction++
+            bookValue = bookValue.times(BigDecimal(bookTypePreference.second))
+        }
+        return VisitorSatisfaction(satisfaction, bookValue)
+    }
+
+    data class VisitorSatisfaction(val satisfaction: Int, val bookValue: BigDecimal)
 
     fun addStrip(isPositive: Boolean, isX: Boolean) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
