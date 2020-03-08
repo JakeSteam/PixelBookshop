@@ -9,7 +9,7 @@ import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.lookups.*
 import uk.co.jakelee.pixelbookshop.repository.*
-import uk.co.jakelee.pixelbookshop.utils.VisitGenerator
+import uk.co.jakelee.pixelbookshop.utils.PendingPurchaseGenerator
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -18,8 +18,8 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFloorRepo: OwnedFloorRepository
     private val ownedFurnitureRepo: OwnedFurnitureRepository
     private val shopRepo: ShopRepository
-    private val pastVisitRepo: PastVisitRepository
-    private val pendingVisitRepo: PendingVisitRepository
+    private val pastPurchaseRepo: PastPurchaseRepository
+    private val pendingPurchaseRepo: PendingPurchaseRepository
     private val playerRepo: PlayerRepository
     private val messageRepo: MessageRepository
 
@@ -52,11 +52,11 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         playerRepo = PlayerRepository(playerDao)
         player = playerRepo.player
 
-        val pastVisitDao = AppDatabase.getDatabase(application, viewModelScope).pastVisitDao()
-        pastVisitRepo = PastVisitRepository(pastVisitDao)
+        val pastPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pastPurchaseDao()
+        pastPurchaseRepo = PastPurchaseRepository(pastPurchaseDao)
 
-        val pendingVisitDao = AppDatabase.getDatabase(application, viewModelScope).pendingVisitDao()
-        pendingVisitRepo = PendingVisitRepository(pendingVisitDao)
+        val pendingPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pendingPurchaseDao()
+        pendingPurchaseRepo = PendingPurchaseRepository(pendingPurchaseDao)
 
         val messageDao = AppDatabase.getDatabase(application, viewModelScope).messageDao()
         messageRepo = MessageRepository(messageDao)
@@ -64,7 +64,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun scheduleNextDay() {
-        val todaysVisits = VisitGenerator().generate(player.value!!.day, ownedFurniture.value!!)
+        val todaysPurchases = PendingPurchaseGenerator().generate(player.value!!.day, ownedFurniture.value!!)
         // Save in database, clearing existing first (just in case). Need Dao etc first
         val a = 10
     }

@@ -7,7 +7,7 @@ import uk.co.jakelee.pixelbookshop.interfaces.Model
 import uk.co.jakelee.pixelbookshop.lookups.Visitor
 
 @Entity
-data class PendingVisit(
+data class PendingPurchase(
     @PrimaryKey(autoGenerate = true) override val id: Int,
     @ColumnInfo val day: Int,
     @ColumnInfo val time: Int,

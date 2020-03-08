@@ -15,7 +15,7 @@ import uk.co.jakelee.pixelbookshop.lookups.*
 import kotlin.random.Random
 
 @Database(entities = [Message::class, OwnedBook::class, OwnedFloor::class, OwnedFurniture::class,
-    PastVisit::class, PendingVisit::class, Player::class, Shop::class],
+    PastPurchase::class, PendingPurchase::class, Player::class, Shop::class],
     version = 1)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -23,8 +23,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun ownedBookDao(): OwnedBookDao
     abstract fun ownedFloorDao(): OwnedFloorDao
     abstract fun ownedFurnitureDao(): OwnedFurnitureDao
-    abstract fun pastVisitDao(): PastVisitDao
-    abstract fun pendingVisitDao(): PendingVisitDao
+    abstract fun pastPurchaseDao(): PastPurchaseDao
+    abstract fun pendingPurchaseDao(): PendingPurchaseDao
     abstract fun playerDao(): PlayerDao
     abstract fun shopDao(): ShopDao
     abstract fun messageDao(): MessageDao
