@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.*
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao.GameTime
 import uk.co.jakelee.pixelbookshop.database.entity.Message
@@ -26,6 +27,7 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     val date: LiveData<GameTime>
     val xp: LiveData<Long>
     val messages: LiveData<List<Message>>
+    private var currentTimer: Job? = null
 
     data class CoinData(var coins: Int?, var max: Int?) {
         fun isValid() = coins != null && max != null
@@ -48,6 +50,26 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
         playerRepo = PlayerRepository(playerDao)
         date = playerRepo.date
         xp = playerRepo.xp
+    }
+
+    fun startTime() {
+        currentTimer = viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repeat(10) { iteration ->
+                    delay(2000)
+                    if (iteration < 9) {
+                        playerRepo.addHour()
+                    } else {
+                        playerRepo.nextDay()
+                        stopTime()
+                    }
+                }
+            }
+        }
+    }
+
+    fun stopTime() {
+        currentTimer?.cancel()
     }
 
     fun getBookData(): MediatorLiveData<BookData> {

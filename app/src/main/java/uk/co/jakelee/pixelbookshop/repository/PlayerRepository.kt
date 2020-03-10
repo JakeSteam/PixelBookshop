@@ -21,4 +21,12 @@ class PlayerRepository(private val playerDao: PlayerDao) {
     suspend fun addXp(newXp: Int) = playerDao.addXp(newXp)
 
     suspend fun addCoins(coins: Int) = playerDao.addCoins(coins)
+
+    suspend fun addHour() {
+        playerDao.addHour()
+    }
+
+    suspend fun nextDay() {
+        playerDao.nextDay()
+    }
 }

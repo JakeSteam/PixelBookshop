@@ -40,6 +40,7 @@ class StatusFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_status, container, false)
         root.text_level_progress.setOnClickListener { xpClick() }
+        root.time_control.setOnClickListener { timeControlClick() }
         root.text_stock_progress.setOnClickListener {
             if (findNavController().currentDestination?.id == R.id.stockFragment) {
                 findNavController().popBackStack(R.id.shopFragment, false)
@@ -79,6 +80,18 @@ class StatusFragment : Fragment() {
             }
     }
 
+    private fun timeControlClick() {
+        statusViewModel.date.value?.let {
+            val shopOpenHour = 9
+            val shopCloseHour = 17
+            if (it.hour in shopOpenHour..shopCloseHour) {
+                statusViewModel.stopTime()
+            } else {
+                statusViewModel.startTime()
+            }
+        }
+    }
+
     private val stockObserver: Observer<StatusViewModel.BookData> = Observer {
         it?.let {
             if (!it.isValid()) return@Observer
@@ -110,17 +123,19 @@ class StatusFragment : Fragment() {
 
     private val dateObserver: Observer<PlayerDao.GameTime> = Observer {
         it?.let {
+            val shopOpenHour = 9
+            val shopCloseHour = 17
+            val isDuringDay = it.hour in shopOpenHour..shopCloseHour
+            time_control.setImageResource(if (isDuringDay) R.drawable.ic_pause else R.drawable.ic_play)
+            text_stock_progress.alpha = if (isDuringDay) 0.5f else 1.0f
+            text_stock_progress.isClickable = !isDuringDay
+
             text_time_progress.progress = it.hour
             val calendar = Calendar.getInstance().apply {
                 set(Calendar.HOUR_OF_DAY, it.hour)
             }
             val formattedTime = SimpleDateFormat("ha", Locale.ROOT).format(calendar.time).toLowerCase()
-            text_time.text = String.format(
-                Locale.UK,
-                getString(R.string.status_day),
-                it.day,
-                formattedTime
-            )
+            text_time.text = String.format(Locale.UK, getString(R.string.status_day), it.day, formattedTime)
         }
     }
 

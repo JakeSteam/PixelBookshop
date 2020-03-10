@@ -29,7 +29,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFloor: LiveData<List<OwnedFloor>>
     private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     private val wall: LiveData<WallInfo>
-    private val player: LiveData<Player>
+    val player: LiveData<Player>
     var latestMessage: LiveData<Message>
 
     private var selectedFurni: OwnedFurniture? = null

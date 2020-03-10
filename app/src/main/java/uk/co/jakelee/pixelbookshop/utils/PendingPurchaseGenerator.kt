@@ -25,11 +25,11 @@ class PendingPurchaseGenerator {
 
         val pendingPurchases = mutableListOf<PendingPurchase>()
         val allBooks = displayFurniture.flatMap { it.ownedBooks }.toMutableList()
-        (0 until numVisitors).forEach {
+        (numVisitors/2 until numVisitors).forEach {
             val visitor = getVisitor()
             val seatingArea = seatingFurniture.random().ownedFurniture
             val numPurchases = randomHelper.getInt(maxPurchases)
-            (0 until numPurchases).forEach {
+            (numPurchases/2 until numPurchases).forEach {
                 if (allBooks.isNotEmpty()) {
                     val book = allBooks.random()
                     allBooks.remove(book)

@@ -54,6 +54,7 @@ class ShopFragment : Fragment() {
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
+        shopViewModel.player.observe(viewLifecycleOwner, playerObserver)
 
         handleArguments()
         return root
@@ -68,6 +69,18 @@ class ShopFragment : Fragment() {
                 shopViewModel.setOrResetMode(SelectedTab.ASSIGN)
                 arguments = null
             }
+        }
+    }
+
+    private val playerObserver = Observer<Player> {
+        val shopOpenHour = 9
+        val shopCloseHour = 17
+        it?.let {
+            val isDuringDay = it.hour in shopOpenHour..shopCloseHour
+            customiseControls.alpha = if (isDuringDay) 0.5f else 1.0f
+            customiseControls.isClickable = !isDuringDay
+            travelControls.alpha = if (isDuringDay) 0.5f else 1.0f
+            travelControls.isClickable = !isDuringDay
         }
     }
 
