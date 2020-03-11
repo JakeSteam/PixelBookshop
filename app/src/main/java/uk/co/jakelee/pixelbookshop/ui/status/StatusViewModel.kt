@@ -27,7 +27,7 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     val date: LiveData<GameTime>
     val xp: LiveData<Long>
     val messages: LiveData<List<Message>>
-    private var currentTimer: Job? = null
+    var currentTimer: Job? = null
 
     data class CoinData(var coins: Int?, var max: Int?) {
         fun isValid() = coins != null && max != null
@@ -55,14 +55,14 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     fun startTime() {
         currentTimer = viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repeat(10) { iteration ->
-                    delay(2000)
-                    if (iteration < 9) {
+                repeat(99) {
+                    if (date.value!!.hour < 9) {
                         playerRepo.addHour()
                     } else {
                         playerRepo.nextDay()
                         stopTime()
                     }
+                    delay(1000)
                 }
             }
         }

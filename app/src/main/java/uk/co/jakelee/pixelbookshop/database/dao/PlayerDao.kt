@@ -37,7 +37,7 @@ interface PlayerDao {
     @Query("UPDATE player SET hour = (hour + 1)")
     fun addHour()
 
-    @Query("UPDATE player SET day = (day + 1), hour = 8")
+    @Query("UPDATE player SET day = (day + 1), hour = 0")
     fun nextDay()
 
     @Query("SELECT day, hour FROM player")

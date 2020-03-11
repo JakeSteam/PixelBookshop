@@ -67,7 +67,7 @@ abstract class AppDatabase : RoomDatabase() {
         suspend fun initialiseDatabase(database: AppDatabase) {
             database.messageDao().insert(Message(0, MessageType.Positive, "Welcome to the game!", true, System.currentTimeMillis()))
 
-            database.playerDao().insert(Player("Jake", 100, 5000, 5, 8))
+            database.playerDao().insert(Player("Jake", 100, 5000, 5, 0))
 
             val wallInfo = WallInfo(Wall.Brick, false, 3)
             database.shopDao().insert(

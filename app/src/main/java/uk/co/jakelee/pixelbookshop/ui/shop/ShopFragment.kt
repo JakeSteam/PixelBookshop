@@ -73,10 +73,8 @@ class ShopFragment : Fragment() {
     }
 
     private val playerObserver = Observer<Player> {
-        val shopOpenHour = 9
-        val shopCloseHour = 17
         it?.let {
-            val isDuringDay = it.hour in shopOpenHour..shopCloseHour
+            val isDuringDay = it.hour in 1..10
             customiseControls.alpha = if (isDuringDay) 0.5f else 1.0f
             customiseControls.isClickable = !isDuringDay
             travelControls.alpha = if (isDuringDay) 0.5f else 1.0f

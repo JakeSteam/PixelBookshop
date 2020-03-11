@@ -123,16 +123,14 @@ class StatusFragment : Fragment() {
 
     private val dateObserver: Observer<PlayerDao.GameTime> = Observer {
         it?.let {
-            val shopOpenHour = 9
-            val shopCloseHour = 17
-            val isDuringDay = it.hour in shopOpenHour..shopCloseHour
+            val isDuringDay = it.hour in 1..10
             time_control.setImageResource(if (isDuringDay) R.drawable.ic_pause else R.drawable.ic_play)
             text_stock_progress.alpha = if (isDuringDay) 0.5f else 1.0f
             text_stock_progress.isClickable = !isDuringDay
 
             text_time_progress.progress = it.hour
             val calendar = Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, it.hour)
+                set(Calendar.HOUR_OF_DAY, it.hour + 8)
             }
             val formattedTime = SimpleDateFormat("ha", Locale.ROOT).format(calendar.time).toLowerCase()
             text_time.text = String.format(Locale.UK, getString(R.string.status_day), it.day, formattedTime)
