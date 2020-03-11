@@ -7,6 +7,6 @@ import androidx.core.view.children
 fun View.setAllEnabled(enabled: Boolean) {
     isEnabled = enabled
     if (this is ViewGroup) {
-        children.forEach { _ -> setAllEnabled(enabled) }
+        children.forEach { child -> child.setAllEnabled(enabled) }
     }
 }
