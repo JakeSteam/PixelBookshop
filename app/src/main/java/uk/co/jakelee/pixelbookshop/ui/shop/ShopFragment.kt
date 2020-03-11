@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_shop.*
 import kotlinx.android.synthetic.main.fragment_shop.view.*
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.*
+import uk.co.jakelee.pixelbookshop.extensions.setAllEnabled
 import uk.co.jakelee.pixelbookshop.lookups.MessageType
 
 class ShopFragment : Fragment() {
@@ -76,9 +77,9 @@ class ShopFragment : Fragment() {
         it?.let {
             val isDuringDay = it.hour in 1..10
             customiseControls.alpha = if (isDuringDay) 0.5f else 1.0f
-            customiseControls.isClickable = !isDuringDay
+            customiseControls.setAllEnabled(!isDuringDay)
             travelControls.alpha = if (isDuringDay) 0.5f else 1.0f
-            travelControls.isClickable = !isDuringDay
+            travelControls.setAllEnabled(!isDuringDay)
         }
     }
 
