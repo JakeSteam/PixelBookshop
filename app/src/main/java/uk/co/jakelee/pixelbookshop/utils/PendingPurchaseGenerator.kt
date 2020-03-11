@@ -4,32 +4,25 @@ import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.database.entity.PendingPurchase
 import uk.co.jakelee.pixelbookshop.lookups.FurnitureType
 import uk.co.jakelee.pixelbookshop.lookups.Visitor
+import kotlin.math.max
 
 class PendingPurchaseGenerator {
 
     fun generate(day: Int, furniture: List<OwnedFurnitureWithOwnedBooks>): List<PendingPurchase> {
         val randomHelper = RandomHelper()
-        val displayFurniture = furniture.filter {
-            it.ownedFurniture.furniture.type == FurnitureType.Display && it.ownedBooks.isNotEmpty()
-        }
-        val decorativeFurniture = furniture.filter {
-            it.ownedFurniture.furniture.type == FurnitureType.Decoration
-        }
-        val seatingFurniture = furniture.filter {
-            it.ownedFurniture.furniture.type == FurnitureType.Seating
-        }
+        val seatingFurniture = getSeatingFurniture(furniture)
 
-        val maxPurchases = decorativeFurniture.sumBy { it.ownedFurniture.furniture.capacity }
+        val maxPurchases = getMaxPurchases(furniture)
         val maxVisitors = seatingFurniture.sumBy { it.ownedFurniture.furniture.capacity }
-        val numVisitors = randomHelper.getInt(maxVisitors)
+        val numVisitors = max(randomHelper.getInt(maxVisitors), 1)
 
         val pendingPurchases = mutableListOf<PendingPurchase>()
-        val allBooks = displayFurniture.flatMap { it.ownedBooks }.toMutableList()
-        (numVisitors/2 until numVisitors).forEach {
+        val allBooks = getDisplayFurniture(furniture)
+        (0 until numVisitors).forEach { _ ->
             val visitor = getVisitor()
             val seatingArea = seatingFurniture.random().ownedFurniture
-            val numPurchases = randomHelper.getInt(maxPurchases)
-            (numPurchases/2 until numPurchases).forEach {
+            val numPurchases = max(randomHelper.getInt(maxPurchases), 1)
+            (0 until numPurchases).forEach { _ ->
                 if (allBooks.isNotEmpty()) {
                     val book = allBooks.random()
                     allBooks.remove(book)
@@ -44,6 +37,17 @@ class PendingPurchaseGenerator {
         return pendingPurchases
 
     }
+
+    private fun getSeatingFurniture(furniture: List<OwnedFurnitureWithOwnedBooks>) = furniture
+        .filter { it.ownedFurniture.furniture.type == FurnitureType.Seating }
+
+    private fun getMaxPurchases(furniture: List<OwnedFurnitureWithOwnedBooks>) = furniture
+        .filter { it.ownedFurniture.furniture.type == FurnitureType.Decoration }
+        .sumBy { it.ownedFurniture.furniture.capacity }
+
+    private fun getDisplayFurniture(furniture: List<OwnedFurnitureWithOwnedBooks>) = furniture
+        .filter { it.ownedFurniture.furniture.type == FurnitureType.Display && it.ownedBooks.isNotEmpty() }
+        .flatMap { it.ownedBooks }.toMutableList()
 
     private fun getVisitor(): Visitor {
         val totalWeighting = Visitor.values().sumByDouble { it.frequency }
