@@ -20,6 +20,13 @@
     <string name="stock_select_all">Select all</string>
     <string name="stock_item_title">%1s (%2d) by %3s %4s</string>
 
+    <string name="message_item_purchased">Purchased %1$s!</string>
+    <string name="message_cannot_afford_upgrade">Can\'t afford upgrade, need %1$d coins!</string>
+    <string name="message_cannot_upgrade_further">This is already fully upgraded!</string>
+    <string name="message_books_only_in_display_furniture">Books can only be assigned to display furniture!</string>
+    <string name="message_display_furniture_at_capacity">There are already %1$d books here!</string>
+    <string name="message_only_some_books_assigned">There was only space for %1$d/%2$d books, they\'ve been assigned!</string>
+
     <string name="book_sort_ascending">Ascending</string>
     <string name="book_sort_descending">Descending</string>
     <string name="book_title">Title</string>

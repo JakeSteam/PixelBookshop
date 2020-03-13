@@ -1,6 +1,7 @@
 package uk.co.jakelee.pixelbookshop.repository
 
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
+import uk.co.jakelee.pixelbookshop.lookups.Furniture
 import uk.co.jakelee.pixelbookshop.utils.Xp
 import java.math.BigDecimal
 
@@ -11,6 +12,8 @@ class PlayerRepository(private val playerDao: PlayerDao) {
     val xp = playerDao.getXp()
     val coins = playerDao.getCoins()
     val player = playerDao.getPlayer()
+
+    suspend fun canPurchase(furniture: Furniture) = canPurchase(furniture.cost, furniture.level)
 
     suspend fun canPurchase(cost: Int, level: Int) = canPurchase(BigDecimal(cost), level)
 

@@ -1,17 +1,19 @@
 package uk.co.jakelee.pixelbookshop.ui.shop
 
 import android.app.Application
+import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
-import uk.co.jakelee.pixelbookshop.extensions.defaultValue
+import uk.co.jakelee.pixelbookshop.extensions.getSatisfaction
 import uk.co.jakelee.pixelbookshop.lookups.*
 import uk.co.jakelee.pixelbookshop.repository.*
 import uk.co.jakelee.pixelbookshop.utils.PendingPurchaseGenerator
 import java.math.BigDecimal
+import uk.co.jakelee.pixelbookshop.R
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -84,58 +86,36 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 val books = mutableListOf<OwnedBook>()
                 val totalCost = BigDecimal(0)
                 val pastPurchases = purchases.map {
-                    messageRepo.addMessage(MessageType.Positive, "${it.visitor.name} picked up ${it.ownedBookId}")
+                    messageRepo.addMessage(
+                        MessageType.Positive,
+                        "${it.visitor.name} picked up ${it.ownedBookId}"
+                    )
                     Thread.sleep(1000)
                     val book = ownedBookRepo.getBook(it.ownedBookId)
                     books.add(book)
                     val satisfaction = it.visitor.getSatisfaction(book)
                     totalCost.plus(satisfaction.bookValue)
                     it.toPastPurchase(book, satisfaction.satisfaction)
+                    // Visitor has picked up book
                 }
-                // Look up seating area
 
-                // Start transaction
+                // Visitor moves to seating area
+                purchases.first().seatingAreaId
+
+                // Visitor purchases books
                 playerRepo.addCoins(totalCost)
                 playerRepo.addXp(totalCost.toInt())
                 pendingPurchaseRepo.deletePurchase(purchases)
                 pastPurchaseRepo.addPurchases(pastPurchases)
                 ownedBookRepo.delete(books)
-                messageRepo.addMessage(MessageType.Positive, "${purchasesByVisitor.key.name} purchased ${purchases.size} books for a total of $totalCost!")
-                // End transaction
+                messageRepo.addMessage(
+                    MessageType.Positive,
+                    "${purchasesByVisitor.key.name} purchased ${purchases.size} books for a total of $totalCost!"
+                )
+
+                // Visitor leaves
             }
     }
-
-    fun Visitor.getSatisfaction(book: OwnedBook): VisitorSatisfaction {
-        var bookValue = book.defaultValue()
-        var satisfaction = 0
-        if (bookPreference.first == book.book) {
-            satisfaction++
-            bookValue = bookValue.times(BigDecimal(bookPreference.second))
-        }
-        if (bookGenrePreference.first == book.book.genre) {
-            satisfaction++
-            bookValue = bookValue.times(BigDecimal(bookGenrePreference.second))
-        }
-        if (bookRarityPreference.first == book.book.rarity) {
-            satisfaction++
-            bookValue = bookValue.times(BigDecimal(bookRarityPreference.second))
-        }
-        if (bookDefectPreference.first == book.bookDefect) {
-            satisfaction++
-            bookValue = bookValue.times(BigDecimal(bookDefectPreference.second))
-        }
-        if (bookSourcePreference.first == book.bookSource) {
-            satisfaction++
-            bookValue = bookValue.times(BigDecimal(bookSourcePreference.second))
-        }
-        if (bookTypePreference.first == book.bookType) {
-            satisfaction++
-            bookValue = bookValue.times(BigDecimal(bookTypePreference.second))
-        }
-        return VisitorSatisfaction(satisfaction, bookValue)
-    }
-
-    data class VisitorSatisfaction(val satisfaction: Int, val bookValue: BigDecimal)
 
     fun addStrip(isPositive: Boolean, isX: Boolean) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
@@ -211,6 +191,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         return mediatorLiveData
     }
 
+    private fun getString(@StringRes stringId: Int) = getApplication<Application>().resources.getString(stringId)
 
     fun wallClick(wall: WallInfo, x: Int, y: Int, shopId: Int) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
@@ -225,17 +206,12 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (nextWall != null && playerRepo.canPurchase(nextWall.cost, 0)) {
                         shopRepo.upgradeWall(nextWall, shopId)
                         playerRepo.purchase(nextWall.cost)
-                        messageRepo.addMessage(MessageType.Positive, "Purchased ${nextWall.title}!")
+                        getApplication<Application>().resources
+                        messageRepo.addMessage(MessageType.Positive, String.format(getString(R.string.message_item_purchased), getString(nextWall.title)))
                     } else if (nextWall != null) {
-                        messageRepo.addMessage(
-                            MessageType.Negative,
-                            "Can't afford upgrade, need ${nextWall.cost} coins!"
-                        )
+                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_cannot_afford_upgrade), nextWall.cost))
                     } else {
-                        messageRepo.addMessage(
-                            MessageType.Neutral,
-                            "This wall is already fully upgraded!"
-                        )
+                        messageRepo.addMessage(MessageType.Neutral, getString(R.string.message_cannot_upgrade_further))
                     }
                 }
                 else -> null
@@ -251,20 +227,11 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (nextFloor != null && playerRepo.canPurchase(nextFloor.cost, 0)) {
                         ownedFloorRepo.upgradeFloor(floor, nextFloor)
                         playerRepo.purchase(nextFloor.cost)
-                        messageRepo.addMessage(
-                            MessageType.Positive,
-                            "Purchased ${nextFloor.title}!"
-                        )
+                        messageRepo.addMessage(MessageType.Positive, String.format(getString(R.string.message_item_purchased), getString(nextFloor.title)))
                     } else if (nextFloor != null) {
-                        messageRepo.addMessage(
-                            MessageType.Negative,
-                            "Can't afford upgrade, need ${nextFloor.cost} coins!"
-                        )
+                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_cannot_afford_upgrade), nextFloor.cost))
                     } else {
-                        messageRepo.addMessage(
-                            MessageType.Neutral,
-                            "This floor tile is already fully upgraded!"
-                        )
+                        messageRepo.addMessage(MessageType.Neutral, getString(R.string.message_cannot_upgrade_further))
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
@@ -286,27 +253,14 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     val nextFurni = Furniture.values().firstOrNull { furni ->
                         furni.type == it.type && furni.tier > it.tier
                     }
-                    if (nextFurni != null && playerRepo.canPurchase(
-                            nextFurni.cost,
-                            nextFurni.level
-                        )
-                    ) {
+                    if (nextFurni != null && playerRepo.canPurchase(nextFurni)) {
                         ownedFurnitureRepo.upgradeFurni(furni.ownedFurniture, nextFurni)
                         playerRepo.purchase(nextFurni.cost)
-                        messageRepo.addMessage(
-                            MessageType.Positive,
-                            "Purchased ${nextFurni.title}!"
-                        )
+                        messageRepo.addMessage(MessageType.Positive, String.format(getString(R.string.message_item_purchased), getString(nextFurni.title)))
                     } else if (nextFurni != null) {
-                        messageRepo.addMessage(
-                            MessageType.Negative,
-                            "Can't afford upgrade, need ${nextFurni.cost} coins!"
-                        )
+                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_cannot_afford_upgrade), nextFurni.cost))
                     } else {
-                        messageRepo.addMessage(
-                            MessageType.Neutral,
-                            "This furniture is already fully upgraded!"
-                        )
+                        messageRepo.addMessage(MessageType.Neutral, getString(R.string.message_cannot_upgrade_further))
                     }
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni.ownedFurniture)
@@ -320,14 +274,14 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 ShopFragment.SelectedTab.ASSIGN -> {
                     if (furni.ownedFurniture.furniture.type != FurnitureType.Display) {
-                        messageRepo.addMessage(MessageType.Negative, "Books can only be assigned to display furniture!")
+                        messageRepo.addMessage(MessageType.Negative, getString(R.string.message_books_only_in_display_furniture))
                         return@withContext
                     }
                     val furnitureCapacity = furni.ownedFurniture.furniture.bookCapacity()
                     val capacity = furnitureCapacity - furni.ownedBooks.size
                     val slicedBooksToAssign = booksToAssign.take(capacity)
                     if (capacity == 0) {
-                        messageRepo.addMessage(MessageType.Negative, "There are already $furnitureCapacity books here!")
+                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_display_furniture_at_capacity), furnitureCapacity))
                         return@withContext
                     }
                     ownedFurnitureRepo.assignBooks(furni.ownedFurniture.id, slicedBooksToAssign)
