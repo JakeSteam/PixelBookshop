@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import uk.co.jakelee.pixelbookshop.database.dao.*
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.lookups.*
+import java.math.BigDecimal
 import kotlin.random.Random
 
 @Database(entities = [Message::class, OwnedBook::class, OwnedFloor::class, OwnedFurniture::class,
@@ -67,7 +68,7 @@ abstract class AppDatabase : RoomDatabase() {
         suspend fun initialiseDatabase(database: AppDatabase) {
             database.messageDao().insert(Message(0, MessageType.Positive, "Welcome to the game!", true, System.currentTimeMillis()))
 
-            database.playerDao().insert(Player("Jake", 100, 5000, 5, 0))
+            database.playerDao().insert(Player("Jake", 100, BigDecimal(5000), 5, 0))
 
             val wallInfo = WallInfo(Wall.Brick, false, 3)
             database.shopDao().insert(

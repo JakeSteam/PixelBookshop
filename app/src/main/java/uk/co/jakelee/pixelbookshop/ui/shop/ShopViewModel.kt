@@ -82,21 +82,21 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             .forEach { purchasesByVisitor ->
                 val purchases = purchasesByVisitor.value.sortedBy { purchase -> purchase.time }
                 val books = mutableListOf<OwnedBook>()
-                var totalCost = 0
+                val totalCost = BigDecimal(0)
                 val pastPurchases = purchases.map {
                     messageRepo.addMessage(MessageType.Positive, "${it.visitor.name} picked up ${it.ownedBookId}")
                     Thread.sleep(1000)
                     val book = ownedBookRepo.getBook(it.ownedBookId)
                     books.add(book)
                     val satisfaction = it.visitor.getSatisfaction(book)
-                    totalCost += satisfaction.bookValue.toInt()
+                    totalCost.plus(satisfaction.bookValue)
                     it.toPastPurchase(book, satisfaction.satisfaction)
                 }
                 // Look up seating area
 
                 // Start transaction
                 playerRepo.addCoins(totalCost)
-                playerRepo.addXp(totalCost)
+                playerRepo.addXp(totalCost.toInt())
                 pendingPurchaseRepo.deletePurchase(purchases)
                 pastPurchaseRepo.addPurchases(pastPurchases)
                 ownedBookRepo.delete(books)

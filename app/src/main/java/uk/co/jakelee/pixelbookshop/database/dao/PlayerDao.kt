@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import uk.co.jakelee.pixelbookshop.database.entity.Player
+import java.math.BigDecimal
 
 @Dao
 interface PlayerDao {
@@ -26,13 +27,13 @@ interface PlayerDao {
     fun addXp(xp: Int)
 
     @Query("SELECT coins FROM player")
-    fun getCoins(): LiveData<Long>
+    fun getCoins(): LiveData<BigDecimal>
 
     @Query("UPDATE player SET coins = (coins - :coins)")
-    fun removeCoins(coins: Int)
+    fun removeCoins(coins: BigDecimal)
 
     @Query("UPDATE player SET coins = (coins + :coins)")
-    fun addCoins(coins: Int)
+    fun addCoins(coins: BigDecimal)
 
     @Query("UPDATE player SET hour = (hour + 1)")
     fun addHour()

@@ -2,8 +2,19 @@ package uk.co.jakelee.pixelbookshop.database
 
 import androidx.room.TypeConverter
 import uk.co.jakelee.pixelbookshop.lookups.*
+import java.math.BigDecimal
 
 class Converters {
+    // Datatype classes
+    @TypeConverter
+    fun longToBigDecimal(value: Long?) = value?.let {
+        BigDecimal(value).divide(BigDecimal(100))
+    }
+
+    @TypeConverter
+    fun bigDecimalToLong(bigDecimal: BigDecimal?) = bigDecimal?.multiply(BigDecimal(100))?.toLong()
+
+    // Enum classes
     @TypeConverter fun bookToInt(value: Book) = value.id
     @TypeConverter fun intToBook(id: Int) = Book.values().first { it.id == id }
 
