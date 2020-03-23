@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.extensions.getSatisfaction
@@ -13,7 +14,6 @@ import uk.co.jakelee.pixelbookshop.lookups.*
 import uk.co.jakelee.pixelbookshop.repository.*
 import uk.co.jakelee.pixelbookshop.utils.PendingPurchaseGenerator
 import java.math.BigDecimal
-import uk.co.jakelee.pixelbookshop.R
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -86,15 +86,15 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 val books = mutableListOf<OwnedBook>()
                 val totalCost = BigDecimal(0)
                 val pastPurchases = purchases.map {
-                    messageRepo.addMessage(
-                        MessageType.Positive,
-                        "${it.visitor.name} picked up ${it.ownedBookId}"
-                    )
                     Thread.sleep(1000)
                     val book = ownedBookRepo.getBook(it.ownedBookId)
                     books.add(book)
                     val satisfaction = it.visitor.getSatisfaction(book)
                     totalCost.plus(satisfaction.bookValue)
+                    messageRepo.addMessage(
+                        MessageType.Positive,
+                        String.format(getString(R.string.message_visitor_picked_up), it.visitor.name, book.book.name)
+                    )
                     it.toPastPurchase(book, satisfaction.satisfaction)
                     // Visitor has picked up book
                 }
@@ -110,9 +110,8 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 ownedBookRepo.delete(books)
                 messageRepo.addMessage(
                     MessageType.Positive,
-                    "${purchasesByVisitor.key.name} purchased ${purchases.size} books for a total of $totalCost!"
+                    String.format(getString(R.string.message_visitor_purchased), purchasesByVisitor.key.name, purchases.size, totalCost)
                 )
-
                 // Visitor leaves
             }
     }
