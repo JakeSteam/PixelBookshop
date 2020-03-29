@@ -26,8 +26,9 @@ class PendingPurchaseGenerator {
                 if (allBooks.isNotEmpty()) {
                     val book = allBooks.random()
                     allBooks.remove(book)
+                    val purchaseTime = randomHelper.getInt(8) // TODO: TimeHelper!
                     pendingPurchases.add(
-                        PendingPurchase(0, day, 9, visitor, book.id, seatingArea.id)
+                        PendingPurchase(0, day, purchaseTime, visitor, book.id, seatingArea.id)
                     )
                 } else { // If we run out of books during selection
                     return pendingPurchases

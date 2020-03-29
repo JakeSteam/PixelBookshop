@@ -5,6 +5,8 @@ import uk.co.jakelee.pixelbookshop.database.entity.PendingPurchase
 
 class PendingPurchaseRepository(private val pendingPurchaseDao: PendingPurchaseDao) {
 
+    val allPurchases = pendingPurchaseDao.getAll()
+
     suspend fun addPurchases(pendingPurchases: List<PendingPurchase>){
         pendingPurchaseDao.deletePendingPurchases()
         pendingPurchaseDao.insert(pendingPurchases)

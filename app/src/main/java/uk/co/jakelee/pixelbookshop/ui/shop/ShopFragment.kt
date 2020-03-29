@@ -53,9 +53,9 @@ class ShopFragment : Fragment() {
             shopViewModel.markMessageAsDismissed()
         }
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
+        shopViewModel.shopUiUpdates.observe(viewLifecycleOwner, purchaseDataObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
-        shopViewModel.player.observe(viewLifecycleOwner, playerObserver)
 
         handleArguments()
         return root
@@ -73,14 +73,15 @@ class ShopFragment : Fragment() {
         }
     }
 
-    private val playerObserver = Observer<Player> {
-        it?.let {
-            val isDuringDay = it.hour in 1..10
-            customiseControls.alpha = if (isDuringDay) 0.5f else 1.0f
-            customiseControls.setAllEnabled(!isDuringDay)
-            travelControls.alpha = if (isDuringDay) 0.5f else 1.0f
-            travelControls.setAllEnabled(!isDuringDay)
-        }
+    private val purchaseDataObserver = Observer<ShopUiUpdate> { result ->
+        // Update UI based on time
+        val isDuringDay = result.time.hour in 1..10
+        customiseControls.alpha = if (isDuringDay) 0.5f else 1.0f
+        customiseControls.setAllEnabled(!isDuringDay)
+        travelControls.alpha = if (isDuringDay) 0.5f else 1.0f
+        travelControls.setAllEnabled(!isDuringDay)
+
+        // Perform actions based on visitor positions
     }
 
     private val latestMessageObserver = Observer<Message> {

@@ -6,21 +6,22 @@ import kotlinx.coroutines.*
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao.GameTime
 import uk.co.jakelee.pixelbookshop.database.entity.Message
+import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.lookups.bookCapacity
 import uk.co.jakelee.pixelbookshop.lookups.coinCapacity
-import uk.co.jakelee.pixelbookshop.repository.MessageRepository
-import uk.co.jakelee.pixelbookshop.repository.OwnedBookRepository
-import uk.co.jakelee.pixelbookshop.repository.OwnedFurnitureRepository
-import uk.co.jakelee.pixelbookshop.repository.PlayerRepository
+import uk.co.jakelee.pixelbookshop.repository.*
+import uk.co.jakelee.pixelbookshop.utils.PendingPurchaseGenerator
 
 
 class StatusViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val pendingPurchaseRepo: PendingPurchaseRepository
     private val ownedFurnitureRepo: OwnedFurnitureRepository
     private val ownedBookRepo: OwnedBookRepository
     private val playerRepo: PlayerRepository
     private val messageRepo: MessageRepository
 
+    private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     val date: LiveData<GameTime>
     val xp: LiveData<Long>
     val messages: LiveData<List<Message>>
@@ -36,8 +37,13 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     init {
+        val pendingPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pendingPurchaseDao()
+        pendingPurchaseRepo = PendingPurchaseRepository(pendingPurchaseDao)
+
         val ownedFurnitureDao = AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
         ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
+        ownedFurniture = ownedFurnitureRepo.allFurnitureWithBooks
+
         val ownedBookDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()
         ownedBookRepo = OwnedBookRepository(ownedBookDao)
         val messageDao = AppDatabase.getDatabase(application, viewModelScope).messageDao()
@@ -59,6 +65,10 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
         isPlaying.value = true
         currentTimer = viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                if (date.value!!.hour == 0) {
+                    val todaysPurchases = PendingPurchaseGenerator().generate(date.value!!.day, ownedFurniture.value!!)
+                    pendingPurchaseRepo.addPurchases(todaysPurchases)
+                }
                 repeat(99) {
                     tickTime()
                     delay(1000)

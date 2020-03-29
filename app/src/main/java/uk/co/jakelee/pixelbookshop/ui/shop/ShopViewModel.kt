@@ -8,13 +8,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
+import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.extensions.getSatisfaction
 import uk.co.jakelee.pixelbookshop.extensions.toCurrencyString
 import uk.co.jakelee.pixelbookshop.lookups.*
 import uk.co.jakelee.pixelbookshop.repository.*
-import uk.co.jakelee.pixelbookshop.utils.PendingPurchaseGenerator
 import java.math.BigDecimal
+
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -32,7 +33,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val ownedFloor: LiveData<List<OwnedFloor>>
     private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     private val wall: LiveData<WallInfo>
-    val player: LiveData<Player>
+    private val pendingPurchases: LiveData<List<PendingPurchase>>
+    private val dateTime: LiveData<PlayerDao.GameTime>
+
     var latestMessage: LiveData<Message>
 
     private var selectedFurni: OwnedFurniture? = null
@@ -58,24 +61,52 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)
-        player = playerRepo.player
+        dateTime = playerRepo.date
 
         val pastPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pastPurchaseDao()
         pastPurchaseRepo = PastPurchaseRepository(pastPurchaseDao)
 
         val pendingPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pendingPurchaseDao()
         pendingPurchaseRepo = PendingPurchaseRepository(pendingPurchaseDao)
+        pendingPurchases = pendingPurchaseRepo.allPurchases
 
         val messageDao = AppDatabase.getDatabase(application, viewModelScope).messageDao()
         messageRepo = MessageRepository(messageDao)
         latestMessage = messageRepo.latestMessage()
     }
 
+    val shopUiUpdates: LiveData<ShopUiUpdate> = Transformations.map(getPurchaseData()) {
+        // TODO: Check if valid
+
+        // Handle pickups
+        
+
+        // Handle checkouts
+
+
+
+        ShopUiUpdate(it.time!!, listOf(Pair(1, 2)))
+    }
+
+    fun getPurchaseData(): MediatorLiveData<PurchasesData> {
+        val mediatorLiveData = MediatorLiveData<PurchasesData>()
+        val current = PurchasesData()
+        mediatorLiveData.addSource(dateTime) { time ->
+            current.time = time
+            mediatorLiveData.setValue(current)
+        }
+        mediatorLiveData.addSource(pendingPurchases) { list ->
+            current.pendingPurchases = list
+            mediatorLiveData.setValue(current)
+        }
+        return mediatorLiveData
+    }
+
     fun scheduleNextDay() = viewModelScope.launch {
         withContext(Dispatchers.IO) {
-            val todaysPurchases = PendingPurchaseGenerator().generate(player.value!!.day, ownedFurniture.value!!)
-            pendingPurchaseRepo.addPurchases(todaysPurchases)
-            playPurchases(todaysPurchases)
+            //val todaysPurchases = PendingPurchaseGenerator().generate(player.value!!.day, ownedFurniture.value!!)
+            //pendingPurchaseRepo.addPurchases(todaysPurchases)
+            //playPurchases(todaysPurchases)
         }
     }
 
@@ -182,10 +213,6 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
         mediatorLiveData.addSource(ownedFurniture) { list ->
             current.furnitures = list
-            mediatorLiveData.setValue(current)
-        }
-        mediatorLiveData.addSource(player) { player ->
-            current.player = player
             mediatorLiveData.setValue(current)
         }
         return mediatorLiveData

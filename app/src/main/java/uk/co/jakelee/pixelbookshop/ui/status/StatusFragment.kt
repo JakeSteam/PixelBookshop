@@ -115,6 +115,7 @@ class StatusFragment : Fragment() {
     }
 
     private val dateObserver: Observer<PlayerDao.GameTime> = Observer {
+        // Hour assumes 8am = 0. As such, 8 hours are added before displaying to user.
         it?.let {
             val isDuringDay = it.hour in 1..10
             text_stock_progress.alpha = if (isDuringDay) 0.5f else 1.0f
