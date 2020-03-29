@@ -26,7 +26,7 @@
     <string name="message_books_only_in_display_furniture">Books can only be assigned to display furniture!</string>
     <string name="message_display_furniture_at_capacity">There are already %1$d books here!</string>
     <string name="message_only_some_books_assigned">There was only space for %1$d/%2$d books, they\'ve been assigned!</string>
-    <string name="message_visitor_purchased">%1$s purchased %2$d books for a total of %3$d!</string>
+    <string name="message_visitor_purchased">%1$s purchased %2$d book(s) for a total of %3$s!</string>
     <string name="message_visitor_picked_up">%1$s picked up %2$s</string>
 
     <string name="book_sort_ascending">Ascending</string>

@@ -10,6 +10,7 @@ import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.extensions.getSatisfaction
+import uk.co.jakelee.pixelbookshop.extensions.toCurrencyString
 import uk.co.jakelee.pixelbookshop.lookups.*
 import uk.co.jakelee.pixelbookshop.repository.*
 import uk.co.jakelee.pixelbookshop.utils.PendingPurchaseGenerator
@@ -78,22 +79,22 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    suspend fun playPurchases(unsortedPurchases: List<PendingPurchase>) {
+    private suspend fun playPurchases(unsortedPurchases: List<PendingPurchase>) {
         unsortedPurchases
             .groupBy { it.visitor }
             .forEach { purchasesByVisitor ->
                 val purchases = purchasesByVisitor.value.sortedBy { purchase -> purchase.time }
                 val books = mutableListOf<OwnedBook>()
-                val totalCost = BigDecimal(0)
+                var totalCost = BigDecimal(0)
                 val pastPurchases = purchases.map {
                     Thread.sleep(1000)
                     val book = ownedBookRepo.getBook(it.ownedBookId)
                     books.add(book)
                     val satisfaction = it.visitor.getSatisfaction(book)
-                    totalCost.plus(satisfaction.bookValue)
+                    totalCost = totalCost.plus(satisfaction.bookValue)
                     messageRepo.addMessage(
                         MessageType.Positive,
-                        String.format(getString(R.string.message_visitor_picked_up), it.visitor.name, book.book.name)
+                        String.format(getString(R.string.message_visitor_picked_up), it.visitor.name, book.book.title)
                     )
                     it.toPastPurchase(book, satisfaction.satisfaction)
                     // Visitor has picked up book
@@ -110,7 +111,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 ownedBookRepo.delete(books)
                 messageRepo.addMessage(
                     MessageType.Positive,
-                    String.format(getString(R.string.message_visitor_purchased), purchasesByVisitor.key.name, purchases.size, totalCost)
+                    String.format(getString(R.string.message_visitor_purchased), purchasesByVisitor.key.name, purchases.size, totalCost.toCurrencyString())
                 )
                 // Visitor leaves
             }
