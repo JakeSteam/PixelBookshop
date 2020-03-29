@@ -75,31 +75,67 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         latestMessage = messageRepo.latestMessage()
     }
 
-    val shopUiUpdates: LiveData<ShopUiUpdate> = Transformations.map(getPurchaseData()) {
-        // TODO: Check if valid
+    fun getTickData(): LiveData<ShopUiUpdate> = Transformations.map(dateTime) { data ->
+        if (data.hour == 0) {
+            return@map ShopUiUpdate(data, listOf())
+        }
+        val visitorLocations = pendingPurchaseRepo.allPurchases.value!!
+            .groupBy { it.visitor }
+            .map  { purchasesByVisitor ->
+                // Check if need to be at a display
+                val purchaseThisTick = purchasesByVisitor.value.findLast { it.day == data.day && it.time == data.hour }
+                if (purchaseThisTick != null) {
+                    val purchaseFurniture = ownedFurniture.value!!.first {
+                        it.ownedBooks.firstOrNull {  ownedBook ->
+                            ownedBook.id == purchaseThisTick.ownedBookId
+                        } != null
+                    }
+                    Pair(purchaseThisTick.visitor, purchaseFurniture.ownedFurniture)
+                }
 
-        // Handle pickups
-        
+                // Check if need to checkout
+                val allPurchasesCompleted = purchasesByVisitor.value.all { it.day == data.day && it.time < data.hour }
+                if (allPurchasesCompleted) {
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            performCheckout(purchasesByVisitor.key, purchasesByVisitor.value)
+                        }
+                    }
+                    Pair(purchasesByVisitor.key, null)
+                }
 
-        // Handle checkouts
-
-
-
-        ShopUiUpdate(it.time!!, listOf(Pair(1, 2)))
+                // Otherwise sitting down
+                val seatingArea = ownedFurniture.value!!.first { it.ownedFurniture.id == purchasesByVisitor.value.first().seatingAreaId }
+                Pair(purchasesByVisitor.key, seatingArea.ownedFurniture)
+            }
+        return@map ShopUiUpdate(data, visitorLocations)
     }
 
-    fun getPurchaseData(): MediatorLiveData<PurchasesData> {
-        val mediatorLiveData = MediatorLiveData<PurchasesData>()
-        val current = PurchasesData()
-        mediatorLiveData.addSource(dateTime) { time ->
-            current.time = time
-            mediatorLiveData.setValue(current)
+    private suspend fun performCheckout(visitor: Visitor, pendingPurchases: List<PendingPurchase>) {
+        val books = mutableListOf<OwnedBook>()
+        var totalCost = BigDecimal(0)
+        val pastPurchases = pendingPurchases.map {
+            val book = ownedBookRepo.getBook(it.ownedBookId)
+            books.add(book)
+            val satisfaction = it.visitor.getSatisfaction(book)
+            totalCost = totalCost.plus(satisfaction.bookValue)
+            messageRepo.addMessage(
+                MessageType.Positive,
+                String.format(getString(R.string.message_visitor_picked_up), it.visitor.name, book.book.title)
+            )
+            it.toPastPurchase(book, satisfaction.satisfaction)
         }
-        mediatorLiveData.addSource(pendingPurchases) { list ->
-            current.pendingPurchases = list
-            mediatorLiveData.setValue(current)
-        }
-        return mediatorLiveData
+
+        // Visitor purchases books
+        playerRepo.addCoins(totalCost)
+        playerRepo.addXp(totalCost.toInt())
+        pendingPurchaseRepo.deletePurchase(pendingPurchases)
+        pastPurchaseRepo.addPurchases(pastPurchases)
+        ownedBookRepo.delete(books)
+        messageRepo.addMessage(
+            MessageType.Positive,
+            String.format(getString(R.string.message_visitor_purchased), visitor.name, pendingPurchases.size, totalCost.toCurrencyString())
+        )
     }
 
     fun scheduleNextDay() = viewModelScope.launch {
@@ -108,44 +144,6 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             //pendingPurchaseRepo.addPurchases(todaysPurchases)
             //playPurchases(todaysPurchases)
         }
-    }
-
-    private suspend fun playPurchases(unsortedPurchases: List<PendingPurchase>) {
-        unsortedPurchases
-            .groupBy { it.visitor }
-            .forEach { purchasesByVisitor ->
-                val purchases = purchasesByVisitor.value.sortedBy { purchase -> purchase.time }
-                val books = mutableListOf<OwnedBook>()
-                var totalCost = BigDecimal(0)
-                val pastPurchases = purchases.map {
-                    Thread.sleep(1000)
-                    val book = ownedBookRepo.getBook(it.ownedBookId)
-                    books.add(book)
-                    val satisfaction = it.visitor.getSatisfaction(book)
-                    totalCost = totalCost.plus(satisfaction.bookValue)
-                    messageRepo.addMessage(
-                        MessageType.Positive,
-                        String.format(getString(R.string.message_visitor_picked_up), it.visitor.name, book.book.title)
-                    )
-                    it.toPastPurchase(book, satisfaction.satisfaction)
-                    // Visitor has picked up book
-                }
-
-                // Visitor moves to seating area
-                purchases.first().seatingAreaId
-
-                // Visitor purchases books
-                playerRepo.addCoins(totalCost)
-                playerRepo.addXp(totalCost.toInt())
-                pendingPurchaseRepo.deletePurchase(purchases)
-                pastPurchaseRepo.addPurchases(pastPurchases)
-                ownedBookRepo.delete(books)
-                messageRepo.addMessage(
-                    MessageType.Positive,
-                    String.format(getString(R.string.message_visitor_purchased), purchasesByVisitor.key.name, purchases.size, totalCost.toCurrencyString())
-                )
-                // Visitor leaves
-            }
     }
 
     fun addStrip(isPositive: Boolean, isX: Boolean) = viewModelScope.launch {

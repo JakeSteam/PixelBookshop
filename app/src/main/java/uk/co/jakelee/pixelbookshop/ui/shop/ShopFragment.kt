@@ -53,7 +53,7 @@ class ShopFragment : Fragment() {
             shopViewModel.markMessageAsDismissed()
         }
         shopViewModel.getShopData().observe(viewLifecycleOwner, shopDataObserver)
-        shopViewModel.shopUiUpdates.observe(viewLifecycleOwner, purchaseDataObserver)
+        shopViewModel.getTickData().observe(viewLifecycleOwner, tickObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
 
@@ -73,8 +73,7 @@ class ShopFragment : Fragment() {
         }
     }
 
-    private val purchaseDataObserver = Observer<ShopUiUpdate> { result ->
-        // Update UI based on time
+    private val tickObserver = Observer<ShopUiUpdate> { result ->
         val isDuringDay = result.time.hour in 1..10
         customiseControls.alpha = if (isDuringDay) 0.5f else 1.0f
         customiseControls.setAllEnabled(!isDuringDay)
