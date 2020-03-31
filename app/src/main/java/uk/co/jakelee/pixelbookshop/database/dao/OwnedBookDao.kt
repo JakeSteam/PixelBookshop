@@ -13,7 +13,7 @@ interface OwnedBookDao {
     fun getAll(): LiveData<List<OwnedBook>>
 
     @Query("SELECT * FROM OwnedBook WHERE id = :ownedBookId")
-    fun get(ownedBookId: Int): OwnedBook
+    fun get(ownedBookId: Int): OwnedBook?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(vararg ownedBook: OwnedBook)

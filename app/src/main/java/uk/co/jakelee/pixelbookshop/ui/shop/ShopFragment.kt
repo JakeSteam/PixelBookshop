@@ -56,6 +56,8 @@ class ShopFragment : Fragment() {
         shopViewModel.getTickData().observe(viewLifecycleOwner, tickObserver)
         shopViewModel.currentTab.observe(viewLifecycleOwner, shopTabObserver)
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
+        shopViewModel.pendingPurchases.observe(viewLifecycleOwner, Observer { })
+        shopViewModel.ownedFurniture.observe(viewLifecycleOwner, Observer { })
 
         handleArguments()
         return root

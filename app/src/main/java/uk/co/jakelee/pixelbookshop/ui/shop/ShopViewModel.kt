@@ -31,9 +31,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private val messageRepo: MessageRepository
 
     private val ownedFloor: LiveData<List<OwnedFloor>>
-    private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
+    val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     private val wall: LiveData<WallInfo>
-    private val pendingPurchases: LiveData<List<PendingPurchase>>
+    val pendingPurchases: LiveData<List<PendingPurchase>>
     private val dateTime: LiveData<PlayerDao.GameTime>
 
     var latestMessage: LiveData<Message>
@@ -76,8 +76,10 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getTickData(): LiveData<ShopUiUpdate> = Transformations.map(dateTime) { data ->
-        if (data.hour == 0) {
-            return@map ShopUiUpdate(data, listOf())
+        if (data == null) {
+            return@map ShopUiUpdate(PlayerDao.GameTime(0, 0), emptyList())
+        } else if (data.hour == 0) {
+            return@map ShopUiUpdate(data, emptyList())
         }
         val visitorLocations = pendingPurchaseRepo.allPurchases.value!!
             .groupBy { it.visitor }
@@ -90,17 +92,21 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                             ownedBook.id == purchaseThisTick.ownedBookId
                         } != null
                     }
+
                     Pair(purchaseThisTick.visitor, purchaseFurniture.ownedFurniture)
+
+                    // Add pickup message if necessary
+                    viewModelScope.launch { withContext(Dispatchers.IO) {
+                        messageRepo.addMessage(MessageType.Positive, String.format(getString(R.string.message_visitor_picked_up), purchasesByVisitor.key.name, purchaseThisTick.ownedBookId))
+                    } }
                 }
 
                 // Check if need to checkout
                 val allPurchasesCompleted = purchasesByVisitor.value.all { it.day == data.day && it.time < data.hour }
                 if (allPurchasesCompleted) {
-                    viewModelScope.launch {
-                        withContext(Dispatchers.IO) {
+                    viewModelScope.launch { withContext(Dispatchers.IO) {
                             performCheckout(purchasesByVisitor.key, purchasesByVisitor.value)
-                        }
-                    }
+                    } }
                     Pair(purchasesByVisitor.key, null)
                 }
 
@@ -114,28 +120,29 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     private suspend fun performCheckout(visitor: Visitor, pendingPurchases: List<PendingPurchase>) {
         val books = mutableListOf<OwnedBook>()
         var totalCost = BigDecimal(0)
-        val pastPurchases = pendingPurchases.map {
-            val book = ownedBookRepo.getBook(it.ownedBookId)
-            books.add(book)
-            val satisfaction = it.visitor.getSatisfaction(book)
-            totalCost = totalCost.plus(satisfaction.bookValue)
-            messageRepo.addMessage(
-                MessageType.Positive,
-                String.format(getString(R.string.message_visitor_picked_up), it.visitor.name, book.book.title)
-            )
-            it.toPastPurchase(book, satisfaction.satisfaction)
+        val pastPurchases = pendingPurchases.mapNotNull {
+            ownedBookRepo.getBook(it.ownedBookId)?.let { book ->
+                books.add(book)
+                val satisfaction = it.visitor.getSatisfaction(book)
+                totalCost = totalCost.plus(satisfaction.bookValue)
+                it.toPastPurchase(book, satisfaction.satisfaction)
+            }
         }
 
         // Visitor purchases books
-        playerRepo.addCoins(totalCost)
-        playerRepo.addXp(totalCost.toInt())
-        pendingPurchaseRepo.deletePurchase(pendingPurchases)
-        pastPurchaseRepo.addPurchases(pastPurchases)
-        ownedBookRepo.delete(books)
-        messageRepo.addMessage(
-            MessageType.Positive,
-            String.format(getString(R.string.message_visitor_purchased), visitor.name, pendingPurchases.size, totalCost.toCurrencyString())
-        )
+        if (books.isNotEmpty()) {
+            playerRepo.addCoins(totalCost)
+            playerRepo.addXp(totalCost.toInt())
+            pendingPurchaseRepo.deletePurchase(pendingPurchases)
+            pastPurchaseRepo.addPurchases(pastPurchases)
+            ownedBookRepo.delete(books)
+            messageRepo.addMessage(
+                MessageType.Positive,
+                String.format(getString(R.string.message_visitor_purchased), visitor.name, pendingPurchases.size, totalCost.toCurrencyString())
+            )
+        } else {
+            messageRepo.addMessage(MessageType.Negative, getString(R.string.message_visitor_no_purchases))
+        }
     }
 
     fun scheduleNextDay() = viewModelScope.launch {

@@ -38,6 +38,7 @@ class StatusFragment : Fragment() {
         statusViewModel.date.observe(viewLifecycleOwner, dateObserver)
         statusViewModel.messages.observe(viewLifecycleOwner, messagesObserver)
         statusViewModel.isPlaying.observe(viewLifecycleOwner, isPlayingObserver)
+        statusViewModel.ownedFurniture.observe(viewLifecycleOwner, Observer { })
 
         val root = inflater.inflate(R.layout.fragment_status, container, false)
         root.text_level_progress.setOnClickListener { xpClick() }

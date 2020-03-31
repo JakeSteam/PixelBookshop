@@ -21,7 +21,7 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
     private val playerRepo: PlayerRepository
     private val messageRepo: MessageRepository
 
-    private val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
+    val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     val date: LiveData<GameTime>
     val xp: LiveData<Long>
     val messages: LiveData<List<Message>>
