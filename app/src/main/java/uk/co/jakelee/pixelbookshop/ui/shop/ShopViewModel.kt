@@ -84,7 +84,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         val visitorLocations = pendingPurchaseRepo.allPurchases.value!!
             .groupBy { it.visitor }
             .map  { purchasesByVisitor ->
-                // Check if need to be at a display
+                // If currently picking up an item, need to be at that display
                 val purchaseThisTick = purchasesByVisitor.value.findLast { it.day == data.day && it.time == data.hour }
                 if (purchaseThisTick != null) {
                     val purchaseFurniture = ownedFurniture.value!!.first {
@@ -93,26 +93,32 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                         } != null
                     }
 
-                    Pair(purchaseThisTick.visitor, purchaseFurniture.ownedFurniture)
-
-                    // Add pickup message if necessary
                     viewModelScope.launch { withContext(Dispatchers.IO) {
                         messageRepo.addMessage(MessageType.Positive, String.format(getString(R.string.message_visitor_picked_up), purchasesByVisitor.key.name, purchaseThisTick.ownedBookId))
                     } }
+
+                    return@map Pair(purchaseThisTick.visitor, purchaseFurniture.ownedFurniture)
                 }
 
-                // Check if need to checkout
+                // If finished purchasing, need to be sitting down
                 val allPurchasesCompleted = purchasesByVisitor.value.all { it.day == data.day && it.time < data.hour }
                 if (allPurchasesCompleted) {
                     viewModelScope.launch { withContext(Dispatchers.IO) {
                             performCheckout(purchasesByVisitor.key, purchasesByVisitor.value)
                     } }
-                    Pair(purchasesByVisitor.key, null)
+                    val seatingArea = ownedFurniture.value!!.first { it.ownedFurniture.id == purchasesByVisitor.value.first().seatingAreaId }
+                    return@map Pair(purchasesByVisitor.key,  seatingArea.ownedFurniture)
                 }
 
-                // Otherwise sitting down
-                val seatingArea = ownedFurniture.value!!.first { it.ownedFurniture.id == purchasesByVisitor.value.first().seatingAreaId }
-                Pair(purchasesByVisitor.key, seatingArea.ownedFurniture)
+                // If holding items but not checking out, also sit down
+                val isIdlingInStore = purchasesByVisitor.value.firstOrNull { it.day == data.day && it.time < data.hour } != null
+                if (isIdlingInStore) {
+                    val seatingArea = ownedFurniture.value!!.first { it.ownedFurniture.id == purchasesByVisitor.value.first().seatingAreaId }
+                    return@map Pair(purchasesByVisitor.key, seatingArea.ownedFurniture)
+                }
+
+                // Otherwise not in store
+                return@map Pair(purchasesByVisitor.key, null)
             }
         return@map ShopUiUpdate(data, visitorLocations)
     }
@@ -142,14 +148,6 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             )
         } else {
             messageRepo.addMessage(MessageType.Negative, getString(R.string.message_visitor_no_purchases))
-        }
-    }
-
-    fun scheduleNextDay() = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
-            //val todaysPurchases = PendingPurchaseGenerator().generate(player.value!!.day, ownedFurniture.value!!)
-            //pendingPurchaseRepo.addPurchases(todaysPurchases)
-            //playPurchases(todaysPurchases)
         }
     }
 

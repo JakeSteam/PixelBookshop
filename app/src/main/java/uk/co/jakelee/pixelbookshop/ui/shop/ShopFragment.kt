@@ -1,6 +1,7 @@
 package uk.co.jakelee.pixelbookshop.ui.shop
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +48,7 @@ class ShopFragment : Fragment() {
         root.button_arrow_ne.setOnClickListener { shopViewModel.addStrip(true, false) }
         root.button_arrow_nw.setOnClickListener { shopViewModel.addStrip(false, true) }
         root.button_arrow_se.setOnClickListener { shopViewModel.addStrip(true, true) }
-        root.button_travel.setOnClickListener { shopViewModel.scheduleNextDay() }
+        root.button_travel.setOnClickListener { }
         root.alert.setOnClickListener {
             alert.visibility = View.GONE
             shopViewModel.markMessageAsDismissed()
@@ -82,6 +83,7 @@ class ShopFragment : Fragment() {
         travelControls.alpha = if (isDuringDay) 0.5f else 1.0f
         travelControls.setAllEnabled(!isDuringDay)
 
+        Log.i("VisitorPosition", result.visitorPosition.toString())
         // Perform actions based on visitor positions
     }
 
