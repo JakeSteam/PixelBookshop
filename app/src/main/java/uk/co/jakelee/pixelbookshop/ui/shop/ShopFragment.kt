@@ -14,6 +14,7 @@ import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.extensions.setAllEnabled
 import uk.co.jakelee.pixelbookshop.lookups.MessageType
+import uk.co.jakelee.pixelbookshop.utils.GameTimeHelper
 
 class ShopFragment : Fragment() {
 
@@ -77,7 +78,7 @@ class ShopFragment : Fragment() {
     }
 
     private val tickObserver = Observer<ShopUiUpdate> { result ->
-        val isDuringDay = result.time.hour in 1..10
+        val isDuringDay = GameTimeHelper.isDuringDay(result.time.hour)
         customiseControls.alpha = if (isDuringDay) 0.5f else 1.0f
         customiseControls.setAllEnabled(!isDuringDay)
         travelControls.alpha = if (isDuringDay) 0.5f else 1.0f

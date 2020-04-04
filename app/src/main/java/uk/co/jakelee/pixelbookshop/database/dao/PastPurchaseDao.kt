@@ -14,12 +14,12 @@ interface PastPurchaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(pastPurchase: List<PastPurchase>)
 
-    @Query("SELECT * FROM pastpurchase ORDER BY day DESC, time DESC LIMIT :limit")
+    @Query("SELECT * FROM pastpurchase ORDER BY day DESC, hour DESC LIMIT :limit")
     fun getLatestPurchases(limit: Int = 100): LiveData<List<PastPurchase>>
 
-    @Query("SELECT * FROM pastpurchase WHERE visitor = :visitor ORDER BY day DESC, time DESC LIMIT :limit")
+    @Query("SELECT * FROM pastpurchase WHERE visitor = :visitor ORDER BY day DESC, hour DESC LIMIT :limit")
     fun getLatestPurchasesByVisitor(visitor: Visitor, limit: Int = 100): LiveData<List<PastPurchase>>
 
-    @Query("DELETE FROM pastpurchase WHERE id NOT IN (SELECT id FROM pastpurchase ORDER BY day DESC, time DESC LIMIT 100)")
+    @Query("DELETE FROM pastpurchase WHERE id NOT IN (SELECT id FROM pastpurchase ORDER BY day DESC, hour DESC LIMIT 100)")
     fun deleteAllOlderPurchases()
 }

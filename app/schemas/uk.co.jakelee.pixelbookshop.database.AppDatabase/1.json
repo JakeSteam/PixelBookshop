@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "67cb556037ceeb564b0b994738df36bf",
+    "identityHash": "9d254b87f58bbce20a2cf30d7a494e35",
     "entities": [
       {
         "tableName": "Message",
@@ -252,7 +252,7 @@
       },
       {
         "tableName": "PastPurchase",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `day` INTEGER NOT NULL, `time` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `satisfaction` INTEGER NOT NULL, `book` INTEGER NOT NULL, `bookDefect` INTEGER NOT NULL, `bookSource` INTEGER NOT NULL, `bookType` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `day` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `satisfaction` INTEGER NOT NULL, `book` INTEGER NOT NULL, `bookDefect` INTEGER NOT NULL, `bookSource` INTEGER NOT NULL, `bookType` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -267,8 +267,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "time",
-            "columnName": "time",
+            "fieldPath": "hour",
+            "columnName": "hour",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -320,7 +320,7 @@
       },
       {
         "tableName": "PendingPurchase",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `day` INTEGER NOT NULL, `time` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `ownedBookId` INTEGER NOT NULL, `seatingAreaId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `day` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `ownedBookId` INTEGER NOT NULL, `seatingAreaId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -335,8 +335,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "time",
-            "columnName": "time",
+            "fieldPath": "hour",
+            "columnName": "hour",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -466,7 +466,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '67cb556037ceeb564b0b994738df36bf')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9d254b87f58bbce20a2cf30d7a494e35')"
     ]
   }
 }

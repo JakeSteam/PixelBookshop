@@ -14,7 +14,7 @@ class PendingPurchaseGenerator {
 
         val maxPurchases = getMaxPurchases(furniture)
         val maxVisitors = seatingFurniture.sumBy { it.ownedFurniture.furniture.capacity }
-        val numVisitors = max(randomHelper.getInt(maxVisitors), 1)
+        val numVisitors = 1// max(randomHelper.getInt(maxVisitors), 1)
 
         val pendingPurchases = mutableListOf<PendingPurchase>()
         val allBooks = getDisplayFurniture(furniture)
@@ -26,9 +26,9 @@ class PendingPurchaseGenerator {
                 if (allBooks.isNotEmpty()) {
                     val book = allBooks.random()
                     allBooks.remove(book)
-                    val purchaseTime = randomHelper.getInt(8) // TODO: TimeHelper!
+                    val purchaseHour = randomHelper.getInt(GameTimeHelper.END_HOUR)
                     pendingPurchases.add(
-                        PendingPurchase(0, day, purchaseTime, visitor, book.id, seatingArea.id)
+                        PendingPurchase(0, day, purchaseHour, visitor, book.id, seatingArea.id)
                     )
                 } else { // If we run out of books during selection
                     return pendingPurchases

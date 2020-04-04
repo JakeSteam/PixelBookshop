@@ -85,7 +85,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
             .groupBy { it.visitor }
             .map  { purchasesByVisitor ->
                 // If currently picking up an item, need to be at that display
-                val purchaseThisTick = purchasesByVisitor.value.findLast { it.day == data.day && it.time == data.hour }
+                val purchaseThisTick = purchasesByVisitor.value.findLast { it.day == data.day && it.hour == data.hour }
                 if (purchaseThisTick != null) {
                     val purchaseFurniture = ownedFurniture.value!!.first {
                         it.ownedBooks.firstOrNull {  ownedBook ->
@@ -101,7 +101,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 // If finished purchasing, need to be sitting down
-                val allPurchasesCompleted = purchasesByVisitor.value.all { it.day == data.day && it.time < data.hour }
+                val allPurchasesCompleted = purchasesByVisitor.value.all { it.day == data.day && it.hour < data.hour }
                 if (allPurchasesCompleted) {
                     viewModelScope.launch { withContext(Dispatchers.IO) {
                             performCheckout(purchasesByVisitor.key, purchasesByVisitor.value)
@@ -111,7 +111,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 // If holding items but not checking out, also sit down
-                val isIdlingInStore = purchasesByVisitor.value.firstOrNull { it.day == data.day && it.time < data.hour } != null
+                val isIdlingInStore = purchasesByVisitor.value.firstOrNull { it.day == data.day && it.hour < data.hour } != null
                 if (isIdlingInStore) {
                     val seatingArea = ownedFurniture.value!!.first { it.ownedFurniture.id == purchasesByVisitor.value.first().seatingAreaId }
                     return@map Pair(purchasesByVisitor.key, seatingArea.ownedFurniture)

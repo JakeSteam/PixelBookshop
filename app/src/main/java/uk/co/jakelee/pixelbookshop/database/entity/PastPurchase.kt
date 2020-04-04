@@ -10,7 +10,7 @@ import uk.co.jakelee.pixelbookshop.lookups.*
 data class PastPurchase(
     @PrimaryKey(autoGenerate = true) override val id: Int,
     @ColumnInfo val day: Int,
-    @ColumnInfo val time: Int,
+    @ColumnInfo val hour: Int,
     @ColumnInfo val visitor: Visitor,
     @ColumnInfo val satisfaction: Int,
     @ColumnInfo val book: Book,
