@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
-import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao.GameTime
+import uk.co.jakelee.pixelbookshop.dto.GameTime
 import uk.co.jakelee.pixelbookshop.database.entity.Message
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.lookups.bookCapacity

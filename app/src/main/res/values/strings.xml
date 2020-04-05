@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Pixel Bookshop</string>
 
+    <string name="format_hours">ha</string>
+
     <string name="status_day">Day %1$d: %2$s</string>
     <string name="status_stock">%1$d for sale, %2$d / %3$d stored</string>
 

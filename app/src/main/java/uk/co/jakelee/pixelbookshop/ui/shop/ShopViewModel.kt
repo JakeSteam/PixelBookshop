@@ -8,8 +8,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.co.jakelee.pixelbookshop.R
 import uk.co.jakelee.pixelbookshop.database.AppDatabase
-import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
 import uk.co.jakelee.pixelbookshop.database.entity.*
+import uk.co.jakelee.pixelbookshop.dto.GameTime
 import uk.co.jakelee.pixelbookshop.extensions.getSatisfaction
 import uk.co.jakelee.pixelbookshop.extensions.toCurrencyString
 import uk.co.jakelee.pixelbookshop.lookups.*
@@ -34,7 +34,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     val ownedFurniture: LiveData<List<OwnedFurnitureWithOwnedBooks>>
     private val wall: LiveData<WallInfo>
     val pendingPurchases: LiveData<List<PendingPurchase>>
-    private val dateTime: LiveData<PlayerDao.GameTime>
+    private val dateTime: LiveData<GameTime>
 
     var latestMessage: LiveData<Message>
 
@@ -77,7 +77,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getTickData(): LiveData<ShopUiUpdate> = Transformations.map(dateTime) { data ->
         if (data == null) {
-            return@map ShopUiUpdate(PlayerDao.GameTime(0, 0), emptyList())
+            return@map ShopUiUpdate(GameTime(0, 0), emptyList())
         } else if (data.hour == 0) {
             return@map ShopUiUpdate(data, emptyList())
         }

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import uk.co.jakelee.pixelbookshop.database.entity.Player
+import uk.co.jakelee.pixelbookshop.dto.GameTime
 import java.math.BigDecimal
 
 @Dao
@@ -44,5 +45,4 @@ interface PlayerDao {
     @Query("SELECT day, hour FROM player")
     fun getDateTime(): LiveData<GameTime>
 
-    data class GameTime(val day: Int, val hour: Int)
 }

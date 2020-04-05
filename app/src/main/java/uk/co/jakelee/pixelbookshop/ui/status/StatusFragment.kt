@@ -15,9 +15,10 @@ import com.skydoves.balloon.BalloonAnimation
 import kotlinx.android.synthetic.main.fragment_status.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
 import uk.co.jakelee.pixelbookshop.R
-import uk.co.jakelee.pixelbookshop.database.dao.PlayerDao
 import uk.co.jakelee.pixelbookshop.database.entity.Message
+import uk.co.jakelee.pixelbookshop.dto.GameTime
 import uk.co.jakelee.pixelbookshop.utils.FormatHelper
+import uk.co.jakelee.pixelbookshop.utils.GameTimeHelper
 import uk.co.jakelee.pixelbookshop.utils.Xp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -109,30 +110,31 @@ class StatusFragment : Fragment() {
 
     private val xpObserver: Observer<Long> = Observer {
         it?.let {
-            val level = Xp.xpToLevel(it)
-            text_level.text = "$level"
+            text_level.text = Xp.xpToLevel(it).toString()
             text_level_progress.progress = Xp.getLevelProgress(it)
         }
     }
 
-    private val dateObserver: Observer<PlayerDao.GameTime> = Observer {
+    private val dateObserver: Observer<GameTime> = Observer {
         // Hour assumes 8am = 0. As such, 8 hours are added before displaying to user.
         it?.let {
-            val isDuringDay = it.hour in 1..10
+            val isDuringDay = GameTimeHelper.isDuringDay(it.hour)
             text_stock_progress.alpha = if (isDuringDay) 0.5f else 1.0f
             text_stock_progress.isClickable = !isDuringDay
 
             text_time_progress.progress = it.hour
             val calendar = Calendar.getInstance().apply {
-                set(Calendar.HOUR_OF_DAY, it.hour + 8)
+                set(Calendar.HOUR_OF_DAY, GameTimeHelper.internalHourToUiHour(it.hour))
             }
-            val formattedTime = SimpleDateFormat("ha", Locale.ROOT).format(calendar.time).toLowerCase()
+            val formattedTime = SimpleDateFormat(getString(R.string.format_hours), Locale.ROOT)
+                .format(calendar.time)
+                .toLowerCase(Locale.getDefault())
             text_time.text = String.format(Locale.UK, getString(R.string.status_day), it.day, formattedTime)
         }
     }
 
-    private val messagesObserver: Observer<List<Message>> = Observer {
-        it?.let { messages ->
+    private val messagesObserver: Observer<List<Message>> = Observer { messageList ->
+        messageList?.let { messages ->
             val unreadMessages = messages.filter { !it.dismissed }
             val size = minOf(99, unreadMessages.size)
             text_messages.text = "$size"
