@@ -7,4 +7,6 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="grey">#CCCCCC</color>
+
+    <color name="furniture_move_highlight">#A13E3E</color>
 </resources>

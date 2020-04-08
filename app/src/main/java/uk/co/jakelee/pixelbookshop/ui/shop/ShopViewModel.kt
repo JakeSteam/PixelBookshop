@@ -39,7 +39,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     var latestMessage: LiveData<Message>
 
-    private var selectedFurni: OwnedFurniture? = null
+    var selectedFurni: MutableLiveData<OwnedFurniture?> = MutableLiveData(null)
 
     var booksToAssign = arrayOf<Int>()
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
@@ -282,9 +282,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFloorRepo.rotateFloor(floor)
                 ShopFragment.SelectedTab.MOVE -> wall.value?.let {
-                    if (!it.isDoor(floor.x, floor.y, ownedFloor.value!!.first().y)) {
-                        ownedFurnitureRepo.moveFurni(floor, selectedFurni)
-                        selectedFurni = null
+                    if (!it.isDoor(floor.x, floor.y, ownedFloor.value!!.first().y) && selectedFurni.value != null) {
+                        ownedFurnitureRepo.moveFurni(floor, selectedFurni.value)
+                        selectedFurni.postValue(null)
                     }
                 }
                 else -> null
@@ -311,11 +311,11 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 ShopFragment.SelectedTab.ROTATE -> ownedFurnitureRepo.rotateFurni(furni.ownedFurniture)
                 ShopFragment.SelectedTab.MOVE -> wall.value?.let {
-                    if (selectedFurni == null) {
-                        selectedFurni = furni.ownedFurniture
+                    if (selectedFurni.value == null) {
+                        selectedFurni.postValue(furni.ownedFurniture)
                     } else if (!it.isDoor(furni.ownedFurniture.x, furni.ownedFurniture.y, ownedFloor.value!!.first().y)) {
-                        ownedFurnitureRepo.swap(furni.ownedFurniture, selectedFurni!!)
-                        selectedFurni = null
+                        ownedFurnitureRepo.swap(furni.ownedFurniture, selectedFurni.value!!)
+                        selectedFurni.postValue(null)
                     }
                 }
                 ShopFragment.SelectedTab.ASSIGN -> {

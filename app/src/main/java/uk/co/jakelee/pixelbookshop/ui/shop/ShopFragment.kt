@@ -1,11 +1,15 @@
 package uk.co.jakelee.pixelbookshop.ui.shop
 
+import android.content.res.ColorStateList
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -61,6 +65,7 @@ class ShopFragment : Fragment() {
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
         shopViewModel.pendingPurchases.observe(viewLifecycleOwner, Observer { })
         shopViewModel.ownedFurniture.observe(viewLifecycleOwner, Observer { })
+        shopViewModel.selectedFurni.observe(viewLifecycleOwner, selectedFurniObserver)
 
         handleArguments()
         return root
@@ -123,6 +128,19 @@ class ShopFragment : Fragment() {
         drawFloors(result.floors!!, maxX)
         drawWalls(result.floors!!, result.wall!!, maxX, maxY)
         drawFurnitures(result.furnitures!!, maxX)
+    }
+
+    private var lastSelectedFurniId: Int? = null
+    private val selectedFurniObserver = Observer<OwnedFurniture?> { id ->
+        lastSelectedFurniId?.let {
+            ImageViewCompat.setImageTintList(view!!.findViewById(it), null)
+        }
+        id?.let {
+            val view = view!!.findViewById<ImageView>(it.id)
+            val colour = ColorStateList.valueOf(ContextCompat.getColor(activity!!, R.color.furniture_move_highlight))
+            ImageViewCompat.setImageTintMode(view, PorterDuff.Mode.MULTIPLY)
+            ImageViewCompat.setImageTintList(view, colour)
+        }
     }
 
     private fun setButtonVisibility(button: View, targetTab: SelectedTab, actualTab: SelectedTab) {
