@@ -3,6 +3,7 @@ package uk.co.jakelee.pixelbookshop.ui.shop
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.view.MotionEvent
 import android.view.View
@@ -47,13 +48,12 @@ class TileRenderer(private val context: Context) {
         layout.addView(tile, params)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    fun <T : Any> createTile(tile: T, @DrawableRes resource: Int, callback: (View, T) -> (Any)) =
+    private fun <T : Any> createTile(tile: T, @DrawableRes resource: Int, callback: (View, T) -> (Any)) =
         ImageView(context).apply {
-            isDrawingCacheEnabled = true
             setImageResource(resource)
             setOnTouchListener(View.OnTouchListener { v, event ->
-                val bmp = Bitmap.createBitmap(v.drawingCache)
+                val bmp = Bitmap.createBitmap(v.width, v.height, Bitmap.Config.ARGB_8888)
+                v.draw(Canvas(bmp))
                 if (event.x.toInt() >= bmp.width || event.y.toInt() >= bmp.height) return@OnTouchListener true
                 val color = bmp.getPixel(event.x.toInt(), event.y.toInt())
                 if (color == Color.TRANSPARENT) {
