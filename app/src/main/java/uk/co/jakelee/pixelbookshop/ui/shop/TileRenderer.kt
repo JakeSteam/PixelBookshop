@@ -42,6 +42,7 @@ class TileRenderer(private val context: Context) {
         val furniture = ownedFurniture.ownedFurniture
         val resource = getFurnitureResource(furniture.furniture, furniture.isFacingEast, books.isNotEmpty())
         val tile = createTile(furniture, resource, callback)
+        tile.id = ownedFurniture.ownedFurniture.id
         val params = getTileParams(furniture.x, furniture.y, maxX, true)
         layout.addView(tile, params)
     }

@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 import uk.co.jakelee.pixelbookshop.database.dao.*
 import uk.co.jakelee.pixelbookshop.database.entity.*
 import uk.co.jakelee.pixelbookshop.lookups.*
+import uk.co.jakelee.pixelbookshop.utils.OwnedBookGenerator
 import java.math.BigDecimal
-import kotlin.random.Random
 
 @Database(entities = [Message::class, OwnedBook::class, OwnedFloor::class, OwnedFurniture::class,
     PastPurchase::class, PendingPurchase::class, Player::class, Shop::class],
@@ -174,16 +174,7 @@ abstract class AppDatabase : RoomDatabase() {
                 OwnedFurniture(57, 1, 6, 5, false, Furniture.WideBookcase),
                 OwnedFurniture(58, 1, 7, 5, false, Furniture.WideBookcase)
             )
-            val bookList = (0..50).map {
-                OwnedBook(0,
-                    Book.values()[Random.nextInt(Book.values().size)],
-                    null,
-                    OwnedBookDefect.values()[Random.nextInt(OwnedBookDefect.values().size)],
-                    OwnedBookQuality.values()[Random.nextInt(OwnedBookQuality.values().size)],
-                    OwnedBookSource.values()[Random.nextInt(OwnedBookSource.values().size)],
-                    OwnedBookType.values()[Random.nextInt(OwnedBookType.values().size)]
-                )
-            }
+            val bookList = OwnedBookGenerator(OwnedBookSource.Gift).generate(50)
             database.ownedBookDao().insert(*bookList.toTypedArray())
         }
     }

@@ -1,6 +1,7 @@
 package uk.co.jakelee.pixelbookshop.ui.shop
 
 import android.app.Application
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
@@ -75,12 +76,20 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         latestMessage = messageRepo.latestMessage()
     }
 
+    var visitorCheckedOut = Triple(0, 0, 0)
+    var lastTickReturned = 0
     fun getTickData(): LiveData<ShopUiUpdate> = Transformations.map(dateTime) { data ->
         if (data == null) {
+            Log.i("VisitorPosition", "Null data, uh oh")
             return@map ShopUiUpdate(GameTime(0, 0), emptyList())
         } else if (data.hour == 0) {
+            Log.i("VisitorPosition", "It's hour 0, nothing to do")
+            return@map ShopUiUpdate(data, emptyList())
+        } else if (lastTickReturned == data.hour) {
+            Log.i("VisitorPosition", "Er, we've already processed this hour")
             return@map ShopUiUpdate(data, emptyList())
         }
+        setOrResetMode(ShopFragment.SelectedTab.NONE)
         val visitorLocations = pendingPurchaseRepo.allPurchases.value!!
             .groupBy { it.visitor }
             .map  { purchasesByVisitor ->
@@ -97,29 +106,35 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                         messageRepo.addMessage(MessageType.Positive, String.format(getString(R.string.message_visitor_picked_up), purchasesByVisitor.key.name, purchaseThisTick.ownedBookId))
                     } }
 
+                    Log.i("VisitorPosition", "Purchasing on tick ${data.hour}")
                     return@map Pair(purchaseThisTick.visitor, purchaseFurniture.ownedFurniture)
                 }
 
                 // If finished purchasing, need to be sitting down
                 val allPurchasesCompleted = purchasesByVisitor.value.all { it.day == data.day && it.hour < data.hour }
-                if (allPurchasesCompleted) {
+                if (allPurchasesCompleted && visitorCheckedOut != Triple(purchasesByVisitor.key.id, data.day, data.hour)) {
+                    visitorCheckedOut = Triple(purchasesByVisitor.key.id, data.day, data.hour)
                     viewModelScope.launch { withContext(Dispatchers.IO) {
                             performCheckout(purchasesByVisitor.key, purchasesByVisitor.value)
                     } }
                     val seatingArea = ownedFurniture.value!!.first { it.ownedFurniture.id == purchasesByVisitor.value.first().seatingAreaId }
+                    Log.i("VisitorPosition", "Sitting down (to checkout) on tick ${data.hour}")
                     return@map Pair(purchasesByVisitor.key,  seatingArea.ownedFurniture)
                 }
 
                 // If holding items but not checking out, also sit down
                 val isIdlingInStore = purchasesByVisitor.value.firstOrNull { it.day == data.day && it.hour < data.hour } != null
-                if (isIdlingInStore) {
+                if (isIdlingInStore && visitorCheckedOut != Triple(purchasesByVisitor.key.id, data.day, data.hour)) {
                     val seatingArea = ownedFurniture.value!!.first { it.ownedFurniture.id == purchasesByVisitor.value.first().seatingAreaId }
+                    Log.i("VisitorPosition", "Sitting down on tick ${data.hour}")
                     return@map Pair(purchasesByVisitor.key, seatingArea.ownedFurniture)
                 }
 
                 // Otherwise not in store
                 return@map Pair(purchasesByVisitor.key, null)
             }
+        Log.i("VisitorPosition", "Returning all locations on tick ${data.hour}")
+        lastTickReturned = data.hour
         return@map ShopUiUpdate(data, visitorLocations)
     }
 
@@ -149,6 +164,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         } else {
             messageRepo.addMessage(MessageType.Negative, getString(R.string.message_visitor_no_purchases))
         }
+        Log.i("VisitorPosition", "Finished checking out")
     }
 
     fun addStrip(isPositive: Boolean, isX: Boolean) = viewModelScope.launch {

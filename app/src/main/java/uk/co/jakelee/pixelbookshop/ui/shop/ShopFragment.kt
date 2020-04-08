@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -77,6 +78,7 @@ class ShopFragment : Fragment() {
         }
     }
 
+    private var visitorLocation: ImageView? = null
     private val tickObserver = Observer<ShopUiUpdate> { result ->
         val isDuringDay = GameTimeHelper.isDuringDay(result.time.hour)
         customiseControls.alpha = if (isDuringDay) 0.5f else 1.0f
@@ -84,8 +86,14 @@ class ShopFragment : Fragment() {
         travelControls.alpha = if (isDuringDay) 0.5f else 1.0f
         travelControls.setAllEnabled(!isDuringDay)
 
-        Log.i("VisitorPosition", result.visitorPosition.toString())
-        // Perform actions based on visitor positions
+        result.visitorPosition.firstOrNull()?.let {
+            Log.i("VisitorPosition", result.visitorPosition.toString())
+            if (it.second != null) {
+                visitorLocation?.alpha = 1f
+                visitorLocation = view!!.findViewById(it.second!!.id)
+                visitorLocation!!.alpha = 0.5f
+            }
+        }
     }
 
     private val latestMessageObserver = Observer<Message> {
