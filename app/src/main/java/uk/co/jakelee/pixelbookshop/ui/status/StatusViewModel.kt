@@ -38,10 +38,10 @@ class StatusViewModel(application: Application) : AndroidViewModel(application) 
 
     init {
         val pendingPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pendingPurchaseDao()
-        pendingPurchaseRepo = PendingPurchaseRepository(pendingPurchaseDao)
+        pendingPurchaseRepo = PendingPurchaseRepository(pendingPurchaseDao, 0)
 
         val ownedFurnitureDao = AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
-        ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
+        ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao, 0)
         ownedFurniture = ownedFurnitureRepo.allFurnitureWithBooks
 
         val ownedBookDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()

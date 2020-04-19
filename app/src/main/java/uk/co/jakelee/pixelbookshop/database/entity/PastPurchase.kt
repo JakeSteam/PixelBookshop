@@ -9,6 +9,7 @@ import uk.co.jakelee.pixelbookshop.lookups.*
 @Entity
 data class PastPurchase(
     @PrimaryKey(autoGenerate = true) override val id: Int,
+    @ColumnInfo val shopId: Int,
     @ColumnInfo val day: Int,
     @ColumnInfo val hour: Int,
     @ColumnInfo val visitor: Visitor,

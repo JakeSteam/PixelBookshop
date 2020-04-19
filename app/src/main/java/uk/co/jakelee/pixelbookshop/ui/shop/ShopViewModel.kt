@@ -1,6 +1,8 @@
 package uk.co.jakelee.pixelbookshop.ui.shop
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.*
@@ -20,7 +22,7 @@ import java.math.BigDecimal
 
 class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val shopId = 1
+    private var shopId = application.getSharedPreferences("prefs", Context.MODE_PRIVATE).getInt("shop", 1)
 
     private val ownedFloorRepo: OwnedFloorRepository
     private val ownedFurnitureRepo: OwnedFurnitureRepository
@@ -48,37 +50,45 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
 
     init {
-        val ownedFloorDao = AppDatabase.getDatabase(application, viewModelScope).ownedFloorDao()
-        ownedFloorRepo = OwnedFloorRepository(ownedFloorDao)
-        ownedFloor = ownedFloorRepo.allFloor
-
-        val ownedFurnitureDao = AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
-        ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao)
-        ownedFurniture = ownedFurnitureRepo.allFurnitureWithBooks
-
-        val ownedBookDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()
-        ownedBookRepo = OwnedBookRepository(ownedBookDao)
-
-        val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
-        shopRepo = ShopRepository(shopDao, shopId)
-        wall = shopRepo.wall
-
+        // Global
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)
         dateTime = playerRepo.date
         xp = playerRepo.xp
         coins = playerRepo.coins
 
-        val pastPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pastPurchaseDao()
-        pastPurchaseRepo = PastPurchaseRepository(pastPurchaseDao)
-
-        val pendingPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pendingPurchaseDao()
-        pendingPurchaseRepo = PendingPurchaseRepository(pendingPurchaseDao)
-        pendingPurchases = pendingPurchaseRepo.allPurchases
-
         val messageDao = AppDatabase.getDatabase(application, viewModelScope).messageDao()
         messageRepo = MessageRepository(messageDao)
         latestMessage = messageRepo.latestMessage()
+
+        val ownedBookDao = AppDatabase.getDatabase(application, viewModelScope).ownedBookDao()
+        ownedBookRepo = OwnedBookRepository(ownedBookDao)
+
+        // Local
+        val shopDao = AppDatabase.getDatabase(application, viewModelScope).shopDao()
+        shopRepo = ShopRepository(shopDao, shopId)
+        wall = shopRepo.wall
+
+        val ownedFloorDao = AppDatabase.getDatabase(application, viewModelScope).ownedFloorDao()
+        ownedFloorRepo = OwnedFloorRepository(ownedFloorDao, shopId)
+        ownedFloor = ownedFloorRepo.allFloor
+
+        val ownedFurnitureDao = AppDatabase.getDatabase(application, viewModelScope).ownedFurnitureDao()
+        ownedFurnitureRepo = OwnedFurnitureRepository(ownedFurnitureDao, shopId)
+        ownedFurniture = ownedFurnitureRepo.allFurnitureWithBooks
+
+        val pastPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pastPurchaseDao()
+        pastPurchaseRepo = PastPurchaseRepository(pastPurchaseDao, shopId)
+
+        val pendingPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pendingPurchaseDao()
+        pendingPurchaseRepo = PendingPurchaseRepository(pendingPurchaseDao, shopId)
+        pendingPurchases = pendingPurchaseRepo.allPurchases
+    }
+
+    fun toggleShop() {
+        val newShopId = if (shopId == 1) 2 else 1
+        getApplication<Application>().getSharedPreferences("prefs", Context.MODE_PRIVATE).edit().putInt("shop", newShopId).apply()
+        shopId = newShopId
     }
 
     var visitorCheckedOut = Triple(0, 0, 0)

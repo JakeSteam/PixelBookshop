@@ -7,11 +7,19 @@ import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurniture
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFurnitureWithOwnedBooks
 import uk.co.jakelee.pixelbookshop.lookups.Furniture
 
-class OwnedFurnitureRepository(private val ownedFurnitureDao: OwnedFurnitureDao) {
+class OwnedFurnitureRepository(private val ownedFurnitureDao: OwnedFurnitureDao, shopId: Int) {
 
-    val allFurniture: LiveData<List<OwnedFurniture>> = ownedFurnitureDao.getAll()
+    val allFurniture: LiveData<List<OwnedFurniture>> = if (shopId > 0) {
+        ownedFurnitureDao.get(shopId)
+    } else {
+        ownedFurnitureDao.getAll()
+    }
 
-    val allFurnitureWithBooks: LiveData<List<OwnedFurnitureWithOwnedBooks>> = ownedFurnitureDao.getAllWithBooks()
+    val allFurnitureWithBooks: LiveData<List<OwnedFurnitureWithOwnedBooks>> = if (shopId > 0) {
+        ownedFurnitureDao.getWithBooks(shopId)
+    } else {
+        ownedFurnitureDao.getAllWithBooks()
+    }
 
     suspend fun insert(ownedFurniture: OwnedFurniture) {
         ownedFurnitureDao.insert(ownedFurniture)

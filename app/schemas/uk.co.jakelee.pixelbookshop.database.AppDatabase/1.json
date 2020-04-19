@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9d254b87f58bbce20a2cf30d7a494e35",
+    "identityHash": "79a8233d290fbc8cdb4589499975ada5",
     "entities": [
       {
         "tableName": "Message",
@@ -252,11 +252,17 @@
       },
       {
         "tableName": "PastPurchase",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `day` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `satisfaction` INTEGER NOT NULL, `book` INTEGER NOT NULL, `bookDefect` INTEGER NOT NULL, `bookSource` INTEGER NOT NULL, `bookType` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `shopId` INTEGER NOT NULL, `day` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `satisfaction` INTEGER NOT NULL, `book` INTEGER NOT NULL, `bookDefect` INTEGER NOT NULL, `bookSource` INTEGER NOT NULL, `bookType` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shopId",
+            "columnName": "shopId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -320,11 +326,17 @@
       },
       {
         "tableName": "PendingPurchase",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `day` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `ownedBookId` INTEGER NOT NULL, `seatingAreaId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `shopId` INTEGER NOT NULL, `day` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `visitor` INTEGER NOT NULL, `ownedBookId` INTEGER NOT NULL, `seatingAreaId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shopId",
+            "columnName": "shopId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -466,7 +478,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9d254b87f58bbce20a2cf30d7a494e35')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '79a8233d290fbc8cdb4589499975ada5')"
     ]
   }
 }

@@ -8,7 +8,7 @@ import kotlin.math.max
 
 class PendingPurchaseGenerator {
 
-    fun generate(day: Int, furniture: List<OwnedFurnitureWithOwnedBooks>): List<PendingPurchase> {
+    fun generate(shopId: Int, day: Int, furniture: List<OwnedFurnitureWithOwnedBooks>): List<PendingPurchase> {
         val randomHelper = RandomHelper()
         val seatingFurniture = getSeatingFurniture(furniture)
 
@@ -28,7 +28,7 @@ class PendingPurchaseGenerator {
                     allBooks.remove(book)
                     val purchaseHour = randomHelper.getInt(GameTimeHelper.END_HOUR)
                     pendingPurchases.add(
-                        PendingPurchase(0, day, purchaseHour, visitor, book.id, seatingArea.id)
+                        PendingPurchase(0, shopId, day, purchaseHour, visitor, book.id, seatingArea.id)
                     )
                 } else { // If we run out of books during selection
                     return pendingPurchases

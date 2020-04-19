@@ -5,9 +5,9 @@ import uk.co.jakelee.pixelbookshop.database.dao.OwnedFloorDao
 import uk.co.jakelee.pixelbookshop.database.entity.OwnedFloor
 import uk.co.jakelee.pixelbookshop.lookups.Floor
 
-class OwnedFloorRepository(private val ownedFloorDao: OwnedFloorDao) {
+class OwnedFloorRepository(private val ownedFloorDao: OwnedFloorDao, shopId: Int) {
 
-    val allFloor: LiveData<List<OwnedFloor>> = ownedFloorDao.getAll()
+    val allFloor: LiveData<List<OwnedFloor>> = ownedFloorDao.get(shopId)
 
     suspend fun insert(ownedFloor: List<OwnedFloor>) {
         ownedFloorDao.insert(ownedFloor)

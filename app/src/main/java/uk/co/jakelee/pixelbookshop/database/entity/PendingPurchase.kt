@@ -9,6 +9,7 @@ import uk.co.jakelee.pixelbookshop.lookups.Visitor
 @Entity
 data class PendingPurchase(
     @PrimaryKey(autoGenerate = true) override val id: Int,
+    @ColumnInfo val shopId: Int,
     @ColumnInfo val day: Int,
     @ColumnInfo val hour: Int,
     @ColumnInfo val visitor: Visitor,
@@ -16,7 +17,7 @@ data class PendingPurchase(
     @ColumnInfo val seatingAreaId: Int
 ): Model {
     fun toPastPurchase(book: OwnedBook, satisfaction: Int) = PastPurchase(
-        0, day, hour, visitor, satisfaction, book.book, book.bookDefect, book.bookSource,
+        0, shopId, day, hour, visitor, satisfaction, book.book, book.bookDefect, book.bookSource,
         book.bookType
     )
 }

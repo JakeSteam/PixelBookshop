@@ -13,9 +13,16 @@ interface OwnedFurnitureDao {
     @Query("SELECT * FROM OwnedFurniture ORDER BY x ASC, y DESC")
     fun getAll(): LiveData<List<OwnedFurniture>>
 
+    @Query("SELECT * FROM OwnedFurniture WHERE shopId = :shopId ORDER BY x ASC, y DESC")
+    fun get(shopId: Int): LiveData<List<OwnedFurniture>>
+
     @Transaction
     @Query("SELECT * FROM OwnedFurniture ORDER BY x ASC, y DESC")
     fun getAllWithBooks(): LiveData<List<OwnedFurnitureWithOwnedBooks>>
+
+    @Transaction
+    @Query("SELECT * FROM OwnedFurniture WHERE shopId = :shopId ORDER BY x ASC, y DESC")
+    fun getWithBooks(shopId: Int): LiveData<List<OwnedFurnitureWithOwnedBooks>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(vararg ownedFurniture: OwnedFurniture)
