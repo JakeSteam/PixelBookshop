@@ -41,6 +41,9 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
 
     var selectedFurni: MutableLiveData<OwnedFurniture?> = MutableLiveData(null)
 
+    var coins: LiveData<BigDecimal>
+    var xp: LiveData<Long>
+
     var booksToAssign = arrayOf<Int>()
     var currentTab = MutableLiveData(ShopFragment.SelectedTab.NONE)
 
@@ -63,6 +66,8 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
         val playerDao = AppDatabase.getDatabase(application, viewModelScope).playerDao()
         playerRepo = PlayerRepository(playerDao)
         dateTime = playerRepo.date
+        xp = playerRepo.xp
+        coins = playerRepo.coins
 
         val pastPurchaseDao = AppDatabase.getDatabase(application, viewModelScope).pastPurchaseDao()
         pastPurchaseRepo = PastPurchaseRepository(pastPurchaseDao)

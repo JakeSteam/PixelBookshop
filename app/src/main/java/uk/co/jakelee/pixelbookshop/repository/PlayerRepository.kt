@@ -11,15 +11,14 @@ class PlayerRepository(private val playerDao: PlayerDao) {
     val date = playerDao.getDateTime()
     val xp = playerDao.getXp()
     val coins = playerDao.getCoins()
-    val player = playerDao.getPlayer()
 
     suspend fun canPurchase(furniture: Furniture) = canPurchase(furniture.cost, furniture.level)
 
     suspend fun canPurchase(cost: Int, level: Int) = canPurchase(BigDecimal(cost), level)
 
     suspend fun canPurchase(cost: BigDecimal, level: Int): Boolean {
-        return Xp.xpToLevel(player.value?.xp ?: 0) >= level
-                && cost <= player.value?.coins ?: BigDecimal(0)
+        return Xp.xpToLevel(xp.value ?: 0) >= level
+                && cost <= coins.value ?: BigDecimal(0)
     }
 
     suspend fun purchase(cost: Int) = purchase(BigDecimal(cost))

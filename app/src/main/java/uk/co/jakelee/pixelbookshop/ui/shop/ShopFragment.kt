@@ -65,6 +65,8 @@ class ShopFragment : Fragment() {
         shopViewModel.latestMessage.observe(viewLifecycleOwner, latestMessageObserver)
         shopViewModel.pendingPurchases.observe(viewLifecycleOwner, Observer { })
         shopViewModel.ownedFurniture.observe(viewLifecycleOwner, Observer { })
+        shopViewModel.coins.observe(viewLifecycleOwner, Observer { })
+        shopViewModel.xp.observe(viewLifecycleOwner, Observer { })
         shopViewModel.selectedFurni.observe(viewLifecycleOwner, selectedFurniObserver)
 
         handleArguments()
