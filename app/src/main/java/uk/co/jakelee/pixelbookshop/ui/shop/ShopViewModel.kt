@@ -252,15 +252,14 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                     if (nextWall != null && playerRepo.canPurchase(nextWall.cost, 0)) {
                         shopRepo.upgradeWall(nextWall, shopId)
                         playerRepo.purchase(nextWall.cost)
-                        getApplication<Application>().resources
                         messageRepo.addMessage(MessageType.Positive, String.format(getString(R.string.message_item_purchased), getString(nextWall.title)))
                     } else if (nextWall != null) {
-                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_cannot_afford_upgrade), nextWall.cost))
+                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_cannot_afford_upgrade), getString(it.title), nextWall.cost))
                     } else {
                         messageRepo.addMessage(MessageType.Neutral, getString(R.string.message_cannot_upgrade_further))
                     }
                 }
-                else -> null
+                else -> { }
             }
         }
     }
@@ -275,7 +274,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                         playerRepo.purchase(nextFloor.cost)
                         messageRepo.addMessage(MessageType.Positive, String.format(getString(R.string.message_item_purchased), getString(nextFloor.title)))
                     } else if (nextFloor != null) {
-                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_cannot_afford_upgrade), nextFloor.cost))
+                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_cannot_afford_upgrade), getString(it.title), nextFloor.cost))
                     } else {
                         messageRepo.addMessage(MessageType.Neutral, getString(R.string.message_cannot_upgrade_further))
                     }
@@ -304,7 +303,7 @@ class ShopViewModel(application: Application) : AndroidViewModel(application) {
                         playerRepo.purchase(nextFurni.cost)
                         messageRepo.addMessage(MessageType.Positive, String.format(getString(R.string.message_item_purchased), getString(nextFurni.title)))
                     } else if (nextFurni != null) {
-                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_cannot_afford_upgrade), nextFurni.cost))
+                        messageRepo.addMessage(MessageType.Negative, String.format(getString(R.string.message_cannot_afford_upgrade), getString(it.title), nextFurni.cost))
                     } else {
                         messageRepo.addMessage(MessageType.Neutral, getString(R.string.message_cannot_upgrade_further))
                     }
