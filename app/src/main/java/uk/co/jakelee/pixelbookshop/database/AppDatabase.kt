@@ -71,8 +71,7 @@ abstract class AppDatabase : RoomDatabase() {
             database.playerDao().insert(Player("Jake", 100, BigDecimal(5000), 5, 0))
 
             val wallInfo = WallInfo(Wall.Brick, false, 3)
-            database.shopDao().insert(
-                Shop(1, "Jake's Shop", wallInfo, System.currentTimeMillis()))
+            database.shopDao().insert(Shop(1, "Jake's Shop", wallInfo, System.currentTimeMillis()))
 
             database.ownedFloorDao().insert(listOf(
                 OwnedFloor(1, 0, 0, true, Floor.StoneMissing),
@@ -176,6 +175,23 @@ abstract class AppDatabase : RoomDatabase() {
             )
             val bookList = OwnedBookGenerator(OwnedBookSource.Gift).generate(50)
             database.ownedBookDao().insert(*bookList.toTypedArray())
+
+            val wallInfo2 = WallInfo(Wall.StoneHoles, false, 1)
+            database.shopDao().insert(Shop(2, "Other's Shop", wallInfo2, System.currentTimeMillis()))
+            database.ownedFloorDao().insert(listOf(
+                OwnedFloor(2, 0, 0, true, Floor.Wood),
+                OwnedFloor(2, 1, 0, true, Floor.Wood),
+                OwnedFloor(2, 2, 0, true, Floor.Wood),
+                OwnedFloor(2, 0, 1, true, Floor.Wood),
+                OwnedFloor(2, 1, 1, true, Floor.Wood),
+                OwnedFloor(2, 2, 1, true, Floor.Wood),
+                OwnedFloor(2, 0, 2, true, Floor.Wood),
+                OwnedFloor(2, 1, 2, true, Floor.Wood),
+                OwnedFloor(2, 2, 2, true, Floor.Wood)
+            ))
+            database.ownedFurnitureDao().insert(
+                OwnedFurniture(999, 2, 0, 0, true, Furniture.Chair),
+                OwnedFurniture(998, 2, 1, 0, true, Furniture.RoundTable))
         }
     }
 }
